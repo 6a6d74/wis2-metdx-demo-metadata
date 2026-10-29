@@ -11,54 +11,35 @@
           "length": 1455,
           "published": "20261029T191359Z",
           "action": "canonical"
+        },
+        {
+          "path": "metadata/test-surface-observations/test-surface-observations.20261029T201857Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/test-surface-observations/test-surface-observations.20261029T201857Z.json",
+          "sha512_hex": "6a8551daba6deed10338374b893223da542344d35c1a5cf84294871a2aa93491725191ee1eee9d0060ae966061d99837dac7853dd7355b610a78d202f4155573",
+          "length": 1446,
+          "published": "20261029T201857Z",
+          "action": "update"
         }
       ],
       "last_publication": {
-        "run_id": "40938152129",
-        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/40938152129",
-        "action": "canonical",
-        "status": "failed",
-        "stamp": "20261029T191359Z",
-        "stage": "done",
-        "message_id": "07afa15d-bec3-43a6-ab47-c272f18c531c",
-        "errors": [
-          "no WCMP2 KPI report from the GDC within 60s"
-        ],
-        "warnings": [],
-        "ets": {
-          "summary": {
-            "PASSED": 10,
-            "FAILED": 0,
-            "SKIPPED": 0,
-            "WARNING": 2
-          },
-          "source": "ca-eccc-msc-global-discovery-catalogue",
-          "failed": []
-        },
-        "kpi": null,
-        "gdc": {
-          "status": "present",
-          "seconds": 0.9,
-          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aio-wis2dev-metdx-demo%3Atest-surface-observations?f=json"
-        },
-        "delivered": {
-          "local": 0.15,
-          "gb": 0.17
-        },
-        "log": "logs/40938152129/test-surface-observations.jsonl"
+        "run_id": "40947880316",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/40947880316",
+        "action": "update",
+        "status": "pending",
+        "stamp": "20261029T201857Z"
       },
       "title": "metdx-demo test surface observations",
       "source_path": "metadata/test-surface-observations.json",
-      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/test-surface-observations/test-surface-observations.20261029T191359Z.json",
-      "current_path": "metadata/test-surface-observations/test-surface-observations.20261029T191359Z.json",
-      "sha512_hex": "a8feb142880cb075302bb892ca825e23985b4c408163c8917bef80563da3772afac57ec49a7f7c5ddb25d512487e1b7fb6de721a6c98f4f7a81a1f9a74dab22f",
-      "sha512_b64": "qP6xQogMsHUwK7iSyoJeI5hbTECBY8iRe++AVj2jdyr6xX7Emn98Xdsl1RJIfht/tt5yGmyY9PeoGh+adNqyLw==",
-      "length": 1455,
-      "published": "20261029T191359Z",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/test-surface-observations/test-surface-observations.20261029T201857Z.json",
+      "current_path": "metadata/test-surface-observations/test-surface-observations.20261029T201857Z.json",
+      "sha512_hex": "6a8551daba6deed10338374b893223da542344d35c1a5cf84294871a2aa93491725191ee1eee9d0060ae966061d99837dac7853dd7355b610a78d202f4155573",
+      "sha512_b64": "aoVR2rpt7tEDODdLiTIj2lQjRNNcGlz4QpSHGiqpNJFyUZHuHu6dAGCulmBh2Zg32seFPdc1W2EKeNIC9BVVcw==",
+      "length": 1446,
+      "published": "20261029T201857Z",
       "deleted": false,
       "deleted_at": null
     }
   },
   "published_commit": "12e94ed83ea8a69eb79455f434b862e06682add5",
-  "updated": "2026-10-29T19:16:04Z"
+  "updated": "2026-10-29T20:18:59Z"
 }
