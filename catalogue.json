@@ -71,8 +71,35 @@
         "run_id": "40957418321",
         "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/40957418321",
         "action": "canonical",
-        "status": "pending",
-        "stamp": "20261029T212402Z"
+        "status": "failed",
+        "stamp": "20261029T212402Z",
+        "stage": "done",
+        "message_id": "46dc384a-fcfe-4cab-a662-035da43f0cef",
+        "errors": [
+          "GDC ETS gdc FAILED: Topic mismatch (io-wis2dev-metdx-demo != int-ecmwf)",
+          "Labs GDC check failed after 120s: GDC has a different version (updated/created 2026-05-05T00:00:00Z, expected 2026-10-29T17:53:00Z) (https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aweather.prediction.forecast.global?f=json)"
+        ],
+        "warnings": [],
+        "ets": {
+          "summary": null,
+          "source": "ca-eccc-msc-global-discovery-catalogue",
+          "failed": [
+            {
+              "test": "gdc",
+              "message": "Topic mismatch (io-wis2dev-metdx-demo != int-ecmwf)"
+            }
+          ]
+        },
+        "kpi": null,
+        "gdc": {
+          "status": "not confirmed",
+          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aweather.prediction.forecast.global?f=json"
+        },
+        "delivered": {
+          "local": 0.14,
+          "gb": 0.16
+        },
+        "log": "logs/40957418321/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.jsonl"
       },
       "title": "ECMWF IFS Global Deterministic Forecast (Destination Earth)",
       "source_path": "metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.json",
@@ -86,6 +113,6 @@
       "deleted_at": null
     }
   },
-  "published_commit": "9e5df4b72cbf01b050901080667742539262b92b",
-  "updated": "2026-10-29T21:24:04Z"
+  "published_commit": "fef14bcb0515fbefe1b1c8293629c1960b3c985c",
+  "updated": "2026-10-29T21:26:53Z"
 }
