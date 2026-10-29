@@ -57,6 +57,22 @@ Status: **agreed 2026-10-29**. Nothing has been built yet. It builds on `pre/HAN
   - `publish.max_workers`.
 - Checked against the live brokers: `preflight`, `open_clients` and `subscribe_all` succeed, and a bad password is reported with the client name.
 
+## Phase 4 design notes
+
+- **`published_commit` in `catalogue.json`** (on `gh-pages`) is the last commit whose records were announced. Each run publishes `published_commit..HEAD`, not just the push's own range. GitHub cancels all but one *queued* run in a concurrency group, so a cancelled run's records are caught up by the next run. If there is no `published_commit`, the run falls back to the push's `before` commit, and failing that announces every record.
+- **Workflow (`publish.yml`):**
+  1. `prepare` (wis2-publish): plan, preflight, stage onto `gh-pages`, upload the Pages artifact and the manifest.
+  2. `deploy` (github-pages).
+  3. `publish` (wis2-publish): `run`, then record the results and logs on `gh-pages`.
+  4. `report` (github-pages): redeploys so the catalogue shows the ETS/KPI outcome.
+- **Exit code 2 from `run`** (a broker or config failure before publishing) does **not** advance `published_commit` and skips `report`, so the next run retries. The staged files stay, which is harmless.
+- **Manual run:** `workflow_dispatch` with `files` set to paths or `all` re-announces those records as they are at `HEAD`. It uses `update` if the catalogue already holds the record, otherwise `canonical`. Leaving `files` empty means "publish anything not yet published".
+- **Site:**
+  - Published files: `metadata/<stem>/<stem>.<stamp>.json`, plus `.sha512` sidecars (`sha512sum -c` compatible).
+  - `catalogue.json` holds the current file, checksums, version history and last publication outcome.
+  - `index.html` is static HTML (works without JS; JS is only used for "copy checksum"), with light and dark themes.
+  - `logs/<run-id>/*.jsonl`.
+
 ## Progress
 
 | Phase | Status |
@@ -64,8 +80,9 @@ Status: **agreed 2026-10-29**. Nothing has been built yet. It builds on `pre/HAN
 | 0: checks | done 2026-10-29 |
 | 1: repo, Pages, environment, ruleset | done 2026-10-29 |
 | 2: config, validator, `validate.yml`, tests | done (PR #1) |
-| 3: MQTT, router, helpers, monitoring, orchestrator | in PR |
-| 4-6 | to do |
+| 3: MQTT, router, helpers, monitoring, orchestrator | done (PR #3) |
+| 4: Pages staging, catalogue, `publish.yml` | in PR |
+| 5-6 | to do |
 
 ## 1. What we're building
 

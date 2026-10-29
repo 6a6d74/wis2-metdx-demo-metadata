@@ -36,10 +36,37 @@ LOG = logging.getLogger("wis2node.publish")
 
 
 # ---------------------------------------------------------------- plan
+def _id_at(rev: str, path: str, cwd: str | None) -> str | None:
+    record, _ = parse_record(ch.show(rev, path, cwd=cwd))
+    return record["id"] if record else None
+
+
+def resolve_base(explicit: str | None, catalogue: dict | None, fallback: str | None) -> str:
+    """Diff from: --base, else the catalogue's last published commit, else the push's
+    'before' commit, else nothing (= every record is new)."""
+    return explicit or (catalogue or {}).get("published_commit") or fallback or ch.ZERO_SHA
+
+
 def plan(base: str, head: str, base_url: str, stamp: str, centre_id: str,
-         catalogue: dict | None = None, only: list[str] | None = None, cwd: str | None = None) -> dict:
-    """Work out what to announce. Raises ValueError for records that can't be published."""
-    found = ch.changed_records(base, head, cwd=cwd)
+         catalogue: dict | None = None, only: list[str] | None = None, cwd: str | None = None,
+         republish: list[str] | None = None) -> dict:
+    """Work out what to announce. Raises ValueError for records that can't be published.
+
+    `republish` (paths, or ["all"]) ignores the diff and re-announces those records as
+    they are at `head`: "update" if the catalogue already holds them, else "canonical".
+    """
+    known = {rid for rid, e in ((catalogue or {}).get("records") or {}).items()
+             if isinstance(e, dict) and not e.get("deleted")}
+    if republish:
+        at_head = [p for p in ch.git("ls-tree", "-r", "--name-only", head, "--", ch.METADATA_DIR,
+                                     cwd=cwd).splitlines() if ch.is_record_path(p)]
+        wanted = at_head if republish == ["all"] else [Path(p).as_posix() for p in republish]
+        missing = sorted(set(wanted) - set(at_head))
+        if missing:
+            raise ValueError(f"not records at {head}: {', '.join(missing)}")
+        found = [ch.Change(ch.MODIFIED if _id_at(head, p, cwd) in known else ch.ADDED, p) for p in wanted]
+    else:
+        found = ch.changed_records(base, head, cwd=cwd)
     if only:
         wanted = {Path(p).as_posix() for p in only}
         found = [c for c in found if c.path in wanted]
@@ -76,6 +103,7 @@ def plan(base: str, head: str, base_url: str, stamp: str, centre_id: str,
                         geometry=record.get("geometry"), datetime=wnm.record_datetime(record)))
 
     jobs.sort(key=lambda j: j.source_path)
+    head = ch.git("rev-parse", head, cwd=cwd).strip()
     return {"centre_id": centre_id, "stamp": stamp, "base_url": base_url, "base": base, "head": head,
             "jobs": [asdict(j) for j in jobs]}
 
@@ -197,7 +225,9 @@ def main(argv: list[str] | None = None) -> int:
     sub = p.add_subparsers(dest="cmd", required=True)
 
     sp = sub.add_parser("plan", help="write the manifest of records to announce")
-    sp.add_argument("--base", required=True, help="commit before the change (empty/zeros = everything)")
+    sp.add_argument("--base", help="diff from this commit (default: catalogue's published_commit)")
+    sp.add_argument("--fallback-base", help="diff from this if there is no --base or published_commit")
+    sp.add_argument("--republish", nargs="*", help="re-announce these metadata/ paths (or 'all') as they are at --head")
     sp.add_argument("--head", default="HEAD")
     sp.add_argument("--base-url", required=True, help="public base URL of the Pages site")
     sp.add_argument("--stamp", help="timestamp for published filenames (default: now, UTC)")
@@ -224,8 +254,10 @@ def main(argv: list[str] | None = None) -> int:
 
         if args.cmd == "plan":
             catalogue = json.loads(Path(args.catalogue).read_text()) if args.catalogue else None
-            manifest = plan(args.base, args.head, base_url or args.base_url, args.stamp or timestamp(),
-                            cfg["centre_id"], catalogue, args.only)
+            base = resolve_base(args.base, catalogue, args.fallback_base)
+            manifest = plan(base, args.head, base_url or args.base_url, args.stamp or timestamp(),
+                            cfg["centre_id"], catalogue, args.only, republish=args.republish or None)
+            print(f"base {base} -> head {args.head}")
             Path(args.out).write_text(json.dumps(manifest, indent=2))
             for j in manifest["jobs"]:
                 print(f"{j['action']:9} {j['source_path']} -> {j['url']}")
