@@ -138,6 +138,10 @@ To raise with the **Labs GDC operators**, for example via `tomkralidis`:
 1. **Enable KPI reports.** The Labs GDC runs with `WMO_RESOURCE_CATALOGUE_RUN_KPI` off (the default), so it never sends WCMP2 KPI reports. If it is enabled, set `monitor.require_kpi: true` in `config/node.yml` to restore the original success rule (ETS **and** KPI received).
 2. **MQTT links rewritten to production Global Brokers.** The Labs GDC's copy of our record has its MQTT links pointing at the production GBs (`gb.wis.cma.cn`, `wis2globalbroker.nws.noaa.gov`, `globalbroker.inmet.gov.br`, `globalbroker.meteo.fr`) instead of the test GB `gb.wis2dev.io`. Ask whether this is intended for the Labs environment.
 
+Also deferred (our own work):
+
+3. **D8: "open PR" button in `6a6d74/wcmp2-editor`** that pre-fills a new `metadata/<name>.json` in this repo (see section 8).
+
 Kept open meanwhile: [#7](https://github.com/6a6d74/wis2-metdx-demo-metadata/issues/7). `"length": 7` is explained (the GDC counts the parsed record's keys); a possible upstream report is pending a decision.
 
 ## 1. What we're building
@@ -306,24 +310,34 @@ Every stage has explicit exceptions and messages for: config missing, git diff f
 ## 8. Design changes and suggestions
 
 **D1. Deploy to Pages once per run, not once per helper (recommended).** Every Pages deployment replaces the whole site, and runs are queued. If N helpers each push to Pages, they race and each one waits through a full deploy cycle. Instead, stage all timestamped files together, deploy once, and then let the helpers run in parallel from the "wait until live" step onwards. This keeps per-record isolation for everything that can fail independently: liveness, publish, delivery, ETS/KPI.
+*Status (2026-10-29): ✅ implemented (single `deploy` job after `prepare` stages all records).*
 
 **D2. Fail fast before anything becomes public.** Check broker liveness, including the publisher credentials, *before* deploying to Pages. A broken broker then leaves no orphaned files.
+*Status (2026-10-29): ✅ implemented (preflight before staging; a later broker failure leaves `published_commit` unchanged so the next run retries).*
 
 **D3. Subscribe before publishing, in one place.** Shared subscriptions plus a router, instead of each helper having its own subscriber connections, means fewer EMQX sessions (the free tier counts session minutes). It also means no helper can miss its own message because it subscribed too late.
+*Status (2026-10-29): ✅ implemented (`Router` over three shared connections per run).*
 
 **D4. Match monitoring events strictly.** ETS and KPI reports carry `metadata_id`, not the WNM ID. Filter by the event `time` being after the publish time, otherwise an old report for the same record could be counted as a pass.
+*Status (2026-10-29): ✅ implemented (`metadata_id` + `timeouts.clock_skew`; GDC `item.download` reports are matched but not time-filtered: low risk, as subscriptions are fresh each run).*
 
 **D5. Stronger PR checks.** Besides the ETS, check the centre ID in `id`, unique IDs, and that `updated` has been bumped. Show the KPI on the PR so reviewers can judge quality. These checks catch most of what the GDC would otherwise reject after merge.
+*Status (2026-10-29): ✅ implemented (proved by the throwaway PR #2).*
 
 **D6. Immutable, timestamped files and a gh-pages history.** Old URLs keep resolving, which matters because earlier notifications point at them. The catalogue also becomes an audit trail.
+*Status (2026-10-29): ✅ implemented (old versions still served; history in `catalogue.json`).*
 
 **D7. Deletions (not in your workflow; suggest adding).** Removing a file in a PR could publish `rel=deletion`, so the GDC drops the record. Without this, the only way to retire a record is manually. Suggest adding it, behind the same review gate.
+*Status (2026-10-29): ✅ implemented and verified live (run 40950578470).*
 
 **D8. Truly no-code authoring.** Collaborators can use GitHub's web UI ("Add file → Upload files" creates a branch and PR). It could be connected to your existing `6a6d74/wcmp2-editor` later, for example an "open PR" button that pre-fills the file.
+*Status (2026-10-29): ◐ partly: web-UI walkthrough, template and editor link done (Phase 6). **Deferred:** an "open PR" button in `6a6d74/wcmp2-editor`, e.g. via the GitHub new-file URL (`…/new/main/metadata?filename=…&value=…`); check URL-length limits and that `value` is still supported.*
 
 **D9. Optional daily health check** (cron) that runs Stage 0 only, so a dead broker is found before someone tries to publish.
+*Status (2026-10-29): ✅ implemented: `.github/workflows/health.yml` + `wis2node.health` (daily 06:17 UTC; failures open or update a "Health check failing" issue, recovery closes it).*
 
 **D10. Things to check against the specs before coding** (Phase 0):
+*Status (2026-10-29): ✅ resolved in Phases 0–5 (see the findings sections above).*
 - the WNM `data_id` convention for metadata
 - `rel` values (`canonical`/`update`/`deletion`)
 - whether the GB echoes the original message `id` unchanged (assumed yes; this is how the delivery check works)

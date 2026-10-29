@@ -1,0 +1,79 @@
+name: Health check
+
+# Daily: can we publish right now? Runs the same broker preflight as a real
+# publication, and checks the Labs GDC API and our Pages catalogue. A failure
+# opens (or comments on) a "Health check failing" issue; recovery closes it.
+#
+# Note: GitHub disables scheduled workflows in public repos after 60 days with
+# no repository activity; re-enable under Actions if that happens.
+
+on:
+  schedule:
+    - cron: "17 6 * * *"   # 06:17 UTC daily
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Separate from the publish group so a queued health run can never displace a
+# queued publication.
+concurrency:
+  group: wis2-health
+  cancel-in-progress: true
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    environment: wis2-publish   # broker secrets
+    permissions:
+      contents: read
+      issues: write   # open/comment/close the health issue
+      pages: read     # look up the Pages URL
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+
+      - name: Check brokers, GDC and Pages
+        id: health
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LOCAL_BROKER_URL: ${{ secrets.LOCAL_BROKER_URL }}
+          LOCAL_BROKER_PUB_PASSWORD: ${{ secrets.LOCAL_BROKER_PUB_PASSWORD }}
+        run: |
+          set +e
+          pages_url=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq .html_url)
+          python -m wis2node.health --pages-url "$pages_url" \
+            --summary "$GITHUB_STEP_SUMMARY" --report report.md
+          echo "rc=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Open, update or close the health issue
+        if: always() && steps.health.outputs.rc != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RC: ${{ steps.health.outputs.rc }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="Health check failing"
+          issue=$(gh issue list --state open --search "\"$title\" in:title" --json number,title \
+            --jq ".[] | select(.title == \"$title\") | .number" | head -n 1)
+          if [ "$RC" != "0" ]; then
+            body=$(printf '%s\n\nRun: %s\n' "$(cat report.md 2>/dev/null || echo 'health check could not run')" "$RUN_URL")
+            if [ -n "$issue" ]; then
+              gh issue comment "$issue" --body "$body"
+            else
+              gh issue create --title "$title" --body "$body"
+            fi
+          elif [ -n "$issue" ]; then
+            gh issue comment "$issue" --body "Recovered: all checks passing. Run: $RUN_URL"
+            gh issue close "$issue"
+          fi
+
+      - name: Fail if unhealthy
+        if: steps.health.outputs.rc != '0'
+        run: |
+          echo "::error::health check failed (exit code ${{ steps.health.outputs.rc }}): see the job summary"
+          exit 1

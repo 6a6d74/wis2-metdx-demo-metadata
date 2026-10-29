@@ -208,6 +208,15 @@ Each helper works through these steps, and a failure in one record never stops t
 
 Every event received is written to a log. The run fails if any record fails, and the job summary lists the reason for each failure.
 
+### Daily health check
+
+The **Health check** workflow runs every day at 06:17 UTC, and can also be started from Actions → Health check → Run workflow. It checks that:
+- both brokers accept our connections, using the same preflight as a real publication, including the publisher login
+- the Labs GDC API answers
+- the catalogue on Pages is served
+
+If anything fails, it opens a **"Health check failing"** issue, or adds a comment to the open one, with the report. When everything passes again, it comments and closes the issue. GitHub pauses scheduled workflows in public repositories after 60 days without activity. If that happens, re-enable the workflow under Actions.
+
 ### Where things live
 
 | Location | Contents |
