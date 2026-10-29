@@ -180,6 +180,7 @@ def run(cfg: dict, jobs: list[Job], password: str, log_dir: Path, wait_for_pages
                           wait_for_pages=wait_for_pages,
                           ets_failures_as_warnings=cfgmod.get(cfg, "monitor", "ets_failures_as_warnings", default=[]),
                           kpi_warn_below=cfgmod.get(cfg, "kpi", "warn_below_percentage"),
+                          require_kpi=bool(cfgmod.get(cfg, "monitor", "require_kpi", default=False)),
                           gdc_url=gdc_url, gdc_interval=gdc_interval, **helper_overrides)
                    for job in jobs]
         workers = max(1, min(len(helpers), cfgmod.get(cfg, "publish", "max_workers", default=4)))

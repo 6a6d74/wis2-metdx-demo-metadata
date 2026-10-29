@@ -61,6 +61,7 @@ class Result:
     warnings: list[str] = field(default_factory=list)
     delivered: dict[str, float] = field(default_factory=dict)  # source -> seconds after publish
     gb_events: list[dict] = field(default_factory=list)        # summaries of GB WNM events
+    gdc_events: list[dict] = field(default_factory=list)       # GDC download/deletion reports
     ets: dict | None = None
     kpi: dict | None = None
     gdc: dict | None = None                                    # Labs GDC confirmation
@@ -95,6 +96,7 @@ class Router:
     def __init__(self, run_log: JsonlLog | None = None):
         self._by_message: dict[str, "Helper"] = {}
         self._by_metadata: dict[str, "Helper"] = {}
+        self._by_url: dict[str, "Helper"] = {}
         self._lock = threading.Lock()
         self._run_log = run_log
 
@@ -102,12 +104,15 @@ class Router:
         with self._lock:
             self._by_message[helper.message_id] = helper
             self._by_metadata[helper.job.metadata_id] = helper
+            self._by_url[helper.job.url] = helper
 
     def unregister(self, helper: "Helper") -> None:
         with self._lock:
             self._by_message.pop(helper.message_id, None)
             if self._by_metadata.get(helper.job.metadata_id) is helper:
                 del self._by_metadata[helper.job.metadata_id]
+            if self._by_url.get(helper.job.url) is helper:
+                del self._by_url[helper.job.url]
 
     def handler(self, source: str) -> Callable[[str, bytes, bool], None]:
         def on_message(topic: str, payload: bytes, retained: bool) -> None:
@@ -147,9 +152,14 @@ class Router:
             wid = mon.wnm_id(event)
             if wid and wid in self._by_message:
                 return self._by_message[wid]
-            if mon.classify(event) in (mon.ETS_REPORT, mon.KPI_REPORT):
-                return self._by_metadata.get(mon.metadata_id(event) or "")
-        return None
+            if mon.classify(event) == mon.WNM_EVENT:
+                return None
+            # GDC reports: by metadata id (ETS, KPI, deletion), else by the record URL
+            # (download failures carry only a link to what the GDC tried to fetch)
+            target = self._by_metadata.get(mon.metadata_id(event) or "")
+            if target is None:
+                target = next((self._by_url[h] for h in mon.link_hrefs(event) if h in self._by_url), None)
+            return target
 
 
 class Helper:
@@ -158,7 +168,7 @@ class Helper:
     def __init__(self, job: Job, *, centre_id: str, publisher: Publisher, router: Router,
                  timeouts: dict, log: JsonlLog, wait_for_pages: bool = True,
                  ets_failures_as_warnings: list[str] | None = None,
-                 kpi_warn_below: float | None = None, clock=time.monotonic,
+                 kpi_warn_below: float | None = None, require_kpi: bool = False, clock=time.monotonic,
                  live_check: Callable[..., float] = wait_until_live,
                  gdc_url: str | None = None, gdc_interval: float = 10.0,
                  gdc_present: Callable[..., float] = wait_for_record,
@@ -172,6 +182,8 @@ class Helper:
         self.wait_for_pages = wait_for_pages
         self.ets_relaxed = set(ets_failures_as_warnings or [])
         self.kpi_warn_below = kpi_warn_below
+        self.require_kpi = require_kpi
+        self._deletion_reported = False
         self.clock = clock
         self.live_check = live_check
         self.gdc_url = gdc_url
@@ -224,18 +236,22 @@ class Helper:
             r.stage = "monitor"
             t1 = self.clock()
             if self.job.action == wnm.DELETION:
-                self._await(lambda: False, t1, self.timeouts["monitor"])
+                self._await(lambda: self._deletion_reported, t1, self.timeouts["monitor"])
+                if not self._deletion_reported:
+                    r.warnings.append(f"no deletion report from the GDC within {self.timeouts['monitor']}s")
             else:
-                self._await(lambda: r.ets is not None and r.kpi is not None, t1, self.timeouts["monitor"])
+                self._await(lambda: r.ets is not None and (r.kpi is not None or not self.require_kpi),
+                            t1, self.timeouts["monitor"])
                 if r.ets is None:
                     r.errors.append(f"no WCMP2 ETS report from the GDC within {self.timeouts['monitor']}s")
-                if r.kpi is None:
+                if r.kpi is None and self.require_kpi:
                     r.errors.append(f"no WCMP2 KPI report from the GDC within {self.timeouts['monitor']}s")
             r.timings["monitor"] = round(self.clock() - t1, 1)
 
             if self.gdc_url:
                 r.stage = "gdc"
                 self._check_gdc()
+            self._await(lambda: True, 0, 0)  # pick up anything that arrived meanwhile (e.g. a late KPI)
             r.stage = "done"
         except (PagesError, BrokerError) as exc:
             r.errors.append(str(exc))
@@ -303,7 +319,7 @@ class Helper:
             return
         self.log.write("event", source=source, topic=topic, classified=cls, event=body)
         {mon.WNM_EVENT: self._on_wnm_event, mon.ETS_REPORT: self._on_ets,
-         mon.KPI_REPORT: self._on_kpi}.get(cls, self._on_other)(body)
+         mon.KPI_REPORT: self._on_kpi, mon.ITEM_EVENT: self._on_item}.get(cls, self._on_other)(body)
 
     def _is_stale(self, event: dict) -> bool:
         t = mon.event_time(event)
@@ -340,6 +356,20 @@ class Helper:
         pct = s.get("percentage")
         if self.kpi_warn_below is not None and isinstance(pct, (int, float)) and pct < self.kpi_warn_below:
             self.result.warnings.append(f"GDC KPI {pct}% is below the threshold of {self.kpi_warn_below}%")
+
+    def _on_item(self, event: dict) -> None:
+        """GDC download failure, or the GDC's report on a deletion."""
+        sev = mon.severity(event)
+        text = f"{event.get('source', 'GDC')}: {mon.title(event)}" + \
+            (f" ({mon.description(event)})" if mon.description(event) else "")
+        self.result.gdc_events.append({"type": event.get("type"), "severity": sev, "title": mon.title(event),
+                                       "description": mon.description(event), "source": event.get("source")})
+        if self.job.action == wnm.DELETION and mon.metadata_id(event) == self.job.metadata_id:
+            self._deletion_reported = True
+        if sev in ("ERROR", "CRITICAL"):
+            self.result.errors.append(text)
+        elif sev == "WARNING":
+            self.result.warnings.append(text)
 
     def _on_other(self, event: dict) -> None:
         if mon.severity(event) in ("ERROR", "CRITICAL"):

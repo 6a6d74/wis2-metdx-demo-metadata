@@ -69,13 +69,38 @@ def test_several_records_in_parallel(fast_cfg, net, record, tmp_path):
     assert len({r.message_id for r in results}) == 5
 
 
-def test_deletion_needs_no_gdc_reports(fast_cfg, net, record, tmp_path):
+def test_deletion_completes_on_gdc_report(fast_cfg, net, record, tmp_path):
+    fast_cfg["timeouts"]["monitor"] = 30   # must finish on the report, not the timeout
     called = []
+    import time
+    t = time.monotonic()
     (r,) = run(fast_cfg, net, [job(record, "deletion")], tmp_path,
                live_check=lambda *a: called.append(a) or 0.0)
     assert r.ok, r.errors
+    assert time.monotonic() - t < 5
     assert called == []  # deletions don't wait for Pages
     assert net.published[0][1]["links"][0]["rel"] == "deletion"
+    assert r.gdc_events[0]["severity"] == "INFO" and "deleted" in r.gdc_events[0]["description"]
+
+
+def test_deletion_not_found_is_error(fast_cfg, net, record, tmp_path):
+    net.gdc_delete_result = "not found"
+    (r,) = run(fast_cfg, net, [job(record, "deletion")], tmp_path)
+    assert not r.ok and "not found" in r.errors[0]
+
+
+def test_deletion_without_report_warns(fast_cfg, net, record, tmp_path):
+    net.gdc_delete_result = None
+    (r,) = run(fast_cfg, net, [job(record, "deletion")], tmp_path)
+    assert r.ok and "no deletion report" in r.warnings[0]
+
+
+def test_gdc_download_failure_is_error(fast_cfg, net, record, tmp_path):
+    net.gdc_download_fails = True
+    (r,) = run(fast_cfg, net, [job(record)], tmp_path)
+    assert not r.ok
+    assert any("WCMP2 access failure (404 Client Error" in e for e in r.errors)
+    assert any("no WCMP2 ETS report" in e for e in r.errors)
 
 
 # ---------------------------------------------------------------- failures
@@ -113,7 +138,19 @@ def test_gdc_ets_failure_can_be_downgraded(fast_cfg, net, record, tmp_path):
     assert r.ok and r.warnings == ["GDC ETS identifier FAILED: Invalid centre_id"]
 
 
-def test_missing_kpi_times_out(fast_cfg, net, record, tmp_path):
+def test_missing_kpi_is_fine_unless_required(fast_cfg, net, record, tmp_path):
+    net.gdc_sends_kpi = False   # the Labs GDC runs with RUN_KPI off
+    (r,) = run(fast_cfg, net, [job(record)], tmp_path)
+    assert r.ok and r.kpi is None and r.ets is not None
+
+
+def test_kpi_recorded_when_sent(fast_cfg, net, record, tmp_path):
+    (r,) = run(fast_cfg, net, [job(record)], tmp_path)
+    assert r.kpi["grade"] == "A"
+
+
+def test_missing_kpi_times_out_when_required(fast_cfg, net, record, tmp_path):
+    fast_cfg["monitor"]["require_kpi"] = True
     net.gdc_sends_kpi = False
     (r,) = run(fast_cfg, net, [job(record)], tmp_path)
     assert r.errors == ["no WCMP2 KPI report from the GDC within 1s"]
@@ -260,6 +297,7 @@ def test_cli_errors_exit_2(monkeypatch, tmp_path):
 
 
 def test_markdown_report(fast_cfg, net, record, tmp_path):
+    fast_cfg["monitor"]["require_kpi"] = True
     net.gdc_sends_kpi = False
     results = run(fast_cfg, net, [job(record)], tmp_path)
     md = publish.to_markdown(results)

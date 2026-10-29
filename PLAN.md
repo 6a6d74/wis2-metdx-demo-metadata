@@ -96,6 +96,31 @@ Status: **agreed 2026-10-29**. Nothing has been built yet. It builds on `pre/HAN
   - `index.html` is static HTML (works without JS; JS is only used for "copy checksum"), with light and dark themes.
   - `logs/<run-id>/*.jsonl`.
 
+## Phase 5 findings: first live publication (run 40938152129, 2026-10-29)
+
+Record `urn:wmo:md:io-wis2dev-metdx-demo:test-surface-observations` (PR #5):
+
+| Step | Result |
+|---|---|
+| Pages | staged as `test-surface-observations.20261029T191359Z.json`, live, `.sha512` matches the served bytes |
+| Delivery | local broker 0.15 s, GB 0.17 s |
+| GB validation events | **none**: the WNM passes the GB's checks |
+| GDC ETS | received about 1 s after publishing. `source: ca-eccc-msc-global-discovery-catalogue`, severity WARNING, 10 passed / 0 failed / 2 warnings (identifier, links: unknown centre-id). **The Labs GDC runs relaxed.** |
+| GDC KPI | **never sent** (checked for 30 min with `tools/listen.py`) |
+| Labs GDC | record present 0.9 s after the ETS stage |
+
+The run was marked failed only because of the missing KPI. What the GDC source (`wmo-im/wmo-resource-catalogue`, `wis2_gdc/registrar.py`) shows:
+- **KPI reports are only sent when `WMO_RESOURCE_CATALOGUE_RUN_KPI=true`**, which is off by default. Because of this, `monitor.require_kpi` (default `false`) was added: helpers succeed on ETS (+ GDC check) and record a KPI report when one arrives. **Suggestion:** ask the Labs GDC operators to enable RUN_KPI, then set `require_kpi: true`.
+- `REJECT_ON_FAILING_ETS` defaults to true: a record with an ETS FAILED is **not** added to the catalogue. This is consistent with treating ETS FAILED as an error.
+- ETS event severity is INFO, WARNING or ERROR depending on the worst test code.
+- **The GDC reports download failures and deletions as type `….item.download`**:
+  - A download failure is ERROR "WCMP2 access failure". It has no `metadata_id`, only a link to the URL fetched, so the router now matches it by the record URL.
+  - A deletion gives INFO "metadata … deleted" or ERROR "… not found", with `metadata_id`. A deletion helper now finishes when this report arrives. A missing report is a warning, an ERROR fails the record, and the GDC 404 check still confirms the deletion.
+- The ETS event links to a copy of the record on S3 with `"length": 7`. The record is 1455 bytes, and the S3 copy is byte-identical.
+  - Our WNM declared 1455.
+  - The S3 path looks like a **Global Cache** layout, so the GDC likely processed a cache re-notification.
+  - **Under investigation here** ([#7](https://github.com/6a6d74/wis2-metdx-demo-metadata/issues/7)) before assuming a cause elsewhere.
+
 ## Progress
 
 | Phase | Status |
@@ -104,8 +129,9 @@ Status: **agreed 2026-10-29**. Nothing has been built yet. It builds on `pre/HAN
 | 1: repo, Pages, environment, ruleset | done 2026-10-29 |
 | 2: config, validator, `validate.yml`, tests | done (PR #1) |
 | 3: MQTT, router, helpers, monitoring, orchestrator | done (PR #3) |
-| 4: Pages staging, catalogue, `publish.yml` | in PR |
-| 5-6 | to do |
+| 4: Pages staging, catalogue, `publish.yml`, Labs GDC check | done (PR #4) |
+| 5: end-to-end test | first publication done; GDC behaviour fixes in PR; deletion test next |
+| 6 | to do |
 
 ## 1. What we're building
 

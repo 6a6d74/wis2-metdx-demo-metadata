@@ -40,6 +40,8 @@ class FakeWIS2:
         self.gdc_kpi_percentage = 85.0
         self.gdc_stale_ets = False        # ETS event dated well before publication
         self.gdc_report_style = "spec"    # "spec": report fields in data.content
+        self.gdc_download_fails = False   # GDC can't fetch the record: item.download ERROR, no ETS
+        self.gdc_delete_result = "deleted"  # "deleted" (INFO), "not found" (ERROR) or None (no report)
 
     def factory(self, name, url, username, password, prefix, on_message=None):
         c = FakeClient(self, name, on_message)
@@ -51,12 +53,12 @@ class FakeWIS2:
         if c and c.connected and any(topic_matches(s, topic) for s in c.subs) and c.on_message:
             c.on_message(topic, payload, False)
 
-    def _event(self, etype, source, content, severity="INFO"):
-        return {"specversion": "1.0", "type": etype, "source": source, "subject": self.centre,
+    def _event(self, etype, source, content, severity="INFO", links=None):
+        return {"links": links or [], **{"specversion": "1.0", "type": etype, "source": source, "subject": self.centre,
                 "id": str(uuid.uuid4()), "time": iso(datetime.now(timezone.utc)),
                 "datacontenttype": "application/json",
                 "data": {"conformsTo": ["http://wis.wmo.int/spec/wme/1/conf/monitoring-event-message-core"],
-                         "severity": severity, "content": content}}
+                         "severity": severity, "content": content}}}
 
     def on_publish(self, topic, payload):
         self.published.append((topic, json.loads(payload)))
@@ -73,9 +75,22 @@ class FakeWIS2:
                               "errors": [err]}, "ERROR")
             self._deliver("gb-sub", mon, json.dumps(ev).encode())
         rel = msg["links"][0]["rel"]
-        if rel == "deletion":
-            return
         mid = msg["properties"]["metadata_id"]
+        gdc = "ca-eccc-msc-global-discovery-catalogue"
+        if rel == "deletion":
+            if self.gdc_delete_result:
+                ok = self.gdc_delete_result == "deleted"
+                ev = self._event("int.wmo.wis.wme.event.item.download", gdc,
+                                 {"metadata_id": mid, "description": f"metadata {mid} {self.gdc_delete_result}",
+                                  "title": "WIS2 GDC WCMP2 deletion report"}, "INFO" if ok else "ERROR")
+                self._deliver("gb-sub", mon, json.dumps(ev).encode())
+            return
+        if self.gdc_download_fails:
+            ev = self._event("int.wmo.wis.wme.event.item.download", gdc,
+                             {"description": "404 Client Error: Not Found", "title": "WCMP2 access failure"},
+                             "ERROR", links=[{"rel": "canonical", "href": msg["links"][0]["href"]}])
+            self._deliver("gb-sub", mon, json.dumps(ev).encode())
+            return
         if self.gdc_sends_ets:
             tests = [{"id": f"http://wis.wmo.int/spec/wcmp/2/conf/core/{t}", "code": "FAILED", "message": m}
                      for t, m in self.gdc_ets_failed]
