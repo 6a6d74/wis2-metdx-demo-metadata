@@ -9,6 +9,23 @@ Status: **agreed 2026-10-29**. Nothing has been built yet. It builds on `pre/HAN
 - **One Pages deployment per merge (D1).** The per-record helpers start from "wait until live".
 - **KPI is informational:** logged, with an optional warning threshold. Only an ETS FAILED, a GB validation error, or a timeout fails a record.
 
+## Environment endpoints
+
+| Component | Endpoint |
+|---|---|
+| Local broker (EMQX) | `mqtts://y8f22c8c.ala.eu-central-1.emqxsl.com:8883` |
+| Global Broker (test) | `mqtts://gb.wis2dev.io:8883` |
+| **Labs Global Discovery Catalogue (where our records should end up)** | <https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata> |
+| Published records and catalogue | <https://6a6d74.github.io/wis2-metdx-demo-metadata/> |
+
+- The Labs GDC is an OGC API - Records endpoint:
+  - search: `/items?q=<text>&f=json`
+  - one record: `/items/<metadata-id>?f=json` (404 if absent)
+- It is **not** `wmo-resource-catalogue.wis2dev.io` (where `gdc.wis2dev.io` redirects), which is a separate catalogue.
+- Baseline check (2026-10-29): the Labs GDC held 604 records, none from `io-wis2dev-metdx-demo`.
+- **Phase 5 check:** after each publication, confirm the record appears in the Labs GDC with the expected content, and that a deletion removes it.
+- **Suggested enhancement (not yet agreed):** an optional final helper step that polls the Labs GDC for the record (`gdc.url` in config, with its own timeout). This would confirm the record is actually in the catalogue, not just that the ETS/KPI reports came back.
+
 ## Phase 0 findings (2026-10-29)
 
 - `everyone`/`everyone` connects to both brokers (MQTT v5 and 3.1.1). QoS 1 is granted on `origin/a/wis2/io-wis2dev-metdx-demo/#`, `.../metadata` (local and GB) and `monitor/a/wis2/io-wis2dev-metdx-demo/#` (GB).
