@@ -2,7 +2,8 @@
 """Listen on a broker and log every message for this centre (JSON Lines).
 
 Usage: python tools/listen.py [--broker gb|local] [--minutes N] [--out FILE]
-Subscribes to origin/a/wis2/<centre>/# and, on the GB, monitor/a/wis2/<centre>/#.
+Subscribes to origin/a/wis2/<centre>/# and, on the GB, also cache/a/wis2/<centre>/#
+(Global Cache re-notifications) and monitor/a/wis2/<centre>/#.
 """
 import argparse
 import json
@@ -27,7 +28,9 @@ cfg = config.load()
 centre = cfg["centre_id"]
 b = cfg["global_broker" if args.broker == "gb" else "local_broker"]
 host, port, tls = parse_url(b["url"])
-topics = [f"origin/a/wis2/{centre}/#"] + ([f"monitor/a/wis2/{centre}/#"] if args.broker == "gb" else [])
+topics = [f"origin/a/wis2/{centre}/#"]
+if args.broker == "gb":
+    topics += [f"cache/a/wis2/{centre}/#", f"monitor/a/wis2/{centre}/#"]
 out = Path(args.out or f"logs/listen-{args.broker}-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}.jsonl")
 out.parent.mkdir(parents=True, exist_ok=True)
 fh = out.open("a")
