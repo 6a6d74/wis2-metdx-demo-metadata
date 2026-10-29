@@ -16,7 +16,7 @@
     "type": "dataset",
     "title": "metdx-demo test surface observations",
     "description": "Test record used by the unit tests of the metdx-demo WIS2 metadata publisher. Not a real dataset.",
-    "keywords": ["surface", "observations", "test"],
+    "keywords": ["metdx-demo", "surface", "observations", "test"],
     "themes": [
       {
         "concepts": [{"id": "weather", "title": "Weather"}],
@@ -31,12 +31,12 @@
       }
     ],
     "created": "2026-10-29T00:00:00Z",
-    "updated": "2026-10-29T00:00:00Z",
+    "updated": "2026-10-29T20:17:16Z",
     "wmo:dataPolicy": "core"
   },
   "links": [
     {
-      "href": "mqtts://everyone:everyone@y8f22c8c.ala.eu-central-1.emqxsl.com:8883",
+      "href": "mqtts://everyone:everyone@gb.wis2dev.io:8883",
       "rel": "items",
       "channel": "origin/a/wis2/io-wis2dev-metdx-demo/data/core/weather/surface-based-observations/synop",
       "type": "application/geo+json",
