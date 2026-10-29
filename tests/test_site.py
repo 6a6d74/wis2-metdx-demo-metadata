@@ -142,3 +142,11 @@ def test_empty_index_renders(site_dir):
     cat = site.load_catalogue(site_dir)
     assert cat["records"] == {}
     assert "No records published yet" in site.render_index(cat)
+
+
+def test_rejected_badge(record):
+    entry = {"id": record["id"], "title": "x", "versions": [], "current_path": "metadata/a/a.S.json",
+             "last_publication": {"status": "failed", "ets": {"rejected": "Topic mismatch (a != b)", "failed": []},
+                                  "errors": ["GDC rejected the record: Topic mismatch (a != b)"]}}
+    html = site.render_index({"centre_id": "c", "records": {record["id"]: entry}})
+    assert "GDC rejected" in html and 'title="Topic mismatch (a != b)"' in html

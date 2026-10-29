@@ -11,7 +11,9 @@ Errors (fail the check):
   - a modified record changed its id, or did not advance properties.updated
   - files under metadata/ that are not metadata/<name>.json
 
-Warnings (reported only): ETS WARNING results, KPI below the configured threshold.
+Warnings (reported only): ETS WARNING results, KPI below the configured threshold,
+links that look copied from a catalogue's copy of the record (e.g. the GDC's
+root/self/alternate links).
 The KPI report is informational.
 
 Usage:
@@ -27,6 +29,7 @@ import sys
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import urlparse
 
 from . import changes as ch
 from . import config as cfgmod
@@ -142,6 +145,28 @@ def check_local_rules(record: dict, status: str, previous: dict | None, centre_i
             f"({previous['properties']['updated']})")
 
 
+CATALOGUE_PATH = "/collections/wis2-discovery-metadata"
+
+
+def check_catalogue_links(record: dict, gdc_url: str | None, result: RecordResult) -> None:
+    """Hint when links point at a discovery catalogue: usually copied from the GDC's copy
+    of a record. The GDC adds its own root/self/alternate/collection links, and "root" is
+    not a registered link relation, so the ETS fails on it."""
+    gdc_host = urlparse(gdc_url).hostname if gdc_url else None
+    copied = []
+    for link in record.get("links") or []:
+        href = link.get("href") if isinstance(link, dict) else None
+        if not isinstance(href, str):
+            continue
+        if (gdc_host and urlparse(href).hostname == gdc_host) or CATALOGUE_PATH in href:
+            copied.append(f"{link.get('rel')}: {href}")
+    if copied:
+        result.warnings.append(
+            f"{len(copied)} link(s) point at a discovery catalogue, so this record looks copied from the GDC. "
+            "Remove the catalogue's own links (root, self, alternate, collection) and keep the dataset's: "
+            + "; ".join(copied))
+
+
 def index_ids(root: Path) -> dict[str, list[str]]:
     """Map record id -> paths, over every record in the working tree."""
     ids: dict[str, list[str]] = {}
@@ -190,6 +215,7 @@ def validate(changes: list[ch.Change], cfg: dict, root: Path, base: str | None,
 
         check_local_rules(record, change.status, previous, centre_id, id_paths, change.path, result,
                           require_prefix=require_prefix)
+        check_catalogue_links(record, cfgmod.get(cfg, "global_discovery_catalogue", "url"), result)
         run_ets(record, relax, result)
         if run_kpis:
             run_kpi(record, warn_below, result)

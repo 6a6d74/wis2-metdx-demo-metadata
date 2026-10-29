@@ -177,3 +177,34 @@ def test_centre_prefix_required_by_default(repo, cfg, record):
     repo.write("metadata/obs.json", record)
     (r,) = run(repo, cfg, base, repo.commit())
     assert any("must start with" in e for e in r.errors)
+
+
+GDC_LINKS = [  # what the GDC adds to its copy of a record (as seen in PR #19)
+    {"rel": "root", "href": "https://wmo-resource-catalogue.labs.wis2dev.io?f=json", "type": "application/json"},
+    {"rel": "self", "href": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/x?f=json",
+     "type": "application/geo+json"},
+    {"rel": "collection", "href": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata",
+     "type": "application/json"},
+]
+
+
+def test_hint_for_links_copied_from_the_gdc(repo, cfg, record):
+    record["links"] += GDC_LINKS
+    base = repo.commit()
+    repo.write("metadata/obs.json", record)
+    (r,) = run(repo, cfg, base, repo.commit())
+    (hint,) = [w for w in r.warnings if "copied from the GDC" in w]
+    assert hint.startswith("3 link(s) point at a discovery catalogue")
+    assert "root: https://wmo-resource-catalogue.labs.wis2dev.io?f=json" in hint
+
+
+def test_hint_also_catches_other_catalogues_and_not_dataset_links(repo, cfg, record):
+    record["links"].append({"rel": "self", "type": "application/json",
+                            "href": "https://other-gdc.example/collections/wis2-discovery-metadata/items/x"})
+    record["links"].append({"rel": "collection", "type": "application/json",
+                            "href": "https://data.example/collections/operational-data?f=json"})
+    base = repo.commit()
+    repo.write("metadata/obs.json", record)
+    (r,) = run(repo, cfg, base, repo.commit())
+    (hint,) = [w for w in r.warnings if "copied from the GDC" in w]
+    assert hint.startswith("1 link(s)") and "other-gdc.example" in hint and "data.example" not in hint

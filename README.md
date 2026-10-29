@@ -86,6 +86,8 @@ To fix a problem, open your file on the PR's branch (**Files changed** → **⋯
 | `properties.updated must be later than the published version` | When editing an existing record, move `updated` to now. |
 | `id changed from … to …` | A record's `id` can't change. Delete the old file and add a new one instead. |
 | `Records must be metadata/<name>.json` | Move the file directly into `metadata/` and give it a `.json` extension. |
+| ⚠️ `link(s) point at a discovery catalogue, so this record looks copied from the GDC` | You started from the GDC's copy of a record. Remove the links pointing at the catalogue (`root`, `self`, `alternate`, `collection`) and keep the dataset's own links. |
+| `ETS links: invalid link relation root` | Usually the same cause: a `root` link copied from the GDC. Remove it. |
 
 The two ⚠️ warnings about `centre_id` (`identifier` and `links`) are expected: ours is a test centre-id. They don't block anything.
 
@@ -303,3 +305,7 @@ Use **Actions → Publish → Run workflow**:
 
 Each run's outcome (delivery, GB events, GDC ETS/KPI) is shown in the job summary and on the
 catalogue page, with full logs under `logs/<run-id>/` on the site.
+
+## License
+
+Licensed under the [Apache License, Version 2.0](LICENSE).
