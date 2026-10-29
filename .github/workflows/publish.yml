@@ -49,14 +49,14 @@ jobs:
     outputs:
       has_jobs: ${{ steps.plan.outputs.has_jobs }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           ref: gh-pages
           path: _site
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
@@ -99,12 +99,12 @@ jobs:
           git -C _site commit -q -m "Stage records for run $GITHUB_RUN_ID ($GITHUB_SHA)"
           git -C _site push -q origin gh-pages
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         if: steps.plan.outputs.has_jobs == 'true'
         with:
           path: _site
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: steps.plan.outputs.has_jobs == 'true'
         with:
           name: manifest
@@ -122,7 +122,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
   publish:
     needs: [prepare, deploy]
@@ -133,19 +133,19 @@ jobs:
     outputs:
       recorded: ${{ steps.record.outcome == 'success' }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           ref: gh-pages
           path: _site
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
       - run: pip install -r requirements.txt
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: manifest
 
@@ -173,13 +173,13 @@ jobs:
           git -C _site commit -q -m "Record results of run $GITHUB_RUN_ID"
           git -C _site push -q origin gh-pages
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         if: always() && steps.record.outcome == 'success'
         with:
           path: _site
           name: github-pages-report
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: publication-logs
@@ -209,6 +209,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
         with:
           artifact_name: github-pages-report

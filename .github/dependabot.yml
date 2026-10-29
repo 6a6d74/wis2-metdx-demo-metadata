@@ -1,0 +1,15 @@
+# Keep the GitHub Actions used by the workflows current. Updates arrive as PRs
+# and go through the same review + validate rules as any other change.
+# Python dependencies are pinned deliberately (pywcmp matches the GDC) and are
+# not managed here.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: "Actions"
