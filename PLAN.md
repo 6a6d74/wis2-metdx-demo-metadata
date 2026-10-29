@@ -128,8 +128,17 @@ The run was marked failed only because of the missing KPI. What the GDC source (
 | 2: config, validator, `validate.yml`, tests | done (PR #1) |
 | 3: MQTT, router, helpers, monitoring, orchestrator | done (PR #3) |
 | 4: Pages staging, catalogue, `publish.yml`, Labs GDC check | done (PR #4) |
-| 5: end-to-end test | first publication done; GDC behaviour fixes in PR; deletion test next |
+| 5: end-to-end test | new record (run 40938152129) and update (run 40947880316, fully green) done; GDC behaviour handled (PR #6); deletion test to do |
 | 6 | to do |
+
+## Follow-up tasks (recorded 2026-10-29, not scheduled)
+
+To raise with the **Labs GDC operators**, for example via `tomkralidis`:
+
+1. **Enable KPI reports.** The Labs GDC runs with `WMO_RESOURCE_CATALOGUE_RUN_KPI` off (the default), so it never sends WCMP2 KPI reports. If it is enabled, set `monitor.require_kpi: true` in `config/node.yml` to restore the original success rule (ETS **and** KPI received).
+2. **MQTT links rewritten to production Global Brokers.** The Labs GDC's copy of our record has its MQTT links pointing at the production GBs (`gb.wis.cma.cn`, `wis2globalbroker.nws.noaa.gov`, `globalbroker.inmet.gov.br`, `globalbroker.meteo.fr`) instead of the test GB `gb.wis2dev.io`. Ask whether this is intended for the Labs environment.
+
+Kept open meanwhile: [#7](https://github.com/6a6d74/wis2-metdx-demo-metadata/issues/7). `"length": 7` is explained (the GDC counts the parsed record's keys); a possible upstream report is pending a decision.
 
 ## 1. What we're building
 
