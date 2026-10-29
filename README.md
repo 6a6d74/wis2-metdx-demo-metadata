@@ -37,7 +37,80 @@ Deleting a file in a merged PR publishes a deletion notice.
 
 The browsable catalogue is at <https://6a6d74.github.io/wis2-metdx-demo-metadata/>.
 
-See [How it works](#how-it-works) and [Configuration](#configuration) below. The design history and findings are in [PLAN.md](PLAN.md).
+New here? Start with [Publish your first record](#publish-your-first-record). See also [How it works](#how-it-works) and [Configuration](#configuration). The design history and findings are in [PLAN.md](PLAN.md).
+
+## Publish your first record
+
+Everything happens in the GitHub web interface. You need to be a collaborator on this repository: accept the invitation from your email, or at <https://github.com/6a6d74/wis2-metdx-demo-metadata/invitations>.
+
+### 1. Write the record
+
+A record is one WCMP2 JSON file. Two ways to start:
+
+- Copy [`examples/record-template.json`](examples/record-template.json) and edit it. The template passes validation as it is.
+- Or use the [WCMP2 Metadata Editor](https://6a6d74.github.io/wcmp2-editor/), then download the JSON.
+
+Check these points:
+
+| Field | Rule |
+|---|---|
+| `id` | **Must** start with `urn:wmo:md:io-wis2dev-metdx-demo:`, followed by a short identifier for your dataset, with no spaces (e.g. `…:my-dataset`). It must be unique in this repository. |
+| `properties.keywords` | Please include `metdx-demo` (see the tip above). |
+| `properties.themes` | Include at least one theme using the `…/earth-system-discipline` scheme (e.g. `weather`). |
+| `properties.created`, `properties.updated` | Date-times with a timezone, e.g. `2026-10-30T09:00:00Z`. |
+| `properties.wmo:dataPolicy` | `core` or `recommended`. A `recommended` record also needs a link with `"rel": "license"`. |
+| MQTT link (if any) | Point it at the Global Broker: `mqtts://everyone:everyone@gb.wis2dev.io:8883`. |
+
+### 2. Propose it in a pull request
+
+1. Open the [`metadata/`](metadata/) folder on GitHub.
+2. Click **Add file → Upload files**, and drop in your file. Alternatively, use **Create new file**, name it, and paste the JSON. Name it after your dataset, e.g. `my-dataset.json`, directly in `metadata/` (no sub-folders).
+3. Under **Commit changes**, choose **Create a new branch for this commit and start a pull request**, then **Propose changes** → **Create pull request**.
+
+### 3. Read the validation report
+
+Within about a minute, the **Validate** check runs and posts a report comment on your PR. It shows:
+- ✅ or ❌ for each record
+- the WCMP2 ETS results
+- a KPI quality score (for information only)
+
+To fix a problem, open your file on the PR's branch (**Files changed** → **⋯** → **Edit file**) and commit to the same branch. The check re-runs and updates the same comment.
+
+| Message in the report | What to do |
+|---|---|
+| `not valid JSON` | A missing comma or quote, or a trailing comma. Paste the file into a JSON checker. |
+| `id must start with "urn:wmo:md:io-wis2dev-metdx-demo:"…` | Fix the `id` prefix. |
+| `id is also used by metadata/….json` | Pick a different identifier, or edit the existing file instead. |
+| `WCMP2 schema validation failed` + `schema: $.… is a required property` | Add the field named in the message. |
+| `ETS themes: No Earth system discipline based theme found` | Add a theme with the `earth-system-discipline` scheme (see the template). |
+| `properties.updated must be later than the published version` | When editing an existing record, move `updated` to now. |
+| `id changed from … to …` | A record's `id` can't change. Delete the old file and add a new one instead. |
+| `Records must be metadata/<name>.json` | Move the file directly into `metadata/` and give it a `.json` extension. |
+
+The two ⚠️ warnings about `centre_id` (`identifier` and `links`) are expected: ours is a test centre-id. They don't block anything.
+
+### 4. Get it approved and merge
+
+- Ask another collaborator to review. You can't approve your own PR. They go to **Files changed** → **Review changes** → **Approve**.
+- Once the check is green and the PR is approved, click **Merge pull request**. Merging **publishes the record to WIS2**.
+
+### 5. Watch it publish
+
+Publishing starts automatically and takes about 1–2 minutes. You can watch it under **Actions → Publish**, where the run's summary shows one row per record:
+- **Local / GB:** the notification was delivered by our broker and by the Global Broker.
+- **GDC ETS:** the Global Discovery Catalogue's validation of your record.
+- **In GDC:** the record is now in the Labs catalogue.
+
+Then find your record:
+- on the [catalogue page](https://6a6d74.github.io/wis2-metdx-demo-metadata/), with its checksum and history
+- in the [Labs GDC](https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items?q=metdx-demo)
+
+If a run shows ❌, its summary lists the reason for each record. Let the repository maintainer know.
+
+### Changing or removing a record later
+
+- **Change:** edit the file in a PR, keep the same `id`, and move `properties.updated` to now. Merging announces an update.
+- **Remove:** delete the file in a PR (open the file → **⋯** → **Delete file**). Merging announces a deletion, and the record disappears from the GDC.
 
 ## How it works
 
