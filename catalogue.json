@@ -17,8 +17,35 @@
         "run_id": "40938152129",
         "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/40938152129",
         "action": "canonical",
-        "status": "pending",
-        "stamp": "20261029T191359Z"
+        "status": "failed",
+        "stamp": "20261029T191359Z",
+        "stage": "done",
+        "message_id": "07afa15d-bec3-43a6-ab47-c272f18c531c",
+        "errors": [
+          "no WCMP2 KPI report from the GDC within 60s"
+        ],
+        "warnings": [],
+        "ets": {
+          "summary": {
+            "PASSED": 10,
+            "FAILED": 0,
+            "SKIPPED": 0,
+            "WARNING": 2
+          },
+          "source": "ca-eccc-msc-global-discovery-catalogue",
+          "failed": []
+        },
+        "kpi": null,
+        "gdc": {
+          "status": "present",
+          "seconds": 0.9,
+          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aio-wis2dev-metdx-demo%3Atest-surface-observations?f=json"
+        },
+        "delivered": {
+          "local": 0.15,
+          "gb": 0.17
+        },
+        "log": "logs/40938152129/test-surface-observations.jsonl"
       },
       "title": "metdx-demo test surface observations",
       "source_path": "metadata/test-surface-observations.json",
@@ -32,6 +59,6 @@
       "deleted_at": null
     }
   },
-  "published_commit": null,
-  "updated": "2026-10-29T19:14:01Z"
+  "published_commit": "12e94ed83ea8a69eb79455f434b862e06682add5",
+  "updated": "2026-10-29T19:16:04Z"
 }
