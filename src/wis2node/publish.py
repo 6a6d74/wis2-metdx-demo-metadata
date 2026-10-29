@@ -9,7 +9,7 @@ own job (and environment):
              and the Global Broker accept connections
   run        subscribe, then one helper thread per manifest job: wait until the
              record is live, publish the WNM, confirm delivery on both brokers,
-             collect GB/GDC monitoring events
+             collect GB/GDC monitoring events, confirm the GDC holds the record
 
 Exit codes: 0 all good, 1 one or more records failed, 2 configuration/preflight error.
 """
@@ -166,19 +166,21 @@ def preflight(cfg: dict, password: str, factory: ClientFactory = BrokerClient) -
 
 # ---------------------------------------------------------------- run
 def run(cfg: dict, jobs: list[Job], password: str, log_dir: Path, wait_for_pages: bool = True,
-        factory: ClientFactory = BrokerClient, live_check=None) -> list[Result]:
+        factory: ClientFactory = BrokerClient, **helper_overrides) -> list[Result]:
     run_log = JsonlLog(log_dir / "monitor.jsonl")
     router = Router(run_log)
     clients = open_clients(cfg, password, router, factory)
     try:
         subscribe_all(cfg, clients)
         timeouts = dict(cfg["timeouts"])
-        extra = {"live_check": live_check} if live_check else {}
+        gdc_url = cfgmod.get(cfg, "global_discovery_catalogue", "url") or None
+        gdc_interval = cfgmod.get(cfg, "global_discovery_catalogue", "poll_interval", default=10)
         helpers = [Helper(job, centre_id=cfg["centre_id"], publisher=clients["local-pub"], router=router,
                           timeouts=timeouts, log=JsonlLog(log_dir / f"{Path(job.source_path).stem}.jsonl"),
                           wait_for_pages=wait_for_pages,
                           ets_failures_as_warnings=cfgmod.get(cfg, "monitor", "ets_failures_as_warnings", default=[]),
-                          kpi_warn_below=cfgmod.get(cfg, "kpi", "warn_below_percentage"), **extra)
+                          kpi_warn_below=cfgmod.get(cfg, "kpi", "warn_below_percentage"),
+                          gdc_url=gdc_url, gdc_interval=gdc_interval, **helper_overrides)
                    for job in jobs]
         workers = max(1, min(len(helpers), cfgmod.get(cfg, "publish", "max_workers", default=4)))
         with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="helper") as pool:
@@ -198,17 +200,19 @@ def to_markdown(results: list[Result], dry_run: bool = False) -> str:
         return "\n".join(lines + ["No metadata records to announce."]) + "\n"
     bad = sum(not r.ok for r in results)
     lines.append(f"**{'❌ ' + str(bad) + ' of ' + str(len(results)) + ' record(s) failed' if bad else '✅ ' + str(len(results)) + ' record(s) published and verified'}**")
-    lines += ["", "| Record | Action | Local | GB | GB events | GDC ETS | GDC KPI | Result |",
-              "|---|---|---|---|---|---|---|---|"]
+    lines += ["", "| Record | Action | Local | GB | GB events | GDC ETS | GDC KPI | In GDC | Result |",
+              "|---|---|---|---|---|---|---|---|---|"]
     for r in results:
         def seen(src):
             return f"{r.delivered[src]}s" if src in r.delivered else "–"
         ets = ("–" if r.ets is None else
                ", ".join(f"{v} {k.lower()}" for k, v in (r.ets.get("summary") or {}).items() if v) or "received")
         kpi = "–" if r.kpi is None else f"{r.kpi.get('percentage')}% ({r.kpi.get('grade')})"
+        gdc = "–" if r.gdc is None else (f"[{r.gdc['status']}]({r.gdc['url']})"
+                                          + (f" {r.gdc['seconds']}s" if "seconds" in r.gdc else ""))
         icon = "✅" if r.ok else f"❌ ({r.stage})"
         lines.append(f"| [`{r.source_path}`]({r.url})<br>{r.metadata_id} | {r.action} | {seen(LOCAL)} | {seen(GB)} "
-                     f"| {len(r.gb_events)} | {ets} | {kpi} | {icon} |")
+                     f"| {len(r.gb_events)} | {ets} | {kpi} | {gdc} | {icon} |")
     for r in results:
         if r.errors or r.warnings:
             lines += ["", f"### `{r.source_path}`", f"message id `{r.message_id}`"]

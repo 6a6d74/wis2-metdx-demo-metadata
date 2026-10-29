@@ -24,7 +24,13 @@ Status: **agreed 2026-10-29**. Nothing has been built yet. It builds on `pre/HAN
 - It is **not** `wmo-resource-catalogue.wis2dev.io` (where `gdc.wis2dev.io` redirects), which is a separate catalogue.
 - Baseline check (2026-10-29): the Labs GDC held 604 records, none from `io-wis2dev-metdx-demo`.
 - **Phase 5 check:** after each publication, confirm the record appears in the Labs GDC with the expected content, and that a deletion removes it.
-- **Suggested enhancement (not yet agreed):** an optional final helper step that polls the Labs GDC for the record (`gdc.url` in config, with its own timeout). This would confirm the record is actually in the catalogue, not just that the ETS/KPI reports came back.
+- **GDC confirmation (agreed and implemented 2026-10-29, `wis2node.gdc`):** after the ETS/KPI stage, each helper polls `<url>/items/<metadata-id>?f=json`:
+  - For new or updated records, it polls until the GDC serves the record with the same `properties.updated` (else `created`) time as ours, compared as instants. The GDC adds its own properties and links, so the bytes can't be compared.
+  - For deletions, it polls until the item returns 404.
+  - Config: `global_discovery_catalogue.url` (empty disables the check), `.poll_interval` (10 s) and `timeouts.gdc` (120 s).
+  - It is skipped if publishing itself failed.
+  - The result appears in the job summary ("In GDC" column) and on the catalogue page (badge linking to the GDC item).
+  - Tested against the live Labs GDC: an existing record is found, a wrong version is reported, and an absent ID returns 404.
 
 ## Phase 0 findings (2026-10-29)
 

@@ -125,7 +125,7 @@ def record_results(manifest: dict, results: list[dict], site: Path, log_dir: Pat
             pub.update(status="not run", errors=["the publish step produced no result for this record"])
             continue
         pub.update(status="ok" if r["ok"] else "failed", stage=r["stage"], message_id=r["message_id"],
-                   errors=r["errors"], warnings=r["warnings"], ets=r["ets"], kpi=r["kpi"],
+                   errors=r["errors"], warnings=r["warnings"], ets=r["ets"], kpi=r["kpi"], gdc=r.get("gdc"),
                    delivered=r["delivered"], log=f"{rel_logs}/{Path(job['source_path']).stem}.jsonl")
     cat["published_commit"] = manifest["head"]
     save_catalogue(site, cat)
@@ -151,6 +151,11 @@ def _status_cell(pub: dict | None) -> str:
     kpi = pub.get("kpi")
     if kpi and kpi.get("percentage") is not None:
         parts.append(f'<span class="badge">KPI {_e(kpi.get("percentage"))}% {_e(kpi.get("grade") or "")}</span>')
+    gdc = pub.get("gdc")
+    if gdc:
+        ok = gdc.get("status") in ("present", "removed")
+        label = {"present": "in GDC ✓", "removed": "removed from GDC ✓"}.get(gdc.get("status"), "GDC ✗")
+        parts.append(f'<a class="badge {"ok" if ok else "bad"}" href="{_e(gdc.get("url"))}">{label}</a>')
     if pub.get("run_url"):
         parts.append(f'<a href="{_e(pub["run_url"])}">run</a>')
     if pub.get("log"):

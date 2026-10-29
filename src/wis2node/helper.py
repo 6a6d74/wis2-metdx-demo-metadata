@@ -20,6 +20,7 @@ from typing import Callable, Protocol
 
 from . import monitor as mon
 from . import wnm
+from .gdc import GDCError, item_url, wait_for_absence, wait_for_record
 from .mqtt import BrokerError
 from .pages import PagesError, wait_until_live
 
@@ -62,6 +63,7 @@ class Result:
     gb_events: list[dict] = field(default_factory=list)        # summaries of GB WNM events
     ets: dict | None = None
     kpi: dict | None = None
+    gdc: dict | None = None                                    # Labs GDC confirmation
     timings: dict[str, float] = field(default_factory=dict)
     log_file: str | None = None
 
@@ -157,7 +159,10 @@ class Helper:
                  timeouts: dict, log: JsonlLog, wait_for_pages: bool = True,
                  ets_failures_as_warnings: list[str] | None = None,
                  kpi_warn_below: float | None = None, clock=time.monotonic,
-                 live_check: Callable[..., float] = wait_until_live):
+                 live_check: Callable[..., float] = wait_until_live,
+                 gdc_url: str | None = None, gdc_interval: float = 10.0,
+                 gdc_present: Callable[..., float] = wait_for_record,
+                 gdc_absent: Callable[..., float] = wait_for_absence):
         self.job = job
         self.centre_id = centre_id
         self.publisher = publisher
@@ -169,6 +174,10 @@ class Helper:
         self.kpi_warn_below = kpi_warn_below
         self.clock = clock
         self.live_check = live_check
+        self.gdc_url = gdc_url
+        self.gdc_interval = gdc_interval
+        self.gdc_present = gdc_present
+        self.gdc_absent = gdc_absent
         self.inbox: queue.Queue = queue.Queue()
         self.message = self._build_message()
         self.message_id = self.message["id"]
@@ -223,6 +232,10 @@ class Helper:
                 if r.kpi is None:
                     r.errors.append(f"no WCMP2 KPI report from the GDC within {self.timeouts['monitor']}s")
             r.timings["monitor"] = round(self.clock() - t1, 1)
+
+            if self.gdc_url:
+                r.stage = "gdc"
+                self._check_gdc()
             r.stage = "done"
         except (PagesError, BrokerError) as exc:
             r.errors.append(str(exc))
@@ -234,6 +247,24 @@ class Helper:
             r.ok = not r.errors
             self.log.write("result", result=asdict(r))
         return r
+
+    def _check_gdc(self) -> None:
+        """Confirm the GDC now holds this version of the record (or, for a deletion, doesn't hold it)."""
+        r, j = self.result, self.job
+        deletion = j.action == wnm.DELETION
+        url = item_url(self.gdc_url, j.metadata_id)
+        try:
+            if deletion:
+                secs = self.gdc_absent(self.gdc_url, j.metadata_id, self.timeouts["gdc"], interval=self.gdc_interval)
+            else:
+                secs = self.gdc_present(self.gdc_url, j.metadata_id, j.datetime, self.timeouts["gdc"],
+                                        interval=self.gdc_interval)
+            r.gdc = {"status": "removed" if deletion else "present", "seconds": round(secs, 1), "url": url}
+            r.timings["gdc"] = round(secs, 1)
+        except GDCError as exc:
+            r.gdc = {"status": "not confirmed", "url": url}
+            r.errors.append(str(exc))
+        self.log.write("gdc", **r.gdc)
 
     def _await(self, done: Callable[[], bool], start: float, timeout: float) -> None:
         """Consume the inbox until done() or timeout, handling every item."""
