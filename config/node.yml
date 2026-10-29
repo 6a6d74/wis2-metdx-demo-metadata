@@ -54,6 +54,10 @@ monitor:
   # GDC ETS tests (short ids, e.g. "identifier", "links") whose FAILED result is
   # reported as a warning instead of an error. Empty: every FAILED is an error.
   ets_failures_as_warnings: []
+  # Whether a helper must also receive a GDC KPI report to succeed. The GDC only
+  # sends KPI reports when WMO_RESOURCE_CATALOGUE_RUN_KPI=true (off by default, and
+  # off on the Labs GDC as of 2026-10-29); a KPI report is recorded whenever one arrives.
+  require_kpi: false
 
 publish:
   # helper threads running at once

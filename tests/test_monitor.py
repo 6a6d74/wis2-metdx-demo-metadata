@@ -60,3 +60,19 @@ def test_kpi_report_and_other():
     assert mon.kpi_summary(kpi)["grade"] == "A"
     assert mon.classify({"type": "int.wmo.wis.wme.event", "data": {"content": {"title": "notice"}}}) == mon.OTHER
     assert mon.classify({}) == mon.OTHER and mon.wnm_id({}) is None and mon.metadata_id({}) is None
+
+
+def test_live_labs_gdc_ets_event():
+    ev = json.loads((FIXTURES / "gdc-ets-event.json").read_text())
+    assert mon.classify(ev) == mon.ETS_REPORT
+    assert mon.metadata_id(ev) == "urn:wmo:md:io-wis2dev-metdx-demo:test-surface-observations"
+    assert mon.ets_failures(ev) == []
+    assert mon.severity(ev) == "WARNING"
+    assert mon.link_hrefs(ev)[0].endswith("test-surface-observations.20261029T191359Z.json")
+
+
+def test_gdc_item_events():
+    deletion = {"type": "int.wmo.wis.wme.event.item.download", "data": {"severity": "INFO", "content": {
+        "metadata_id": "m", "description": "metadata m deleted", "title": "WIS2 GDC WCMP2 deletion report"}}}
+    assert mon.classify(deletion) == mon.ITEM_EVENT
+    assert mon.metadata_id(deletion) == "m" and mon.description(deletion) == "metadata m deleted"

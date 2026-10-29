@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-WNM_EVENT, ETS_REPORT, KPI_REPORT, OTHER = "wnm", "ets", "kpi", "other"
+WNM_EVENT, ETS_REPORT, KPI_REPORT, ITEM_EVENT, OTHER = "wnm", "ets", "kpi", "item", "other"
 
 
 def content(event: dict) -> dict:
@@ -33,6 +33,9 @@ def classify(event: dict) -> str:
         return KPI_REPORT
     if ".wnm." in etype or isinstance(content(event).get("wnm"), dict):
         return WNM_EVENT
+    # the GDC reports record download failures and deletions as "item.download"
+    if etype.endswith(".item.download"):
+        return ITEM_EVENT
     return OTHER
 
 
@@ -54,6 +57,19 @@ def metadata_id(event: dict) -> str | None:
         mid = (wnm.get("properties") or {}).get("metadata_id")
         return mid if isinstance(mid, str) else None
     return None
+
+
+def link_hrefs(event: dict) -> list[str]:
+    """hrefs of the event's links (top level, and under data)."""
+    hrefs = []
+    for links in (event.get("links"), (event.get("data") or {}).get("links")):
+        if isinstance(links, list):
+            hrefs += [lk["href"] for lk in links if isinstance(lk, dict) and isinstance(lk.get("href"), str)]
+    return hrefs
+
+
+def description(event: dict) -> str:
+    return str(content(event).get("description") or "")
 
 
 def severity(event: dict) -> str:
