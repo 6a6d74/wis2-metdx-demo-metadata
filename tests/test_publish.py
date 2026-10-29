@@ -368,3 +368,43 @@ def test_missing_local_broker_url_is_a_config_error(fast_cfg, net):
     fast_cfg["local_broker"]["url"] = ""
     with pytest.raises(ConfigError, match="LOCAL_BROKER_URL"):
         publish.preflight(fast_cfg, PASSWORD, factory=net.factory)
+
+
+# ---------------------------------------------------------------- records naming other centres
+def other_centre(record, centre="xx-other"):
+    r = json.loads(json.dumps(record))
+    r["id"] = f"urn:wmo:md:{centre}:obs"
+    return r
+
+
+def test_subscribes_to_monitor_topics_of_record_centres(fast_cfg, net, record, tmp_path):
+    run(fast_cfg, net, [job(other_centre(record)), job(record, path="metadata/own.json")], tmp_path)
+    assert set(net.clients["gb-sub"].subs) == {
+        "origin/a/wis2/io-wis2dev-metdx-demo/metadata",
+        "monitor/a/wis2/io-wis2dev-metdx-demo/#",
+        "monitor/a/wis2/xx-other/#"}
+
+
+def test_other_centre_record_accepted_when_gdc_allows(fast_cfg, net, record, tmp_path):
+    net.gdc_enforces_topic_match = False   # e.g. a GDC configured for the demo
+    (r,) = run(fast_cfg, net, [job(other_centre(record))], tmp_path)
+    assert r.ok, r.errors
+    assert r.ets["failed"] == []
+
+
+def test_gdc_topic_mismatch_is_reported_not_a_false_pass(fast_cfg, net, record, tmp_path):
+    from wis2node.gdc import GDCError
+
+    def not_registered(*args, **kwargs):
+        raise GDCError("record not in the GDC")
+
+    (r,) = run(fast_cfg, net, [job(other_centre(record))], tmp_path, gdc_present=not_registered)
+    assert not r.ok
+    assert any("Topic mismatch (io-wis2dev-metdx-demo != xx-other)" in e for e in r.errors)
+    assert any("record not in the GDC" in e for e in r.errors)
+
+
+def test_download_failure_matched_via_cache_url_filename(fast_cfg, net, record, tmp_path):
+    net.gdc_download_fails = True   # its link is the cache copy's URL, not our Pages URL
+    (r,) = run(fast_cfg, net, [job(record)], tmp_path)
+    assert any("WCMP2 access failure" in e for e in r.errors)

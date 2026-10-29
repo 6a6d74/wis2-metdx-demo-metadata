@@ -5,7 +5,8 @@ Errors (fail the check):
   - WCMP2 schema validation failure (checked separately: pywcmp leaves it out
     of the ETS summary)
   - any ETS test FAILED, or the ETS crashing on the record
-  - id does not start with urn:wmo:md:<centre-id>:
+  - id does not start with urn:wmo:md:<centre-id>: (unless
+    validation.require_centre_id_prefix is false)
   - id used by another record in metadata/
   - a modified record changed its id, or did not advance properties.updated
   - files under metadata/ that are not metadata/<name>.json
@@ -114,10 +115,11 @@ def run_kpi(record: dict, warn_below: float | None, result: RecordResult) -> Non
 
 
 def check_local_rules(record: dict, status: str, previous: dict | None, centre_id: str,
-                      id_paths: dict[str, list[str]], path: str, result: RecordResult) -> None:
+                      id_paths: dict[str, list[str]], path: str, result: RecordResult,
+                      require_prefix: bool = True) -> None:
     rid = record["id"]
     prefix = f"urn:wmo:md:{centre_id}:"
-    if not rid.startswith(prefix) or rid == prefix:
+    if require_prefix and (not rid.startswith(prefix) or rid == prefix):
         result.errors.append(f'id must start with "{prefix}" followed by a local identifier')
 
     others = [p for p in id_paths.get(rid, []) if p != path]
@@ -154,6 +156,7 @@ def validate(changes: list[ch.Change], cfg: dict, root: Path, base: str | None,
              run_kpis: bool = True) -> list[RecordResult]:
     centre_id = cfg["centre_id"]
     relax = cfgmod.get(cfg, "validation", "relax_centre_id_checks", default=True)
+    require_prefix = cfgmod.get(cfg, "validation", "require_centre_id_prefix", default=True)
     warn_below = cfgmod.get(cfg, "kpi", "warn_below_percentage")
     id_paths = index_ids(root)
     results = []
@@ -185,7 +188,8 @@ def validate(changes: list[ch.Change], cfg: dict, root: Path, base: str | None,
         if change.status == ch.MODIFIED and base:
             previous, _ = parse_record(ch.show(base, change.path, cwd=str(root)))
 
-        check_local_rules(record, change.status, previous, centre_id, id_paths, change.path, result)
+        check_local_rules(record, change.status, previous, centre_id, id_paths, change.path, result,
+                          require_prefix=require_prefix)
         run_ets(record, relax, result)
         if run_kpis:
             run_kpi(record, warn_below, result)

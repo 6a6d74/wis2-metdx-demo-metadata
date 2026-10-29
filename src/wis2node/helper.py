@@ -96,7 +96,7 @@ class Router:
     def __init__(self, run_log: JsonlLog | None = None):
         self._by_message: dict[str, "Helper"] = {}
         self._by_metadata: dict[str, "Helper"] = {}
-        self._by_url: dict[str, "Helper"] = {}
+        self._by_file: dict[str, "Helper"] = {}  # published filename (unique per publication)
         self._lock = threading.Lock()
         self._run_log = run_log
 
@@ -104,15 +104,15 @@ class Router:
         with self._lock:
             self._by_message[helper.message_id] = helper
             self._by_metadata[helper.job.metadata_id] = helper
-            self._by_url[helper.job.url] = helper
+            self._by_file[_filename(helper.job.url)] = helper
 
     def unregister(self, helper: "Helper") -> None:
         with self._lock:
             self._by_message.pop(helper.message_id, None)
             if self._by_metadata.get(helper.job.metadata_id) is helper:
                 del self._by_metadata[helper.job.metadata_id]
-            if self._by_url.get(helper.job.url) is helper:
-                del self._by_url[helper.job.url]
+            if self._by_file.get(_filename(helper.job.url)) is helper:
+                del self._by_file[_filename(helper.job.url)]
 
     def handler(self, source: str) -> Callable[[str, bytes, bool], None]:
         def on_message(topic: str, payload: bytes, retained: bool) -> None:
@@ -154,12 +154,17 @@ class Router:
                 return self._by_message[wid]
             if mon.classify(event) == mon.WNM_EVENT:
                 return None
-            # GDC reports: by metadata id (ETS, KPI, deletion), else by the record URL
-            # (download failures carry only a link to what the GDC tried to fetch)
+            # GDC reports: by metadata id (ETS, KPI, deletion), else by our published
+            # filename in the event's links (download failures and "Topic mismatch"
+            # carry no metadata id, only a link to the (cached) record)
             target = self._by_metadata.get(mon.metadata_id(event) or "")
             if target is None:
-                target = next((self._by_url[h] for h in mon.link_hrefs(event) if h in self._by_url), None)
+                target = next((self._by_file[f] for f in mon.link_filenames(event) if f in self._by_file), None)
             return target
+
+
+def _filename(url: str) -> str:
+    return url.rstrip("/").rsplit("/", 1)[-1]
 
 
 class Helper:
@@ -342,6 +347,10 @@ class Helper:
 
     def _on_ets(self, event: dict) -> None:
         failures = mon.ets_failures(event)
+        if not failures and mon.severity(event) in ("ERROR", "CRITICAL"):
+            # e.g. "Topic mismatch": the GDC rejected the record before running the tests
+            reason = mon.description(event) or mon.title(event)
+            failures = [{"id": "gdc", "code": "FAILED", "message": reason}]
         self.result.ets = {"summary": mon.report(event).get("summary"), "source": event.get("source"),
                            "failed": [{"test": mon.short_test_id(t), "message": t.get("message")} for t in failures]}
         for t in failures:

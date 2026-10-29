@@ -43,6 +43,7 @@ class FakeWIS2:
         self.gdc_report_style = "spec"    # "spec": report fields in data.content
         self.gdc_download_fails = False   # GDC can't fetch the record: item.download ERROR, no ETS
         self.gdc_delete_result = "deleted"  # "deleted" (INFO), "not found" (ERROR) or None (no report)
+        self.gdc_enforces_topic_match = True  # real GDC: record centre-id must equal the topic's
 
     def factory(self, name, url, username, password, prefix, on_message=None, label=None):
         self.urls[name] = (url, label)
@@ -79,6 +80,12 @@ class FakeWIS2:
         rel = msg["links"][0]["rel"]
         mid = msg["properties"]["metadata_id"]
         gdc = "ca-eccc-msc-global-discovery-catalogue"
+        # like the real chain: the GDC works from the Global Cache copy (same filename, other host)
+        # and reports ETS/KPI on the monitor topic of the centre named in the record's id
+        filename = msg["links"][0]["href"].rsplit("/", 1)[-1]
+        cached = f"https://cache.example/data/{self.centre}/metadata/20261030T000000Z/{filename}"
+        record_centre = mid.split(":")[3]
+        rec_mon = f"monitor/a/wis2/{record_centre}"
         if rel == "deletion":
             if self.gdc_delete_result:
                 ok = self.gdc_delete_result == "deleted"
@@ -90,8 +97,14 @@ class FakeWIS2:
         if self.gdc_download_fails:
             ev = self._event("int.wmo.wis.wme.event.item.download", gdc,
                              {"description": "404 Client Error: Not Found", "title": "WCMP2 access failure"},
-                             "ERROR", links=[{"rel": "canonical", "href": msg["links"][0]["href"]}])
+                             "ERROR", links=[{"rel": "related", "href": cached}])
             self._deliver("gb-sub", mon, json.dumps(ev).encode())
+            return
+        if self.gdc_enforces_topic_match and record_centre != self.centre:
+            ev = self._event("int.wmo.wis.wme.event.wcmp2.ets", gdc,
+                             {"description": f"Topic mismatch ({self.centre} != {record_centre})",
+                              "title": "Topic mismatch"}, "ERROR", links=[{"rel": "related", "href": cached}])
+            self._deliver("gb-sub", rec_mon, json.dumps(ev).encode())
             return
         if self.gdc_sends_ets:
             tests = [{"id": f"http://wis.wmo.int/spec/wcmp/2/conf/core/{t}", "code": "FAILED", "message": m}
@@ -102,12 +115,12 @@ class FakeWIS2:
             ev = self._event("int.wmo.wis.wme.event.wcmp2.ets", "io-wis2dev-global-discovery-catalogue", report)
             if self.gdc_stale_ets:
                 ev["time"] = iso(datetime.now(timezone.utc) - timedelta(hours=1))
-            self._deliver("gb-sub", mon, json.dumps(ev).encode())
+            self._deliver("gb-sub", rec_mon, json.dumps(ev).encode())
         if self.gdc_sends_kpi:
             report = {"id": str(uuid.uuid4()), "report_type": "kpi", "metadata_id": mid, "tests": [],
                       "summary": {"total": 20, "score": 17, "percentage": self.gdc_kpi_percentage, "grade": "A"}}
             ev = self._event("int.wmo.wis.wme.event.wcmp2.kpi", "io-wis2dev-global-discovery-catalogue", report)
-            self._deliver("gb-sub", mon, json.dumps(ev).encode())
+            self._deliver("gb-sub", rec_mon, json.dumps(ev).encode())
 
 
 class FakeClient:

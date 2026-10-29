@@ -154,11 +154,20 @@ def close_all(clients: dict[str, BrokerClient]) -> None:
             LOG.warning("error closing %s", c.name, exc_info=True)
 
 
-def subscribe_all(cfg: dict, clients: dict[str, BrokerClient]) -> None:
+def record_centres(jobs: list[Job]) -> set[str]:
+    """Centre-ids named in the records' ids (urn:wmo:md:<centre-id>:...)."""
+    parts = (j.metadata_id.split(":") for j in jobs)
+    return {p[3] for p in parts if len(p) > 4 and p[3]}
+
+
+def subscribe_all(cfg: dict, clients: dict[str, BrokerClient], jobs: list[Job] | None = None) -> None:
+    """The GDC reports on monitor/a/wis2/<centre-id of the record>, which differs from ours
+    when a record's id names another centre, so subscribe to those centres' topics too."""
     centre = cfg["centre_id"]
     timeout = cfg["timeouts"]["broker_connect"]
+    monitor = [f"monitor/a/wis2/{c}/#" for c in sorted({centre} | record_centres(jobs or []))]
     clients["local-sub"].subscribe([f"origin/a/wis2/{centre}/metadata"], timeout)
-    clients["gb-sub"].subscribe([f"origin/a/wis2/{centre}/metadata", f"monitor/a/wis2/{centre}/#"], timeout)
+    clients["gb-sub"].subscribe([f"origin/a/wis2/{centre}/metadata", *monitor], timeout)
 
 
 def preflight(cfg: dict, password: str, factory: ClientFactory = BrokerClient) -> None:
@@ -173,7 +182,7 @@ def run(cfg: dict, jobs: list[Job], password: str, log_dir: Path, wait_for_pages
     router = Router(run_log)
     clients = open_clients(cfg, password, router, factory)
     try:
-        subscribe_all(cfg, clients)
+        subscribe_all(cfg, clients, jobs)
         timeouts = dict(cfg["timeouts"])
         gdc_url = cfgmod.get(cfg, "global_discovery_catalogue", "url") or None
         gdc_interval = cfgmod.get(cfg, "global_discovery_catalogue", "poll_interval", default=10)
