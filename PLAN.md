@@ -116,7 +116,10 @@ The run was marked failed only because of the missing KPI. What the GDC source (
 - **The GDC reports download failures and deletions as type `….item.download`**:
   - A download failure is ERROR "WCMP2 access failure". It has no `metadata_id`, only a link to the URL fetched, so the router now matches it by the record URL.
   - A deletion gives INFO "metadata … deleted" or ERROR "… not found", with `metadata_id`. A deletion helper now finishes when this report arrives. A missing report is a warning, an ERROR fails the record, and the GDC 404 check still confirms the deletion.
-- The ETS event links to a GDC-cached copy of the record on S3, with `"length": 7` (the record is 1455 bytes). This looks like a GDC-side bug; worth reporting.
+- The ETS event links to a copy of the record on S3 with `"length": 7`. The record is 1455 bytes, and the S3 copy is byte-identical.
+  - Our WNM declared 1455.
+  - The S3 path looks like a **Global Cache** layout, so the GDC likely processed a cache re-notification.
+  - **Under investigation here** ([#7](https://github.com/6a6d74/wis2-metdx-demo-metadata/issues/7)) before assuming a cause elsewhere.
 
 ## Progress
 
