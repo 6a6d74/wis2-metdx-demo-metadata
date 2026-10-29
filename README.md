@@ -30,7 +30,7 @@ python -m wis2node.validate metadata/my-record.json
 
 - `tools/check_publisher.py`: checks the publisher login and, with `--publish`, the end-to-end path
   through the local broker and the GB, logging any monitor events.
-- `tools/listen.py`: logs everything on this centre's origin and monitor topics (GB or local broker)
+- `tools/listen.py`: logs everything on this centre's origin, cache and monitor topics (GB or local broker)
   for N minutes. It's useful for watching a publication independently of the workflow.
 
 ## Re-announcing records
