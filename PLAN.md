@@ -40,14 +40,32 @@ Status: **agreed 2026-10-29**. Nothing has been built yet. It builds on `pre/HAN
   - **Risk for Phase 5:** if the wis2dev GDC runs the ETS strictly, its ETS report will contain FAILED results for every record. That's to be confirmed on the first publish, and we may need to agree how to treat it.
 - Local macOS (python.org build) needs `SSL_CERT_FILE=$(python -m certifi)` for `pywcmp bundle sync`. The runners don't.
 
+## Phase 3 findings and design adjustments
+
+- **WNM schema (1.3.0) requires `properties.datetime`** (or `start_datetime`+`end_datetime`), and `null` is allowed. Without it, every message would have triggered a GB `wnm.validation.schema` error. We set it to the record's `properties.updated`, falling back to `created`. The tests validate the built messages against the official schema (`tests/fixtures/wnm-1.3.0-bundled.json`).
+- **The Pages deployment needs its own job** (`github-pages` environment) while publishing needs `wis2-publish`, so the run is split into three steps connected by a **manifest**:
+  - `python -m wis2node.publish plan` writes `manifest.json`: what to announce and each record's timestamped URL.
+  - `... preflight` checks the brokers. It runs before anything is staged.
+  - `... run --manifest` handles the subscriptions, helpers, delivery check, monitoring and report.
+  - Exit codes: 0 OK, 1 some records failed, 2 config/preflight error.
+- **Renames:** a file renamed with the same `id` is announced once as `update`, and its deletion is dropped.
+- **Deletions:** `href` is the record's `current_url` from `catalogue.json` (Phase 4), falling back to the source path.
+- **Monitoring clock:** the `monitor` timeout starts once delivery is confirmed, or when the delivery wait times out. Events stay queued from the moment of publishing, so none are missed.
+- **New config:**
+  - `timeouts.clock_skew` (30 s): ETS/KPI events timestamped earlier than publish time minus this are ignored as stale.
+  - `monitor.ets_failures_as_warnings`: GDC ETS test ids to downgrade, e.g. `identifier` if the GDC is strict about our test centre-id.
+  - `publish.max_workers`.
+- Checked against the live brokers: `preflight`, `open_clients` and `subscribe_all` succeed, and a bad password is reported with the client name.
+
 ## Progress
 
 | Phase | Status |
 |---|---|
 | 0: checks | done 2026-10-29 |
 | 1: repo, Pages, environment, ruleset | done 2026-10-29 |
-| 2: config, validator, `validate.yml`, tests | in PR |
-| 3-6 | to do |
+| 2: config, validator, `validate.yml`, tests | done (PR #1) |
+| 3: MQTT, router, helpers, monitoring, orchestrator | in PR |
+| 4-6 | to do |
 
 ## 1. What we're building
 

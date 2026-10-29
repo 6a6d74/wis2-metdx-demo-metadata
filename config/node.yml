@@ -29,6 +29,8 @@ timeouts:  # seconds
   pages_live: 300
   delivery: 60
   monitor: 60
+  # monitoring events timestamped more than this before our publish are ignored as stale
+  clock_skew: 30
 
 kpi:
   # Warn (never fail) when a GDC KPI percentage is below this value; null disables.
@@ -39,3 +41,12 @@ validation:
   # centre). true reports those checks as warnings; our own rule still requires
   # ids to start with urn:wmo:md:<centre_id>:.
   relax_centre_id_checks: true
+
+monitor:
+  # GDC ETS tests (short ids, e.g. "identifier", "links") whose FAILED result is
+  # reported as a warning instead of an error. Empty: every FAILED is an error.
+  ets_failures_as_warnings: []
+
+publish:
+  # helper threads running at once
+  max_workers: 4
