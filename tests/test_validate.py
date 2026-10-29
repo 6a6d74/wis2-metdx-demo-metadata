@@ -147,3 +147,14 @@ def test_cli_exit_codes(repo, cfg, record, monkeypatch, tmp_path):
     repo.commit()
     assert v.main(["--base", base, "--config", conf, "--no-kpi"]) == 1
     assert v.main(["--base", "deadbeef", "--config", conf]) == 2
+
+
+def test_example_template_passes_validation(repo, cfg):
+    """examples/record-template.json is what collaborators copy: keep it valid."""
+    from pathlib import Path
+    template = (Path(__file__).parent.parent / "examples" / "record-template.json").read_text()
+    base = repo.commit()
+    repo.write("metadata/my-dataset.json", template)
+    (r,) = run(repo, cfg, base, repo.commit())
+    assert r.ok, r.errors
+    assert r.ets["summary"]["FAILED"] == 0

@@ -129,7 +129,7 @@ The run was marked failed only because of the missing KPI. What the GDC source (
 | 3: MQTT, router, helpers, monitoring, orchestrator | done (PR #3) |
 | 4: Pages staging, catalogue, `publish.yml`, Labs GDC check | done (PR #4) |
 | 5: end-to-end test | **done 2026-10-29**: new record (run 40938152129; failed only on the then-required KPI), update (run 40947880316) and deletion (run 40950578470) both fully green. Deletion chain: WNM → cache re-notification (+0.2 s) → GDC `item.download` INFO "deleted" (+0.03 s) → Labs GDC 404 (+0.5 s). GDC behaviour handled in PR #6. |
-| 6 | to do |
+| 6: collaborator guide | README "Publish your first record" walkthrough, troubleshooting table and `examples/record-template.json` (kept valid by a unit test) |
 
 ## Follow-up tasks (recorded 2026-10-29, not scheduled)
 
