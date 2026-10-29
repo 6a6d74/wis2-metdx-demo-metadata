@@ -19,8 +19,10 @@ def net():
 
 
 @pytest.fixture
-def fast_cfg(cfg):
+def fast_cfg(cfg, monkeypatch):
+    monkeypatch.delenv("LOCAL_BROKER_URL", raising=False)
     cfg["timeouts"].update(delivery=1, monitor=1, pages_live=1, broker_connect=1)
+    cfg["local_broker"]["url"] = "mqtts://local.example:8883"   # in Actions: the LOCAL_BROKER_URL secret
     return cfg
 
 
@@ -348,3 +350,21 @@ def test_gdc_skipped_when_publish_fails(fast_cfg, net, record, tmp_path):
     (r,) = run(fast_cfg, net, [job(record)], tmp_path,
                gdc_present=lambda *a, **k: pytest.fail("GDC should not be polled"))
     assert r.gdc is None and r.stage == "publish"
+
+
+# ---------------------------------------------------------------- local broker URL kept private
+def test_local_broker_url_from_secret_and_hidden_in_logs(fast_cfg, net, monkeypatch, caplog):
+    import logging
+    monkeypatch.setenv("LOCAL_BROKER_URL", "mqtts://secret-host.example:8883")
+    with caplog.at_level(logging.INFO):
+        publish.preflight(fast_cfg, PASSWORD, factory=net.factory)
+    assert net.urls["local-pub"] == ("mqtts://secret-host.example:8883", "local broker")
+    assert net.urls["local-sub"][0] == "mqtts://secret-host.example:8883"
+    assert "secret-host" not in caplog.text and "local broker" in caplog.text
+
+
+def test_missing_local_broker_url_is_a_config_error(fast_cfg, net):
+    from wis2node.config import ConfigError
+    fast_cfg["local_broker"]["url"] = ""
+    with pytest.raises(ConfigError, match="LOCAL_BROKER_URL"):
+        publish.preflight(fast_cfg, PASSWORD, factory=net.factory)

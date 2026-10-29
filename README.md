@@ -3,6 +3,25 @@
 A no-code WIS2 Node for the SG-FIT **metdx-demo** activity. It publishes WCMP2 discovery
 metadata into the WIS2 test environment (`gb.wis2dev.io`).
 
+> [!TIP]
+> **Collaborators: please add the keyword `metdx-demo` to your records.** It isn't mandatory,
+> but it makes the demo's records easy to find in the Global Discovery Catalogue. Add it to
+> `properties.keywords`:
+>
+> ```json
+> {
+>   "id": "urn:wmo:md:io-wis2dev-metdx-demo:my-dataset",
+>   "properties": {
+>     "title": "My dataset",
+>     "keywords": ["metdx-demo", "surface", "observations"]
+>   }
+> }
+> ```
+>
+> Find them with
+> [`…/items?q=metdx-demo`](https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items?q=metdx-demo)
+> in the Labs GDC.
+
 To publish a record, add or change a JSON file in [`metadata/`](metadata/) through a pull
 request. Once a collaborator approves the PR and validation passes, merging it publishes the
 record:
@@ -29,7 +48,7 @@ This repository is a minimal **WIS2 Node** that runs entirely on GitHub, with no
 | Metadata authoring and change control | this repo: pull requests to `metadata/` |
 | Validation | the **Validate** workflow, a required check on every PR |
 | HTTP endpoint serving the records | **GitHub Pages**, from the `gh-pages` branch |
-| Local broker (where notifications are published) | **EMQX** Serverless (`config/node.yml` → `local_broker`) |
+| Local broker (where notifications are published) | **EMQX** Serverless (address held in the `LOCAL_BROKER_URL` secret) |
 | Publishing and verification | the **Publish** workflow, on merge to `main` |
 
 Downstream WIS2 components that we only observe:
@@ -109,7 +128,7 @@ Settings live in [`config/node.yml`](config/node.yml). Change them through a PR,
 | Setting | Default | Meaning |
 |---|---|---|
 | `centre_id` | `io-wis2dev-metdx-demo` | WIS2 centre-id. Used in topics, `data_id`, and the required record-`id` prefix. |
-| `local_broker.url` | `mqtts://y8f22c8c.ala.eu-central-1.emqxsl.com:8883` | Broker we publish to (`mqtts://` = TLS). |
+| `local_broker.url` | `""` | **Not set here:** the local broker address is kept as the `LOCAL_BROKER_URL` secret, so it isn't advertised. It is used only if the secret is absent. |
 | `local_broker.subscribe.username` / `.password` | `everyone` / `everyone` | Used to confirm delivery. These are the standard public WIS2 credentials. |
 | `local_broker.publish.username` | `sgfit` | Publisher login. The password is **not** in this file (see below). |
 | `global_broker.url` | `mqtts://gb.wis2dev.io:8883` | Global Broker to confirm delivery on and to receive monitoring events from. |
@@ -129,11 +148,21 @@ Settings live in [`config/node.yml`](config/node.yml). Change them through a PR,
 | `monitor.require_kpi` | `false` | Require a GDC KPI report for success. The GDC only sends KPI reports when its `WMO_RESOURCE_CATALOGUE_RUN_KPI` setting is on, and that is off on the Labs GDC. |
 | `publish.max_workers` | `4` | Number of records published in parallel. |
 
-**Secret:** the publisher password is the `LOCAL_BROKER_PUB_PASSWORD` secret in the `wis2-publish` GitHub environment. Only workflows running from `main` can use it, so collaborators never see it and PRs from forks never get it. To change it:
+**Secrets** are kept in the `wis2-publish` GitHub environment. Only workflows running from `main` can use them, so collaborators never see them and PRs from forks never get them.
+
+| Secret | Contents |
+|---|---|
+| `LOCAL_BROKER_URL` | Local broker address, e.g. `mqtts://<host>:8883`. Kept secret so it isn't advertised. GitHub masks it in workflow logs, and the code refers to it only as "local broker". |
+| `LOCAL_BROKER_PUB_PASSWORD` | Publisher password for `local_broker.publish.username`. |
+
+To set or change one (you are prompted for the value):
 
 ```
+gh secret set LOCAL_BROKER_URL --env wis2-publish -R 6a6d74/wis2-metdx-demo-metadata
 gh secret set LOCAL_BROKER_PUB_PASSWORD --env wis2-publish -R 6a6d74/wis2-metdx-demo-metadata
 ```
+
+For local runs of the tools, export `LOCAL_BROKER_URL` (and `LOCAL_BROKER_PUB_PASSWORD` where needed) in your shell.
 
 **Environment overrides (local runs):** any setting can be overridden with an environment variable named `WIS2_` followed by its path in upper case, joined with underscores. For example, `WIS2_TIMEOUTS_DELIVERY=90` or `WIS2_GLOBAL_BROKER_URL=mqtts://other:8883`. Lists are comma-separated, and `null` clears a value. The workflows don't set any overrides, so in Actions `config/node.yml` is what applies.
 

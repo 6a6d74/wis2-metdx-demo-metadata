@@ -13,7 +13,7 @@ Status: **agreed 2026-10-29**. Nothing has been built yet. It builds on `pre/HAN
 
 | Component | Endpoint |
 |---|---|
-| Local broker (EMQX) | `mqtts://y8f22c8c.ala.eu-central-1.emqxsl.com:8883` |
+| Local broker (EMQX) | kept as the `LOCAL_BROKER_URL` secret (not advertised; decided 2026-10-29) |
 | Global Broker (test) | `mqtts://gb.wis2dev.io:8883` |
 | **Labs Global Discovery Catalogue (where our records should end up)** | <https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata> |
 | Published records and catalogue | <https://6a6d74.github.io/wis2-metdx-demo-metadata/> |
@@ -140,7 +140,7 @@ This is a minimal WIS2 Node that runs entirely on GitHub, with no server:
 | Metadata authoring and change control | GitHub repo + pull requests (PRs) |
 | Validation | GitHub Actions check on each PR (required for merge) |
 | HTTP endpoint for records | GitHub Pages (immutable, timestamped files) |
-| Local broker | EMQX Serverless `mqtts://y8f22c8c.ala.eu-central-1.emqxsl.com:8883` |
+| Local broker | EMQX Serverless (address in the `LOCAL_BROKER_URL` secret) |
 | Publishing notifications | GitHub Actions job on merge to `main` |
 | Proof of delivery and quality | Subscriptions to local broker + `gb.wis2dev.io`, capturing GB and GDC monitoring events |
 | Browsable catalogue | `index.html` + `catalogue.json` on Pages, with SHA-512 checksums |
@@ -183,7 +183,7 @@ The **`gh-pages` branch** is the published-state store. It holds every timestamp
 ```yaml
 centre_id: io-wis2dev-metdx-demo
 local_broker:
-  url: mqtts://y8f22c8c.ala.eu-central-1.emqxsl.com:8883
+  url: ""   # from the LOCAL_BROKER_URL secret
   subscribe: {username: everyone, password: everyone}
   publish:   {username: sgfit}          # password from secret LOCAL_BROKER_PUB_PASSWORD
 global_broker:
