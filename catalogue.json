@@ -25,8 +25,24 @@
         "run_id": "40950578470",
         "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/40950578470",
         "action": "deletion",
-        "status": "pending",
-        "stamp": "20261029T203703Z"
+        "status": "ok",
+        "stamp": "20261029T203703Z",
+        "stage": "done",
+        "message_id": "159e848f-d5cb-4daf-b3af-bbeb0acd0fed",
+        "errors": [],
+        "warnings": [],
+        "ets": null,
+        "kpi": null,
+        "gdc": {
+          "status": "removed",
+          "seconds": 0.5,
+          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aio-wis2dev-metdx-demo%3Atest-surface-observations?f=json"
+        },
+        "delivered": {
+          "local": 0.09,
+          "gb": 0.16
+        },
+        "log": "logs/40950578470/test-surface-observations.jsonl"
       },
       "title": "metdx-demo test surface observations",
       "source_path": "metadata/test-surface-observations.json",
@@ -40,6 +56,6 @@
       "deleted_at": "2026-10-29T20:37:05Z"
     }
   },
-  "published_commit": "196ab9d436703695e576184e76a6b6d466e78b21",
-  "updated": "2026-10-29T20:37:05Z"
+  "published_commit": "9e5df4b72cbf01b050901080667742539262b92b",
+  "updated": "2026-10-29T20:37:49Z"
 }
