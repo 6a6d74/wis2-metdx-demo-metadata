@@ -33,3 +33,9 @@ timeouts:  # seconds
 kpi:
   # Warn (never fail) when a GDC KPI percentage is below this value; null disables.
   warn_below_percentage: null
+
+validation:
+  # pywcmp fails centre-ids that are not in the official WIS2 list (ours is a test
+  # centre). true reports those checks as warnings; our own rule still requires
+  # ids to start with urn:wmo:md:<centre_id>:.
+  relax_centre_id_checks: true

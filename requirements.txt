@@ -1,0 +1,2 @@
+# Installed by the workflows; keep in step with pyproject.toml.
+-e .
