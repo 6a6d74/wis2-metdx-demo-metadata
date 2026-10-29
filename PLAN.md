@@ -119,6 +119,17 @@ The run was marked failed only because of the missing KPI. What the GDC source (
 - **`"length": 7` in the ETS event's link is explained ([#7](https://github.com/6a6d74/wis2-metdx-demo-metadata/issues/7)).** The GDC sets `length = len(self.metadata)`, and `self.metadata` is the parsed record (a dict), so the value is the count of top-level keys (7 for us), not bytes. No change is needed here. A possible upstream fix is `len(self.source)`.
 - **The test environment has a cache hop for metadata.** Something copies records to an S3 bucket (`tests3-tests352b11fd6-l4o6wt8gtoam.s3.amazonaws.com/data/<centre>/metadata/<timestamp>/…`) and re-announces them on `cache/a/wis2/<centre>/metadata`. The GDC processes that re-notification, which is why its event links to S3, not to Pages. Which component does this, and whether it is a full Global Cache, is still to be confirmed with the test environment operators.
 
+## Records naming other centres (2026-10-30)
+
+For the demo, records may appear to come from many WIS centres, so `validation.require_centre_id_prefix` (code default `true`) is set to `false` in `config/node.yml`.
+
+**Downstream constraint:** the GDC (`wmo-resource-catalogue`, `registrar.register`) compares the centre-id in the record's `id` with the centre-id of the topic it arrived on (ours). If they differ, it **does not register the record**. It publishes a `wcmp2.ets` ERROR "Topic mismatch (<topic centre> != <record centre>)" to `monitor/a/wis2/<record centre>`. This check is unconditional in the current upstream code, so whether the Labs GDC accepts such records depends on how it is deployed (see follow-up task 3).
+
+Publisher changes so that such records are reported correctly:
+- The publisher also subscribes to `monitor/a/wis2/<centre>/#` for every centre named in the run's records. The GDC reports ETS/KPI to the record's centre, not ours.
+- Events without `metadata_id` (download failures, "Topic mismatch") are matched by our **published filename**. Their links point at the Global Cache copy, which keeps our timestamped filename but not our Pages URL.
+- A `wcmp2.ets` event with severity ERROR and no test results (e.g. "Topic mismatch") counts as a failure, not as an ETS pass.
+
 ## Progress
 
 | Phase | Status |
@@ -138,9 +149,11 @@ To raise with the **Labs GDC operators**, for example via `tomkralidis`:
 1. **Enable KPI reports.** The Labs GDC runs with `WMO_RESOURCE_CATALOGUE_RUN_KPI` off (the default), so it never sends WCMP2 KPI reports. If it is enabled, set `monitor.require_kpi: true` in `config/node.yml` to restore the original success rule (ETS **and** KPI received).
 2. **MQTT links rewritten to production Global Brokers.** The Labs GDC's copy of our record has its MQTT links pointing at the production GBs (`gb.wis.cma.cn`, `wis2globalbroker.nws.noaa.gov`, `globalbroker.inmet.gov.br`, `globalbroker.meteo.fr`) instead of the test GB `gb.wis2dev.io`. Ask whether this is intended for the Labs environment.
 
+3. **Records naming other centres.** Ask whether the Labs GDC accepts records whose `id` centre-id differs from the publishing topic's centre-id. Upstream it rejects them unconditionally ("Topic mismatch"). If it doesn't accept them, publishing such records from this node won't put them in the catalogue.
+
 Also deferred (our own work):
 
-3. **D8: "open PR" button in `6a6d74/wcmp2-editor`** that pre-fills a new `metadata/<name>.json` in this repo (see section 8).
+4. **D8: "open PR" button in `6a6d74/wcmp2-editor`** that pre-fills a new `metadata/<name>.json` in this repo (see section 8).
 
 Kept open meanwhile: [#7](https://github.com/6a6d74/wis2-metdx-demo-metadata/issues/7). `"length": 7` is explained (the GDC counts the parsed record's keys); a possible upstream report is pending a decision.
 

@@ -51,6 +51,12 @@ validation:
   # centre). true reports those checks as warnings; our own rule still requires
   # ids to start with urn:wmo:md:<centre_id>:.
   relax_centre_id_checks: true
+  # Require record ids to start with urn:wmo:md:<centre_id>: (default true: normally
+  # a node only publishes its own records). false for this demo, where records
+  # appear to come from many WIS centres. Note: the GDC compares the record's
+  # centre-id with the publishing topic's and, unless configured otherwise, does
+  # not register records that differ ("Topic mismatch"). See PLAN.md.
+  require_centre_id_prefix: false
 
 monitor:
   # GDC ETS tests (short ids, e.g. "identifier", "links") whose FAILED result is

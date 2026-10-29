@@ -54,7 +54,7 @@ Check these points:
 
 | Field | Rule |
 |---|---|
-| `id` | **Must** start with `urn:wmo:md:io-wis2dev-metdx-demo:`, followed by a short identifier for your dataset, with no spaces (e.g. `…:my-dataset`). It must be unique in this repository. |
+| `id` | `urn:wmo:md:<centre-id>:<identifier>`, with no spaces, e.g. `urn:wmo:md:io-wis2dev-metdx-demo:my-dataset`. For this demo, the centre-id may be another WIS centre's (`validation.require_centre_id_prefix` is off). It must be unique in this repository. |
 | `properties.keywords` | Please include `metdx-demo` (see the tip above). |
 | `properties.themes` | Include at least one theme using the `…/earth-system-discipline` scheme (e.g. `weather`). |
 | `properties.created`, `properties.updated` | Date-times with a timezone, e.g. `2026-10-30T09:00:00Z`. |
@@ -79,7 +79,7 @@ To fix a problem, open your file on the PR's branch (**Files changed** → **⋯
 | Message in the report | What to do |
 |---|---|
 | `not valid JSON` | A missing comma or quote, or a trailing comma. Paste the file into a JSON checker. |
-| `id must start with "urn:wmo:md:io-wis2dev-metdx-demo:"…` | Fix the `id` prefix. |
+| `id must start with "urn:wmo:md:io-wis2dev-metdx-demo:"…` | Only shown if `validation.require_centre_id_prefix` is on: fix the `id` prefix. |
 | `id is also used by metadata/….json` | Pick a different identifier, or edit the existing file instead. |
 | `WCMP2 schema validation failed` + `schema: $.… is a required property` | Add the field named in the message. |
 | `ETS themes: No Earth system discipline based theme found` | Add a theme with the `earth-system-discipline` scheme (see the template). |
@@ -249,6 +249,7 @@ Settings live in [`config/node.yml`](config/node.yml). Change them through a PR,
 | `timeouts.gdc` | `120` | Seconds for the GDC to show the record (or remove it). |
 | `timeouts.clock_skew` | `30` | GDC reports dated more than this many seconds before our publish are ignored as stale. |
 | `kpi.warn_below_percentage` | `null` | Warn (never fail) when a KPI score is below this value. |
+| `validation.require_centre_id_prefix` | `true` (code default); **`false` in this repo** | Require record ids to start with `urn:wmo:md:<centre_id>:`. Normally a node publishes only its own records. It is off here because demo records appear to come from many WIS centres. Note that the GDC compares the record's centre-id with the publishing topic's ("Topic mismatch") and, unless it is configured otherwise, does not register records that differ. |
 | `validation.relax_centre_id_checks` | `true` | pywcmp fails centre-ids that aren't in the official WIS2 list, and ours is a test centre. `true` reports those tests as warnings. Our own prefix rule still applies. |
 | `monitor.ets_failures_as_warnings` | `[]` | GDC ETS tests (short names, e.g. `identifier`) whose FAILED result counts as a warning instead of an error. |
 | `monitor.require_kpi` | `false` | Require a GDC KPI report for success. The GDC only sends KPI reports when its `WMO_RESOURCE_CATALOGUE_RUN_KPI` setting is on, and that is off on the Labs GDC. |

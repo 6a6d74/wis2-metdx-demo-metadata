@@ -68,6 +68,12 @@ def link_hrefs(event: dict) -> list[str]:
     return hrefs
 
 
+def link_filenames(event: dict) -> list[str]:
+    """Last path segment of each link: our timestamped filename survives the cache hop
+    (the GDC's events link to the Global Cache copy, not to our Pages URL)."""
+    return [h.rstrip("/").rsplit("/", 1)[-1] for h in link_hrefs(event)]
+
+
 def description(event: dict) -> str:
     return str(content(event).get("description") or "")
 

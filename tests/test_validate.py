@@ -66,6 +66,7 @@ def test_ets_crash_is_an_error_not_an_exception(repo, cfg, record):
 
 
 def test_wrong_centre_prefix(repo, cfg, record):
+    cfg["validation"]["require_centre_id_prefix"] = True
     record["id"] = "urn:wmo:md:xx-other:obs"
     base = repo.commit()
     repo.write("metadata/obs.json", record)
@@ -158,3 +159,21 @@ def test_example_template_passes_validation(repo, cfg):
     (r,) = run(repo, cfg, base, repo.commit())
     assert r.ok, r.errors
     assert r.ets["summary"]["FAILED"] == 0
+
+
+def test_other_centre_prefix_allowed_when_check_off(repo, cfg, record):
+    cfg["validation"]["require_centre_id_prefix"] = False   # as in this repo's config (demo)
+    record["id"] = "urn:wmo:md:xx-other:obs"
+    base = repo.commit()
+    repo.write("metadata/obs.json", record)
+    (r,) = run(repo, cfg, base, repo.commit())
+    assert r.ok, r.errors
+
+
+def test_centre_prefix_required_by_default(repo, cfg, record):
+    del cfg["validation"]["require_centre_id_prefix"]
+    record["id"] = "urn:wmo:md:xx-other:obs"
+    base = repo.commit()
+    repo.write("metadata/obs.json", record)
+    (r,) = run(repo, cfg, base, repo.commit())
+    assert any("must start with" in e for e in r.errors)
