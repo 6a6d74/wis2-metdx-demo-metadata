@@ -42,6 +42,8 @@ class ConfigError(Exception):
 def _coerce(raw: str, current: Any, name: str) -> Any:
     if raw.lower() in ("null", "none", ""):
         return None
+    if isinstance(current, list):  # comma-separated
+        return [x.strip() for x in raw.split(",") if x.strip()]
     try:
         if isinstance(current, bool):
             if raw.lower() not in ("true", "false"):

@@ -1,0 +1,55 @@
+[
+  {
+    "specversion": "1.0",
+    "type": "int.wmo.wis.wme.wnm.validation.schema",
+    "source": "io-wis2dev-global-broker",
+    "subject": "io-wis2dev-metdx-demo",
+    "id": "6ce23b08-073e-44a7-ae80-9459e02f2388",
+    "time": "2026-10-29T17:35:10.438Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://schemas.wmo.int/wme/1.0.0/schemas/wis2-event-message-encoding-bundled.json",
+    "data": {
+      "conformsTo": [
+        "http://wis.wmo.int/spec/wme/1/conf/monitoring-event-message-core"
+      ],
+      "channel": "origin/a/wis2/io-wis2dev-metdx-demo/metadata",
+      "content": {
+        "wnm": {
+          "id": "47505241-def9-411f-ae4a-cefa53abc7a2",
+          "test": "metdx-demo publisher ACL check - not a WNM, please ignore",
+          "pubtime": "2026-10-29T17:35:10Z"
+        },
+        "title": "WIS2 Notification Message not compliant with the defined schema",
+        "errors": [
+          "WNM links require one and only one of rel=canonical, rel=update, rel=deletion. Please update before the end of the grace pertiod (2027-06-30)"
+        ]
+      },
+      "severity": "ERROR"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "type": "int.wmo.wis.wme.wnm.validation.schema",
+    "source": "io-wis2dev-global-broker",
+    "subject": "io-wis2dev-metdx-demo",
+    "id": "3bd2972d-7bfa-449e-8816-e168c762fe3a",
+    "time": "2026-10-29T17:35:10.439Z",
+    "datacontenttype": "application/json",
+    "dataschema": "https://schemas.wmo.int/wme/1.0.0/schemas/wis2-event-message-encoding-bundled.json",
+    "data": {
+      "conformsTo": [
+        "http://wis.wmo.int/spec/wme/1/conf/monitoring-event-message-core"
+      ],
+      "channel": "origin/a/wis2/io-wis2dev-metdx-demo/metadata",
+      "content": {
+        "wnm": {
+          "id": "47505241-def9-411f-ae4a-cefa53abc7a2",
+          "test": "metdx-demo publisher ACL check - not a WNM, please ignore",
+          "pubtime": "2026-10-29T17:35:10Z"
+        },
+        "title": "WIS2 Notification Message not compliant with the defined schema"
+      },
+      "severity": "ERROR"
+    }
+  }
+]
