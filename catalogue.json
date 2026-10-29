@@ -1,1 +1,37 @@
-{"centre_id": "io-wis2dev-metdx-demo", "records": []}
+{
+  "centre_id": "io-wis2dev-metdx-demo",
+  "records": {
+    "urn:wmo:md:io-wis2dev-metdx-demo:test-surface-observations": {
+      "id": "urn:wmo:md:io-wis2dev-metdx-demo:test-surface-observations",
+      "versions": [
+        {
+          "path": "metadata/test-surface-observations/test-surface-observations.20261029T191359Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/test-surface-observations/test-surface-observations.20261029T191359Z.json",
+          "sha512_hex": "a8feb142880cb075302bb892ca825e23985b4c408163c8917bef80563da3772afac57ec49a7f7c5ddb25d512487e1b7fb6de721a6c98f4f7a81a1f9a74dab22f",
+          "length": 1455,
+          "published": "20261029T191359Z",
+          "action": "canonical"
+        }
+      ],
+      "last_publication": {
+        "run_id": "40938152129",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/40938152129",
+        "action": "canonical",
+        "status": "pending",
+        "stamp": "20261029T191359Z"
+      },
+      "title": "metdx-demo test surface observations",
+      "source_path": "metadata/test-surface-observations.json",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/test-surface-observations/test-surface-observations.20261029T191359Z.json",
+      "current_path": "metadata/test-surface-observations/test-surface-observations.20261029T191359Z.json",
+      "sha512_hex": "a8feb142880cb075302bb892ca825e23985b4c408163c8917bef80563da3772afac57ec49a7f7c5ddb25d512487e1b7fb6de721a6c98f4f7a81a1f9a74dab22f",
+      "sha512_b64": "qP6xQogMsHUwK7iSyoJeI5hbTECBY8iRe++AVj2jdyr6xX7Emn98Xdsl1RJIfht/tt5yGmyY9PeoGh+adNqyLw==",
+      "length": 1455,
+      "published": "20261029T191359Z",
+      "deleted": false,
+      "deleted_at": null
+    }
+  },
+  "published_commit": null,
+  "updated": "2026-10-29T19:14:01Z"
+}

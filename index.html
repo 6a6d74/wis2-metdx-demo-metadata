@@ -1,4 +1,62 @@
 <!doctype html>
+<html lang="en">
+<head>
 <meta charset="utf-8">
-<title>metdx-demo metadata</title>
-<p>The io-wis2dev-metdx-demo catalogue will appear here after the first publication.</p>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>io-wis2dev-metdx-demo metadata catalogue</title>
+<style>
+:root { --bg:#fff; --fg:#1b1f24; --muted:#636c76; --line:#d8dee4; --ok:#1a7f37; --bad:#cf222e; --warn:#9a6700; --chip:#f6f8fa; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#0d1117; --fg:#e6edf3; --muted:#8d96a0; --line:#30363d; --ok:#3fb950; --bad:#f85149; --warn:#d29922; --chip:#161b22; }
+}
+* { box-sizing: border-box; }
+body { margin:0; padding:24px 16px; background:var(--bg); color:var(--fg);
+       font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
+main { max-width:1200px; margin:0 auto; }
+h1 { font-size:1.5rem; margin:0 0 4px; }
+p.meta { color:var(--muted); margin:0 0 20px; }
+a { color:inherit; }
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; }
+th, td { text-align:left; vertical-align:top; padding:10px 8px; border-bottom:1px solid var(--line); }
+th { font-size:.8rem; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); }
+code { font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace; }
+code.id { color:var(--muted); word-break:break-all; }
+.muted { color:var(--muted); }
+.badge { display:inline-block; padding:1px 8px; border-radius:999px; background:var(--chip);
+          border:1px solid var(--line); font-size:.8rem; margin:0 4px 4px 0; }
+.badge.ok { color:var(--ok); border-color:var(--ok); }
+.badge.bad { color:var(--bad); border-color:var(--bad); }
+.badge.warn { color:var(--warn); border-color:var(--warn); }
+button { font-size:.75rem; padding:1px 6px; border:1px solid var(--line); border-radius:4px;
+          background:var(--chip); color:var(--fg); cursor:pointer; }
+details summary { cursor:pointer; color:var(--muted); font-size:.85rem; }
+details ul { margin:4px 0; padding-left:18px; font-size:.85rem; }
+tr.deleted td { opacity:.6; }
+</style>
+</head>
+<body>
+<main>
+<h1>io-wis2dev-metdx-demo: WCMP2 discovery metadata</h1>
+<p class="meta">1 record(s) · updated 2026-10-29T19:14:01Z · <a href="catalogue.json">catalogue.json</a></p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Record</th><th>Current file</th><th>SHA-512</th><th>Published</th><th>Last publication</th></tr></thead>
+<tbody>
+<tr><td><strong>metdx-demo test surface observations</strong><br><code class="id">urn:wmo:md:io-wis2dev-metdx-demo:test-surface-observations</code></td><td><a href="metadata/test-surface-observations/test-surface-observations.20261029T191359Z.json">test-surface-observations.20261029T191359Z.json</a><br><span class="muted">1455 bytes</span><details><summary>1 version(s)</summary><ul><li><a href="metadata/test-surface-observations/test-surface-observations.20261029T191359Z.json">20261029T191359Z</a> canonical <code title="a8feb142880cb075302bb892ca825e23985b4c408163c8917bef80563da3772afac57ec49a7f7c5ddb25d512487e1b7fb6de721a6c98f4f7a81a1f9a74dab22f">a8feb142880cb075…</code></li></ul></details></td><td><code class="sha" title="a8feb142880cb075302bb892ca825e23985b4c408163c8917bef80563da3772afac57ec49a7f7c5ddb25d512487e1b7fb6de721a6c98f4f7a81a1f9a74dab22f">a8feb142880cb075302bb892…</code> <button type="button" data-copy="a8feb142880cb075302bb892ca825e23985b4c408163c8917bef80563da3772afac57ec49a7f7c5ddb25d512487e1b7fb6de721a6c98f4f7a81a1f9a74dab22f" aria-label="Copy SHA-512">copy</button><br><a class="muted" href="metadata/test-surface-observations/test-surface-observations.20261029T191359Z.json.sha512">.sha512</a></td><td>20261029T191359Z</td><td><span class="badge muted">pending</span> <a href="https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/40938152129">run</a></td></tr>
+</tbody>
+</table>
+</div>
+
+</main>
+<script>
+document.addEventListener("click", function (e) {
+  var b = e.target.closest("button[data-copy]");
+  if (!b || !navigator.clipboard) return;
+  navigator.clipboard.writeText(b.dataset.copy).then(function () {
+    var t = b.textContent; b.textContent = "copied"; setTimeout(function () { b.textContent = t; }, 1200);
+  });
+});
+</script>
+</body>
+</html>
