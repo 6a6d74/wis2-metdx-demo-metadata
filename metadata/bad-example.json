@@ -1,0 +1,74 @@
+{
+  "id": "urn:wmo:md:xx-wrong-centre:bad-example",
+  "conformsTo": [
+    "http://wis.wmo.int/spec/wcmp/2/conf/core"
+  ],
+  "type": "Feature",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -10.0,
+          49.0
+        ],
+        [
+          2.0,
+          49.0
+        ],
+        [
+          2.0,
+          61.0
+        ],
+        [
+          -10.0,
+          61.0
+        ],
+        [
+          -10.0,
+          49.0
+        ]
+      ]
+    ]
+  },
+  "time": {
+    "interval": [
+      "2026-01-01T00:00:00Z",
+      ".."
+    ],
+    "resolution": "PT1H"
+  },
+  "properties": {
+    "type": "dataset",
+    "title": "metdx-demo test surface observations",
+    "description": "Test record used by the unit tests of the metdx-demo WIS2 metadata publisher. Not a real dataset.",
+    "keywords": [
+      "surface",
+      "observations",
+      "test"
+    ],
+    "themes": [
+      {
+        "concepts": [
+          {
+            "id": "weather",
+            "title": "Weather"
+          }
+        ],
+        "scheme": "https://codes.wmo.int/wis/topic-hierarchy/earth-system-discipline"
+      }
+    ],
+    "created": "2026-10-29T00:00:00Z",
+    "updated": "2026-10-29T00:00:00Z",
+    "wmo:dataPolicy": "core"
+  },
+  "links": [
+    {
+      "href": "mqtts://everyone:everyone@y8f22c8c.ala.eu-central-1.emqxsl.com:8883",
+      "rel": "items",
+      "channel": "origin/a/wis2/io-wis2dev-metdx-demo/data/core/weather/surface-based-observations/synop",
+      "type": "application/geo+json",
+      "title": "Notifications for this dataset"
+    }
+  ]
+}
