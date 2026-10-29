@@ -58,19 +58,43 @@ Downstream WIS2 components that we only observe:
 | **Global Broker** (`gb.wis2dev.io`) | It delivers our message, and it raises validation events if the message is invalid. |
 | **Global Discovery Catalogue** (Labs) | It sends a WCMP2 ETS report, and a KPI report if enabled. It then holds the record, which we confirm through its API. |
 
-```mermaid
-flowchart LR
-  subgraph GitHub
-    PR[Pull request<br>metadata/*.json] -->|Validate check<br>+ 1 approval| main[main]
-    main -->|Publish workflow| GP[gh-pages branch<br>timestamped records,<br>catalogue.json, index.html]
-    GP --> Pages[GitHub Pages]
-  end
-  main -. "WNM (publisher)" .-> LB[(Local broker<br>EMQX)]
-  LB --> GB[(Global Broker<br>gb.wis2dev.io)]
-  GB --> GDC[Global Discovery<br>Catalogue]
-  GDC -->|fetches record| Pages
-  GB -. "origin + monitor events" .-> main
-  GDC -. "ETS / KPI events via GB" .-> GB
+```text
+1. Change control (GitHub)
+
+   +-----------------+     +------------------+     +--------------------+
+   | Pull request    |     | Validate check   |     | Publish workflow   |
+   | metadata/*.json |---->| + 1 approval     |---->| (on merge to main) |
+   +-----------------+     | -> merge to main |     +---------+----------+
+                           +------------------+               |
+                                                              | stages records
+                                                              v
+                                       +-------------------------------------+
+                                       | gh-pages branch  ->  GitHub Pages   |
+                                       |  <name>.<timestamp>.json + .sha512  |
+                                       |  catalogue.json, index.html         |
+                                       +-------------------------------------+
+
+2. Publication, for each record
+
+   Publish workflow                 WIS2 test environment
+   (helper thread)
+                                    +--------------+      +------------------+
+   (a) publish WNM ---------------->| Local broker |----->| Global Broker    |
+       (publisher login)            | (EMQX)       |      | (gb.wis2dev.io)  |
+                                    +------+-------+      +---+----------+---+
+                                           |                  |          |
+   (b) confirm delivery <------------------+------------------+          |
+       (our message id, via both brokers)                                v
+                                                          +------------------+
+                                                          | Global Discovery |
+   (c) collect monitoring events <--- ETS / KPI reports --| Catalogue (Labs) |
+       (relayed by the Global Broker)                     +--------+---------+
+                                                                   |
+   (d) confirm the record is in   <--- GDC API: items/<id> --------+
+       the GDC (or gone, if deleted)                               |
+                                                     fetches the   |
+                                                     record from   v
+                                                             GitHub Pages
 ```
 
 ### On a pull request: Validate
