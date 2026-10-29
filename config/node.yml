@@ -1,0 +1,35 @@
+# Non-secret configuration for the io-wis2dev-metdx-demo WIS2 Node.
+# Any value can be overridden by an environment variable, e.g.
+# WIS2_CENTRE_ID, WIS2_LOCAL_BROKER_URL, WIS2_TIMEOUTS_DELIVERY.
+# The publisher password is never stored here: it comes from the
+# LOCAL_BROKER_PUB_PASSWORD secret in the wis2-publish environment.
+
+centre_id: io-wis2dev-metdx-demo
+
+local_broker:
+  url: mqtts://y8f22c8c.ala.eu-central-1.emqxsl.com:8883
+  subscribe:
+    username: everyone
+    password: everyone
+  publish:
+    username: sgfit
+
+global_broker:
+  url: mqtts://gb.wis2dev.io:8883
+  subscribe:
+    username: everyone
+    password: everyone
+
+pages:
+  # Empty means use the URL reported by the GitHub Pages deployment.
+  base_url: ""
+
+timeouts:  # seconds
+  broker_connect: 15
+  pages_live: 300
+  delivery: 60
+  monitor: 60
+
+kpi:
+  # Warn (never fail) when a GDC KPI percentage is below this value; null disables.
+  warn_below_percentage: null
