@@ -14,6 +14,13 @@ Status: **agreed 2026-10-29**. Nothing has been built yet. It builds on `pre/HAN
 - `everyone`/`everyone` connects to both brokers (MQTT v5 and 3.1.1). QoS 1 is granted on `origin/a/wis2/io-wis2dev-metdx-demo/#`, `.../metadata` (local and GB) and `monitor/a/wis2/io-wis2dev-metdx-demo/#` (GB).
 - TLS: use the `certifi` CA bundle explicitly (`tls_set(ca_certs=certifi.where())`). python.org macOS builds have no system bundle, and certifi behaves the same on runners.
 - **Live GB event types differ from the draft spec examples.** Observed types: `int.wmo.wis.wme.wnm.validation.schema` and `int.wmo.wis.wme.wnm.validation.metadata`, with `source: io-wis2dev-global-broker` and `severity: ERROR`. The topic is at `data.channel` (not `data.content.channel`) and the WNM at `data.content.wnm` (`.id` = message ID). So the matcher will use prefixes (`…wnm.validation*`, `…wcmp2.ets`, `…wcmp2.kpi`) plus `data.content.report_type`.
+- **Publisher check (`tools/check_publisher.py --publish`, 2026-10-29):**
+  - `sgfit` connects and is allowed to publish on `origin/a/wis2/io-wis2dev-metdx-demo/metadata` (PUBACK Success).
+  - The message was delivered by the local broker and by `gb.wis2dev.io`, and **the GB keeps the original message `id`**.
+  - The deliberately invalid test payload was forwarded and produced **two distinct** `…wnm.validation.schema` ERROR events on `monitor/a/wis2/io-wis2dev-metdx-demo`. They have different event `id`s. One carries `data.content.errors: [...]` (the rel check), the other has no detail.
+  - Both embed the full offending message at `data.content.wnm`, so match on `data.content.wnm.id`.
+  - Helpers log every distinct event (de-duplicating only on the event `id`, in case QoS 1 redelivers), and surface `data.content.errors` in the job summary.
+  - The full sample is in `logs/check_publisher-20261029T173511Z.jsonl` (local only, not committed).
 - No GDC ETS/KPI events were seen in 150 s of `monitor/a/wis2/#`. Their real shape will be confirmed during the Phase 5 end-to-end test.
 - WNM conventions (WNM 1.3):
   - `rel` is exactly one of `canonical` (new), `update` or `deletion`.
@@ -23,6 +30,24 @@ Status: **agreed 2026-10-29**. Nothing has been built yet. It builds on `pre/HAN
   - `geometry` must be a Point, a Polygon or `null`. A WCMP2 MultiPolygon or other geometry is reduced to its bounding-box Polygon.
 - The `validate` check must run on **every** PR, with no `paths:` filter, exiting quickly when no metadata changed. Otherwise, as a required check, it would block PRs that don't touch `metadata/`.
 - Config: `config/node.yml` is the single source of non-secret settings, so no repo variables are needed. Environment variables (`WIS2_*`) can still override any value.
+
+## Phase 2 findings (pywcmp 0.14.5)
+
+- **`run_tests()` omits the schema validation result** from `tests` and `summary`, so a schema-invalid record can show `FAILED: 0`. The validator runs `test_requirement_validation()` separately and treats a failure as an error.
+- The ETS tests index record fields directly (`record['properties'][...]`), so a malformed record raises `KeyError` instead of reporting FAILED. The validator catches that as an error.
+- **Centre-id:** the identifier and links tests FAIL any centre-id that isn't in the WIS2 topic-hierarchy list, unless it ends with `-test` or `relax_centre_id_checks=True` (which reports a WARNING). `io-wis2dev-metdx-demo` is not in the list.
+  - PR validation runs relaxed (`validation.relax_centre_id_checks: true`), and our own rule enforces the `urn:wmo:md:io-wis2dev-metdx-demo:` prefix.
+  - **Risk for Phase 5:** if the wis2dev GDC runs the ETS strictly, its ETS report will contain FAILED results for every record. That's to be confirmed on the first publish, and we may need to agree how to treat it.
+- Local macOS (python.org build) needs `SSL_CERT_FILE=$(python -m certifi)` for `pywcmp bundle sync`. The runners don't.
+
+## Progress
+
+| Phase | Status |
+|---|---|
+| 0: checks | done 2026-10-29 |
+| 1: repo, Pages, environment, ruleset | done 2026-10-29 |
+| 2: config, validator, `validate.yml`, tests | in PR |
+| 3-6 | to do |
 
 ## 1. What we're building
 

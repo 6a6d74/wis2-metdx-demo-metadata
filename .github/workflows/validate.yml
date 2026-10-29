@@ -1,0 +1,88 @@
+name: Validate
+
+# Runs on every pull request (no path filter): "validate" is a required status
+# check, so it must report on PRs that don't touch metadata/ as well.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write   # to post the report as a PR comment
+    steps:
+      # Checks out the PR merge commit: HEAD^1 is the target branch, HEAD is
+      # the result of merging, so the diff is exactly what the PR would change.
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Fetch WCMP2 schema and codelists
+        run: pywcmp bundle sync
+
+      - name: Validate changed records
+        id: validate
+        run: |
+          set +e
+          python -m wis2node.validate --base HEAD^1 --head HEAD \
+            --markdown report.md --json report.json
+          rc=$?
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
+      - name: Post report on the PR
+        if: always() && steps.validate.outputs.rc != ''
+        continue-on-error: true   # PRs from forks get a read-only token
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+            --jq '.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("<!-- wis2node-validate -->"))) | .id' \
+            | head -n 1)
+          if [ -n "$id" ]; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -F body=@report.md > /dev/null
+          else
+            gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -F body=@report.md > /dev/null
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: validation-report
+          path: report.*
+          if-no-files-found: ignore
+
+      - name: Fail if validation failed
+        if: steps.validate.outputs.rc != '0'
+        run: |
+          echo "::error::WCMP2 validation failed (exit code ${{ steps.validate.outputs.rc }}): see the job summary or PR comment"
+          exit 1
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e ".[test]"
+      - run: pywcmp bundle sync
+      - run: pytest -q

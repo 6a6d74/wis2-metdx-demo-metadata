@@ -4,3 +4,5 @@ __pycache__/
 *.pyc
 _site/
 pre/
+logs/
+*.egg-info/

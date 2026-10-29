@@ -18,4 +18,17 @@ The browsable catalogue is at <https://6a6d74.github.io/wis2-metdx-demo-metadata
 
 The design is described in [PLAN.md](PLAN.md), and the configuration is in [config/node.yml](config/node.yml).
 
-> Work in progress: the validation and publishing workflows are not in place yet.
+## Checking a record locally (optional)
+
+```
+pip install -e .
+pywcmp bundle sync
+python -m wis2node.validate metadata/my-record.json
+```
+
+## Tools
+
+- `tools/check_publisher.py`: checks the publisher login and, with `--publish`, the end-to-end path
+  through the local broker and the GB, logging any monitor events.
+
+> Work in progress: validation is in place, and the publishing workflow is to do.
