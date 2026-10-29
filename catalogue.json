@@ -111,8 +111,38 @@
       "published": "20261029T212402Z",
       "deleted": false,
       "deleted_at": null
+    },
+    "urn:wmo:md:io-wis2dev-metdx-demo:weather.prediction.forecast.global": {
+      "id": "urn:wmo:md:io-wis2dev-metdx-demo:weather.prediction.forecast.global",
+      "versions": [
+        {
+          "path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global.20261029T214959Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global.20261029T214959Z.json",
+          "sha512_hex": "3b3cc212891cdd79efe7266a6ac4f6b3a00f882b4d6bbca6ac17c4f7f4211c1490b9e89c3ceb1da9b5d5d2f4c36ddccb7bdb22e1d0286c4343a3280267275aee",
+          "length": 6840,
+          "published": "20261029T214959Z",
+          "action": "canonical"
+        }
+      ],
+      "last_publication": {
+        "run_id": "40961004646",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/40961004646",
+        "action": "canonical",
+        "status": "pending",
+        "stamp": "20261029T214959Z"
+      },
+      "title": "ECMWF IFS Global Deterministic Forecast (Destination Earth)",
+      "source_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global.json",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global.20261029T214959Z.json",
+      "current_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global.20261029T214959Z.json",
+      "sha512_hex": "3b3cc212891cdd79efe7266a6ac4f6b3a00f882b4d6bbca6ac17c4f7f4211c1490b9e89c3ceb1da9b5d5d2f4c36ddccb7bdb22e1d0286c4343a3280267275aee",
+      "sha512_b64": "OzzCEokc3Xnv5yZqasT2s6APiCtNa7ymrBfE9/QhHBSQueicPOsdqbXV0vTDbdzLe9si4dAobENDoygCZyda7g==",
+      "length": 6840,
+      "published": "20261029T214959Z",
+      "deleted": false,
+      "deleted_at": null
     }
   },
   "published_commit": "fef14bcb0515fbefe1b1c8293629c1960b3c985c",
-  "updated": "2026-10-29T21:26:53Z"
+  "updated": "2026-10-29T21:50:01Z"
 }
