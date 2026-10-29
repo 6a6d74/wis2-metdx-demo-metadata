@@ -123,21 +123,23 @@ def open_clients(cfg: dict, password: str, router: Router | None, factory: Clien
     """Connect publisher + both subscribers; on any failure close what was opened and raise."""
     prefix = cfg["centre_id"]
     lb, gb = cfg["local_broker"], cfg["global_broker"]
+    local_url = cfgmod.local_broker_url(cfg)
+    # (url, username, password, message handler, label used in logs: hides the local broker host)
     specs = {
-        "local-pub": (lb["url"], lb["publish"]["username"], password, None),
-        "local-sub": (lb["url"], lb["subscribe"]["username"], lb["subscribe"]["password"],
-                      router.handler(LOCAL) if router else None),
+        "local-pub": (local_url, lb["publish"]["username"], password, None, "local broker"),
+        "local-sub": (local_url, lb["subscribe"]["username"], lb["subscribe"]["password"],
+                      router.handler(LOCAL) if router else None, "local broker"),
         "gb-sub": (gb["url"], gb["subscribe"]["username"], gb["subscribe"]["password"],
-                   router.handler(GB) if router else None),
+                   router.handler(GB) if router else None, gb["url"]),
     }
     timeout = cfg["timeouts"]["broker_connect"]
     opened: dict[str, BrokerClient] = {}
     try:
-        for name, (url, user, pw, handler) in specs.items():
-            client = factory(name, url, user, pw, prefix, on_message=handler)
+        for name, (url, user, pw, handler, label) in specs.items():
+            client = factory(name, url, user, pw, prefix, on_message=handler, label=label)
             client.connect(timeout)
             opened[name] = client
-            LOG.info("%s: connected to %s as %s", name, url, user)
+            LOG.info("%s: connected to %s as %s", name, label, user)
     except BrokerError:
         close_all(opened)
         raise

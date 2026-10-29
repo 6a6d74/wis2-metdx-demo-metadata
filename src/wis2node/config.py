@@ -5,7 +5,9 @@ WIS2_ followed by its path in upper case, joined with underscores. For example,
 local_broker.url becomes WIS2_LOCAL_BROKER_URL and timeouts.delivery becomes
 WIS2_TIMEOUTS_DELIVERY. Overrides take the type of the value they replace.
 
-Secrets are never read from the file: see `publisher_password()`.
+Secrets are never read from the file: see `publisher_password()`. The local
+broker URL is kept out of the file too (we don't advertise it): see
+`local_broker_url()`.
 """
 from __future__ import annotations
 
@@ -18,10 +20,10 @@ import yaml
 DEFAULT_PATH = Path("config/node.yml")
 ENV_PREFIX = "WIS2_"
 PUBLISHER_PASSWORD_ENV = "LOCAL_BROKER_PUB_PASSWORD"
+LOCAL_BROKER_URL_ENV = "LOCAL_BROKER_URL"
 
 REQUIRED = [
     ("centre_id",),
-    ("local_broker", "url"),
     ("local_broker", "subscribe", "username"),
     ("local_broker", "subscribe", "password"),
     ("local_broker", "publish", "username"),
@@ -100,6 +102,17 @@ def get(cfg: dict, *keys: str, default: Any = None) -> Any:
             return default
         node = node[key]
     return node
+
+
+def local_broker_url(cfg: dict, env: dict[str, str] | None = None) -> str:
+    """The local broker URL: LOCAL_BROKER_URL (a secret in Actions), else local_broker.url.
+
+    Required only when connecting, so validation (which runs without secrets) never needs it.
+    """
+    value = (dict(os.environ) if env is None else env).get(LOCAL_BROKER_URL_ENV) or get(cfg, "local_broker", "url")
+    if not value:
+        raise ConfigError(f"{LOCAL_BROKER_URL_ENV} is not set (the local broker URL is kept as a secret)")
+    return value
 
 
 def publisher_password(env: dict[str, str] | None = None) -> str:

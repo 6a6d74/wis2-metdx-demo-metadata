@@ -56,3 +56,17 @@ def test_publisher_password_only_from_env():
     assert config.publisher_password({"LOCAL_BROKER_PUB_PASSWORD": "s3cret"}) == "s3cret"
     with pytest.raises(config.ConfigError):
         config.publisher_password({})
+
+
+def test_config_loads_without_local_broker_url():
+    # validation runs on PRs without secrets, so the URL must not be required at load time
+    c = config.load(ROOT / "config" / "node.yml", env={})
+    assert c["local_broker"]["url"] == ""
+
+
+def test_local_broker_url_resolution():
+    cfg = {"local_broker": {"url": ""}}
+    assert config.local_broker_url(cfg, {"LOCAL_BROKER_URL": "mqtts://a:8883"}) == "mqtts://a:8883"
+    assert config.local_broker_url({"local_broker": {"url": "mqtts://b:8883"}}, {}) == "mqtts://b:8883"
+    with pytest.raises(config.ConfigError, match="LOCAL_BROKER_URL"):
+        config.local_broker_url(cfg, {})

@@ -87,6 +87,7 @@ jobs:
       - name: Check brokers (preflight)
         if: steps.plan.outputs.has_jobs == 'true'
         env:
+          LOCAL_BROKER_URL: ${{ secrets.LOCAL_BROKER_URL }}
           LOCAL_BROKER_PUB_PASSWORD: ${{ secrets.LOCAL_BROKER_PUB_PASSWORD }}
         run: python -m wis2node.publish preflight
 
@@ -152,6 +153,7 @@ jobs:
       - name: Publish and verify
         id: run
         env:
+          LOCAL_BROKER_URL: ${{ secrets.LOCAL_BROKER_URL }}
           LOCAL_BROKER_PUB_PASSWORD: ${{ secrets.LOCAL_BROKER_PUB_PASSWORD }}
         run: |
           set +e

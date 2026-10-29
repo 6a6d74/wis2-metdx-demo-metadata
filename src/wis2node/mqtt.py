@@ -23,7 +23,7 @@ class BrokerError(Exception):
 def parse_url(url: str) -> tuple[str, int, bool]:
     u = urlparse(url)
     if u.scheme not in TLS_SCHEMES | PLAIN_SCHEMES or not u.hostname:
-        raise BrokerError(f"unsupported broker URL {url!r} (expected mqtts://host:port)")
+        raise BrokerError("unsupported broker URL (expected mqtts://host:port)")
     tls = u.scheme in TLS_SCHEMES
     return u.hostname, u.port or (8883 if tls else 1883), tls
 
@@ -36,10 +36,12 @@ class BrokerClient:
     """
 
     def __init__(self, name: str, url: str, username: str, password: str,
-                 client_id_prefix: str, on_message: MessageHandler | None = None):
+                 client_id_prefix: str, on_message: MessageHandler | None = None, label: str | None = None):
         self.name = name
         self.url = url
         self.host, self.port, tls = parse_url(url)
+        # how the broker is named in messages; pass a label to keep a host out of logs
+        self.label = label or f"{self.host}:{self.port}"
         self._connected = threading.Event()
         self._connack = None
         self._lock = threading.Lock()
@@ -102,14 +104,14 @@ class BrokerClient:
         try:
             self._client.connect(self.host, self.port, keepalive=60)
         except Exception as exc:  # DNS, TCP or TLS failure
-            raise BrokerError(f"[{self.name}] cannot connect to {self.host}:{self.port}: {exc}") from None
+            raise BrokerError(f"[{self.name}] cannot connect to {self.label}: {type(exc).__name__}") from None
         self._client.loop_start()
         if not self._connected.wait(timeout):
             self.close()
-            raise BrokerError(f"[{self.name}] no CONNACK from {self.host}:{self.port} within {timeout:g}s")
+            raise BrokerError(f"[{self.name}] no CONNACK from {self.label} within {timeout:g}s")
         if self._connack.is_failure:
             self.close()
-            raise BrokerError(f"[{self.name}] connection refused by {self.host}: {self._connack}")
+            raise BrokerError(f"[{self.name}] connection refused by {self.label}: {self._connack}")
 
     def subscribe(self, topics: list[str], timeout: float, qos: int = 1) -> None:
         result, mid = self._client.subscribe([(t, qos) for t in topics])

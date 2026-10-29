@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Check the publisher account on the local broker.
 
-Broker URLs, usernames and the centre-id come from config/node.yml (run from the
-repo root, with the package installed: pip install -e .).
+Usernames, the GB URL and the centre-id come from config/node.yml (run from the
+repo root, with the package installed: pip install -e .). The local broker URL is
+not in the repo: set LOCAL_BROKER_URL in the environment.
 
 The password is read, in order of preference, from:
   1. the WIS2_LOCAL_BROKER_PUB_PASSWORD environment variable
@@ -36,7 +37,7 @@ from wis2node import config
 
 CFG = config.load()
 CENTRE = CFG["centre_id"]
-LOCAL = CFG["local_broker"]["url"]
+LOCAL = config.local_broker_url(CFG)  # LOCAL_BROKER_URL env var (kept as a secret)
 GB = CFG["global_broker"]["url"]
 PUB_USER = CFG["local_broker"]["publish"]["username"]
 LOCAL_SUB = CFG["local_broker"]["subscribe"]

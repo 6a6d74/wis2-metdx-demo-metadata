@@ -28,6 +28,7 @@ class FakeWIS2:
     def __init__(self, centre="io-wis2dev-metdx-demo"):
         self.centre = centre
         self.clients = {}
+        self.urls = {}                    # client name -> (url, label)
         self.published = []
         self.refuse_connect = set()       # client names
         self.refuse_publish = False
@@ -43,7 +44,8 @@ class FakeWIS2:
         self.gdc_download_fails = False   # GDC can't fetch the record: item.download ERROR, no ETS
         self.gdc_delete_result = "deleted"  # "deleted" (INFO), "not found" (ERROR) or None (no report)
 
-    def factory(self, name, url, username, password, prefix, on_message=None):
+    def factory(self, name, url, username, password, prefix, on_message=None, label=None):
+        self.urls[name] = (url, label)
         c = FakeClient(self, name, on_message)
         self.clients[name] = c
         return c

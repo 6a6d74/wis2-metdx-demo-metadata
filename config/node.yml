@@ -1,13 +1,15 @@
 # Non-secret configuration for the io-wis2dev-metdx-demo WIS2 Node.
 # Any value can be overridden by an environment variable, e.g.
 # WIS2_CENTRE_ID, WIS2_LOCAL_BROKER_URL, WIS2_TIMEOUTS_DELIVERY.
-# The publisher password is never stored here: it comes from the
-# LOCAL_BROKER_PUB_PASSWORD secret in the wis2-publish environment.
+# Kept out of this file, as secrets in the wis2-publish environment:
+#   LOCAL_BROKER_URL           local broker address (not advertised)
+#   LOCAL_BROKER_PUB_PASSWORD  publisher password
 
 centre_id: io-wis2dev-metdx-demo
 
 local_broker:
-  url: mqtts://y8f22c8c.ala.eu-central-1.emqxsl.com:8883
+  # url comes from the LOCAL_BROKER_URL secret; set it here only for a private fork.
+  url: ""
   subscribe:
     username: everyone
     password: everyone

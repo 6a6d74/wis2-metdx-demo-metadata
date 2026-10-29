@@ -27,7 +27,9 @@ args = p.parse_args()
 cfg = config.load()
 centre = cfg["centre_id"]
 b = cfg["global_broker" if args.broker == "gb" else "local_broker"]
-host, port, tls = parse_url(b["url"])
+url = b["url"] if args.broker == "gb" else config.local_broker_url(cfg)  # local: LOCAL_BROKER_URL env var
+host, port, tls = parse_url(url)
+label = host if args.broker == "gb" else "local broker"
 topics = [f"origin/a/wis2/{centre}/#"]
 if args.broker == "gb":
     topics += [f"cache/a/wis2/{centre}/#", f"monitor/a/wis2/{centre}/#"]
@@ -37,7 +39,7 @@ fh = out.open("a")
 
 
 def on_connect(c, u, f, rc, props):
-    print(f"connected to {host}: {rc}; subscribing {topics}", flush=True)
+    print(f"connected to {label}: {rc}; subscribing {topics}", flush=True)
     c.subscribe([(t, 1) for t in topics])
 
 
