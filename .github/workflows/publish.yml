@@ -1,0 +1,214 @@
+name: Publish
+
+# On merge to main: stage changed records on GitHub Pages under timestamped
+# names, deploy, then announce each one to WIS2 and verify delivery and the
+# GDC's ETS/KPI reports. See PLAN.md section 5.
+#
+#   prepare (wis2-publish)  plan -> preflight -> stage on gh-pages -> Pages artifact
+#   deploy  (github-pages)  deploy the staged site
+#   publish (wis2-publish)  helpers: wait live, publish WNM, verify; record results
+#   report  (github-pages)  redeploy so the catalogue shows the outcome
+#
+# Each run publishes everything between the catalogue's published_commit and
+# HEAD, so a run that GitHub cancels while queued is caught up by the next one.
+
+on:
+  push:
+    branches: [main]
+    paths: ["metadata/**"]
+  workflow_dispatch:
+    inputs:
+      files:
+        description: >-
+          Optional: space-separated metadata/ paths to re-announce, or "all".
+          Leave empty to publish anything not yet published.
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wis2-publish
+  cancel-in-progress: false
+
+env:
+  PYTHON_VERSION: "3.12"
+  GIT_AUTHOR_NAME: github-actions[bot]
+  GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+  GIT_COMMITTER_NAME: github-actions[bot]
+  GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    environment: wis2-publish
+    permissions:
+      contents: write   # push to gh-pages
+      pages: read       # look up the Pages URL
+    outputs:
+      has_jobs: ${{ steps.plan.outputs.has_jobs }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/checkout@v5
+        with:
+          ref: gh-pages
+          path: _site
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+      - run: pip install -r requirements.txt
+
+      - name: Plan
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FILES: ${{ inputs.files }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          base_url=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq .html_url)
+          args=()
+          if [ -n "$FILES" ]; then
+            read -r -a files <<< "$FILES"
+            args=(--republish "${files[@]}")
+          fi
+          python -m wis2node.publish plan --catalogue _site/catalogue.json \
+            --fallback-base "$BEFORE" --head "$GITHUB_SHA" --base-url "$base_url" \
+            --out manifest.json "${args[@]}"
+          echo "has_jobs=$(jq '.jobs | length > 0' manifest.json)" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Plan"; echo
+            jq -r '"base `\(.base)` → head `\(.head)`\n", (.jobs[] | "- **\(.action)** `\(.source_path)` → \(.url)")' manifest.json
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Check brokers (preflight)
+        if: steps.plan.outputs.has_jobs == 'true'
+        env:
+          LOCAL_BROKER_PUB_PASSWORD: ${{ secrets.LOCAL_BROKER_PUB_PASSWORD }}
+        run: python -m wis2node.publish preflight
+
+      - name: Stage records on gh-pages
+        if: steps.plan.outputs.has_jobs == 'true'
+        run: |
+          python -m wis2node.site stage --manifest manifest.json --site _site \
+            --run-id "$GITHUB_RUN_ID" --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          git -C _site add -A
+          git -C _site commit -q -m "Stage records for run $GITHUB_RUN_ID ($GITHUB_SHA)"
+          git -C _site push -q origin gh-pages
+
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.plan.outputs.has_jobs == 'true'
+        with:
+          path: _site
+
+      - uses: actions/upload-artifact@v4
+        if: steps.plan.outputs.has_jobs == 'true'
+        with:
+          name: manifest
+          path: manifest.json
+
+  deploy:
+    needs: prepare
+    if: needs.prepare.outputs.has_jobs == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  publish:
+    needs: [prepare, deploy]
+    runs-on: ubuntu-latest
+    environment: wis2-publish
+    permissions:
+      contents: write   # push results and logs to gh-pages
+    outputs:
+      recorded: ${{ steps.record.outcome == 'success' }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/checkout@v5
+        with:
+          ref: gh-pages
+          path: _site
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+      - run: pip install -r requirements.txt
+      - uses: actions/download-artifact@v4
+        with:
+          name: manifest
+
+      - name: Publish and verify
+        id: run
+        env:
+          LOCAL_BROKER_PUB_PASSWORD: ${{ secrets.LOCAL_BROKER_PUB_PASSWORD }}
+        run: |
+          set +e
+          python -m wis2node.publish run --manifest manifest.json --log-dir logs/run \
+            --summary "$GITHUB_STEP_SUMMARY" --results results.json
+          echo "rc=$?" >> "$GITHUB_OUTPUT"
+
+      # rc 0/1: notifications went out, so record outcomes and advance
+      # published_commit. rc 2 (config/broker failure before publishing): leave
+      # published_commit alone so the next run retries.
+      - name: Record results in the catalogue
+        id: record
+        if: always() && (steps.run.outputs.rc == '0' || steps.run.outputs.rc == '1')
+        run: |
+          python -m wis2node.site record --manifest manifest.json --site _site --results results.json \
+            --log-dir logs/run --run-id "$GITHUB_RUN_ID" \
+            --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          git -C _site add -A
+          git -C _site commit -q -m "Record results of run $GITHUB_RUN_ID"
+          git -C _site push -q origin gh-pages
+
+      - uses: actions/upload-pages-artifact@v3
+        if: always() && steps.record.outcome == 'success'
+        with:
+          path: _site
+          name: github-pages-report
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: publication-logs
+          path: |
+            manifest.json
+            results.json
+            logs/run/
+          if-no-files-found: ignore
+
+      - name: Fail if any record failed
+        if: steps.run.outputs.rc != '0'
+        run: |
+          echo "::error::publication failed (exit code ${{ steps.run.outputs.rc }}): see the job summary"
+          exit 1
+
+  report:
+    needs: [prepare, publish]
+    if: >-
+      always() && needs.prepare.outputs.has_jobs == 'true' &&
+      needs.publish.outputs.recorded == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-report

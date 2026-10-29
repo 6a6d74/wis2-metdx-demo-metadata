@@ -9,6 +9,29 @@ Status: **agreed 2026-10-29**. Nothing has been built yet. It builds on `pre/HAN
 - **One Pages deployment per merge (D1).** The per-record helpers start from "wait until live".
 - **KPI is informational:** logged, with an optional warning threshold. Only an ETS FAILED, a GB validation error, or a timeout fails a record.
 
+## Environment endpoints
+
+| Component | Endpoint |
+|---|---|
+| Local broker (EMQX) | `mqtts://y8f22c8c.ala.eu-central-1.emqxsl.com:8883` |
+| Global Broker (test) | `mqtts://gb.wis2dev.io:8883` |
+| **Labs Global Discovery Catalogue (where our records should end up)** | <https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata> |
+| Published records and catalogue | <https://6a6d74.github.io/wis2-metdx-demo-metadata/> |
+
+- The Labs GDC is an OGC API - Records endpoint:
+  - search: `/items?q=<text>&f=json`
+  - one record: `/items/<metadata-id>?f=json` (404 if absent)
+- It is **not** `wmo-resource-catalogue.wis2dev.io` (where `gdc.wis2dev.io` redirects), which is a separate catalogue.
+- Baseline check (2026-10-29): the Labs GDC held 604 records, none from `io-wis2dev-metdx-demo`.
+- **Phase 5 check:** after each publication, confirm the record appears in the Labs GDC with the expected content, and that a deletion removes it.
+- **GDC confirmation (agreed and implemented 2026-10-29, `wis2node.gdc`):** after the ETS/KPI stage, each helper polls `<url>/items/<metadata-id>?f=json`:
+  - For new or updated records, it polls until the GDC serves the record with the same `properties.updated` (else `created`) time as ours, compared as instants. The GDC adds its own properties and links, so the bytes can't be compared.
+  - For deletions, it polls until the item returns 404.
+  - Config: `global_discovery_catalogue.url` (empty disables the check), `.poll_interval` (10 s) and `timeouts.gdc` (120 s).
+  - It is skipped if publishing itself failed.
+  - The result appears in the job summary ("In GDC" column) and on the catalogue page (badge linking to the GDC item).
+  - Tested against the live Labs GDC: an existing record is found, a wrong version is reported, and an absent ID returns 404.
+
 ## Phase 0 findings (2026-10-29)
 
 - `everyone`/`everyone` connects to both brokers (MQTT v5 and 3.1.1). QoS 1 is granted on `origin/a/wis2/io-wis2dev-metdx-demo/#`, `.../metadata` (local and GB) and `monitor/a/wis2/io-wis2dev-metdx-demo/#` (GB).
@@ -57,6 +80,22 @@ Status: **agreed 2026-10-29**. Nothing has been built yet. It builds on `pre/HAN
   - `publish.max_workers`.
 - Checked against the live brokers: `preflight`, `open_clients` and `subscribe_all` succeed, and a bad password is reported with the client name.
 
+## Phase 4 design notes
+
+- **`published_commit` in `catalogue.json`** (on `gh-pages`) is the last commit whose records were announced. Each run publishes `published_commit..HEAD`, not just the push's own range. GitHub cancels all but one *queued* run in a concurrency group, so a cancelled run's records are caught up by the next run. If there is no `published_commit`, the run falls back to the push's `before` commit, and failing that announces every record.
+- **Workflow (`publish.yml`):**
+  1. `prepare` (wis2-publish): plan, preflight, stage onto `gh-pages`, upload the Pages artifact and the manifest.
+  2. `deploy` (github-pages).
+  3. `publish` (wis2-publish): `run`, then record the results and logs on `gh-pages`.
+  4. `report` (github-pages): redeploys so the catalogue shows the ETS/KPI outcome.
+- **Exit code 2 from `run`** (a broker or config failure before publishing) does **not** advance `published_commit` and skips `report`, so the next run retries. The staged files stay, which is harmless.
+- **Manual run:** `workflow_dispatch` with `files` set to paths or `all` re-announces those records as they are at `HEAD`. It uses `update` if the catalogue already holds the record, otherwise `canonical`. Leaving `files` empty means "publish anything not yet published".
+- **Site:**
+  - Published files: `metadata/<stem>/<stem>.<stamp>.json`, plus `.sha512` sidecars (`sha512sum -c` compatible).
+  - `catalogue.json` holds the current file, checksums, version history and last publication outcome.
+  - `index.html` is static HTML (works without JS; JS is only used for "copy checksum"), with light and dark themes.
+  - `logs/<run-id>/*.jsonl`.
+
 ## Progress
 
 | Phase | Status |
@@ -64,8 +103,9 @@ Status: **agreed 2026-10-29**. Nothing has been built yet. It builds on `pre/HAN
 | 0: checks | done 2026-10-29 |
 | 1: repo, Pages, environment, ruleset | done 2026-10-29 |
 | 2: config, validator, `validate.yml`, tests | done (PR #1) |
-| 3: MQTT, router, helpers, monitoring, orchestrator | in PR |
-| 4-6 | to do |
+| 3: MQTT, router, helpers, monitoring, orchestrator | done (PR #3) |
+| 4: Pages staging, catalogue, `publish.yml` | in PR |
+| 5-6 | to do |
 
 ## 1. What we're building
 

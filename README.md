@@ -31,4 +31,13 @@ python -m wis2node.validate metadata/my-record.json
 - `tools/check_publisher.py`: checks the publisher login and, with `--publish`, the end-to-end path
   through the local broker and the GB, logging any monitor events.
 
-> Work in progress: validation is in place, and the publishing workflow is to do.
+## Re-announcing records
+
+Use **Actions → Publish → Run workflow**:
+
+- Leave **files** empty to publish anything merged but not yet published.
+- Enter space-separated paths (e.g. `metadata/a.json metadata/b.json`), or `all`, to re-announce
+  records as they are now. This is useful after a GDC outage.
+
+Each run's outcome (delivery, GB events, GDC ETS/KPI) is shown in the job summary and on the
+catalogue page, with full logs under `logs/<run-id>/` on the site.

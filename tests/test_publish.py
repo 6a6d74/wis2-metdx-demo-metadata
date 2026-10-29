@@ -34,8 +34,11 @@ def job(record, action="canonical", path="metadata/obs.json"):
 
 
 def run(cfg, net, jobs, tmp_path, **kw):
-    return publish.run(cfg, jobs, PASSWORD, tmp_path / "logs", factory=net.factory,
-                       live_check=kw.pop("live_check", lambda url, sha, timeout: 0.0), **kw)
+    """Run against the fake network; Pages and the GDC are stubbed unless overridden."""
+    kw.setdefault("live_check", lambda url, sha, timeout: 0.0)
+    kw.setdefault("gdc_present", lambda base, mid, dt, timeout, interval: 0.5)
+    kw.setdefault("gdc_absent", lambda base, mid, timeout, interval: 0.5)
+    return publish.run(cfg, jobs, PASSWORD, tmp_path / "logs", factory=net.factory, **kw)
 
 
 # ---------------------------------------------------------------- happy paths
@@ -262,3 +265,48 @@ def test_markdown_report(fast_cfg, net, record, tmp_path):
     md = publish.to_markdown(results)
     assert "1 of 1 record(s) failed" in md and "no WCMP2 KPI report" in md
     assert "No metadata records" in publish.to_markdown([])
+
+
+# ---------------------------------------------------------------- GDC confirmation
+def test_gdc_confirms_record(fast_cfg, net, record, tmp_path):
+    seen = []
+    def present(base, mid, dt, timeout, interval):
+        seen.append((base, mid, dt, timeout))
+        return 12.0
+    (r,) = run(fast_cfg, net, [job(record)], tmp_path, gdc_present=present)
+    assert r.ok and r.gdc["status"] == "present" and r.gdc["seconds"] == 12.0
+    assert seen == [(fast_cfg["global_discovery_catalogue"]["url"], record["id"],
+                     record["properties"]["updated"], fast_cfg["timeouts"]["gdc"])]
+    assert r.gdc["url"].endswith("/items/urn%3Awmo%3Amd%3Aio-wis2dev-metdx-demo%3Atest-surface-observations?f=json")
+    assert "| [present]" in publish.to_markdown([r])
+
+
+def test_gdc_never_shows_record(fast_cfg, net, record, tmp_path):
+    from wis2node.gdc import GDCError
+    def absent(base, mid, dt, timeout, interval):
+        raise GDCError("Labs GDC check failed after 120s: record not in the GDC (url)")
+    (r,) = run(fast_cfg, net, [job(record)], tmp_path, gdc_present=absent)
+    assert not r.ok and r.stage == "done"
+    assert r.gdc["status"] == "not confirmed" and "record not in the GDC" in r.errors[0]
+
+
+def test_gdc_deletion_checks_absence(fast_cfg, net, record, tmp_path):
+    called = []
+    (r,) = run(fast_cfg, net, [job(record, "deletion")], tmp_path,
+               gdc_absent=lambda base, mid, timeout, interval: called.append(mid) or 3.0,
+               gdc_present=lambda *a, **k: pytest.fail("presence check on a deletion"))
+    assert r.ok and r.gdc["status"] == "removed" and called == [record["id"]]
+
+
+def test_gdc_check_disabled_when_no_url(fast_cfg, net, record, tmp_path):
+    fast_cfg["global_discovery_catalogue"]["url"] = ""
+    (r,) = run(fast_cfg, net, [job(record)], tmp_path,
+               gdc_present=lambda *a, **k: pytest.fail("GDC should not be polled"))
+    assert r.ok and r.gdc is None
+
+
+def test_gdc_skipped_when_publish_fails(fast_cfg, net, record, tmp_path):
+    net.refuse_publish = True
+    (r,) = run(fast_cfg, net, [job(record)], tmp_path,
+               gdc_present=lambda *a, **k: pytest.fail("GDC should not be polled"))
+    assert r.gdc is None and r.stage == "publish"

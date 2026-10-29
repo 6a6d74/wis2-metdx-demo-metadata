@@ -20,6 +20,13 @@ global_broker:
     username: everyone
     password: everyone
 
+global_discovery_catalogue:
+  # Labs GDC (OGC API - Records collection). After the ETS/KPI reports, each helper
+  # polls <url>/items/<metadata-id> until the GDC holds this version of the record
+  # (or, for a deletion, until it is gone). Empty disables the check.
+  url: https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata
+  poll_interval: 10
+
 pages:
   # Empty means use the URL reported by the GitHub Pages deployment.
   base_url: ""
@@ -29,6 +36,7 @@ timeouts:  # seconds
   pages_live: 300
   delivery: 60
   monitor: 60
+  gdc: 120
   # monitoring events timestamped more than this before our publish are ignored as stale
   clock_skew: 30
 
