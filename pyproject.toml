@@ -7,6 +7,8 @@ name = "wis2node"
 version = "0.1.0"
 description = "No-code WIS2 Node: validate and publish WCMP2 discovery metadata"
 requires-python = ">=3.11"
+license = { file = "LICENSE" }
+classifiers = ["License :: OSI Approved :: Apache Software License"]
 dependencies = [
     "certifi",
     "paho-mqtt>=2.0,<3",

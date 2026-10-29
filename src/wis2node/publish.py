@@ -217,7 +217,7 @@ def to_markdown(results: list[Result], dry_run: bool = False) -> str:
     for r in results:
         def seen(src):
             return f"{r.delivered[src]}s" if src in r.delivered else "–"
-        ets = ("–" if r.ets is None else
+        ets = ("–" if r.ets is None else "rejected" if r.ets.get("rejected") else
                ", ".join(f"{v} {k.lower()}" for k, v in (r.ets.get("summary") or {}).items() if v) or "received")
         kpi = "–" if r.kpi is None else f"{r.kpi.get('percentage')}% ({r.kpi.get('grade')})"
         gdc = "–" if r.gdc is None else (f"[{r.gdc['status']}]({r.gdc['url']})"

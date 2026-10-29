@@ -408,3 +408,11 @@ def test_download_failure_matched_via_cache_url_filename(fast_cfg, net, record, 
     net.gdc_download_fails = True   # its link is the cache copy's URL, not our Pages URL
     (r,) = run(fast_cfg, net, [job(record)], tmp_path)
     assert any("WCMP2 access failure" in e for e in r.errors)
+
+
+def test_gdc_rejection_wording(fast_cfg, net, record, tmp_path):
+    (r,) = run(fast_cfg, net, [job(other_centre(record))], tmp_path)
+    assert "GDC rejected the record: Topic mismatch (io-wis2dev-metdx-demo != xx-other)" in r.errors
+    assert not any("GDC ETS" in e for e in r.errors)
+    assert r.ets["rejected"].startswith("Topic mismatch")
+    assert "| rejected |" in publish.to_markdown([r])

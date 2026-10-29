@@ -350,7 +350,9 @@ class Helper:
         if not failures and mon.severity(event) in ("ERROR", "CRITICAL"):
             # e.g. "Topic mismatch": the GDC rejected the record before running the tests
             reason = mon.description(event) or mon.title(event)
-            failures = [{"id": "gdc", "code": "FAILED", "message": reason}]
+            self.result.ets = {"rejected": reason, "summary": None, "source": event.get("source"), "failed": []}
+            self.result.errors.append(f"GDC rejected the record: {reason}")
+            return
         self.result.ets = {"summary": mon.report(event).get("summary"), "source": event.get("source"),
                            "failed": [{"test": mon.short_test_id(t), "message": t.get("message")} for t in failures]}
         for t in failures:
