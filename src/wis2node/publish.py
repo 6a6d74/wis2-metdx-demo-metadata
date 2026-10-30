@@ -186,13 +186,15 @@ def run(cfg: dict, jobs: list[Job], password: str, log_dir: Path, wait_for_pages
         timeouts = dict(cfg["timeouts"])
         gdc_url = cfgmod.get(cfg, "global_discovery_catalogue", "url") or None
         gdc_interval = cfgmod.get(cfg, "global_discovery_catalogue", "poll_interval", default=10)
+        gdc_source = cfgmod.get(cfg, "global_discovery_catalogue", "source") or None
         helpers = [Helper(job, centre_id=cfg["centre_id"], publisher=clients["local-pub"], router=router,
                           timeouts=timeouts, log=JsonlLog(log_dir / f"{Path(job.source_path).stem}.jsonl"),
                           wait_for_pages=wait_for_pages,
                           ets_failures_as_warnings=cfgmod.get(cfg, "monitor", "ets_failures_as_warnings", default=[]),
                           kpi_warn_below=cfgmod.get(cfg, "kpi", "warn_below_percentage"),
                           require_kpi=bool(cfgmod.get(cfg, "monitor", "require_kpi", default=False)),
-                          gdc_url=gdc_url, gdc_interval=gdc_interval, **helper_overrides)
+                          gdc_url=gdc_url, gdc_interval=gdc_interval, gdc_source=gdc_source,
+                          **helper_overrides)
                    for job in jobs]
         workers = max(1, min(len(helpers), cfgmod.get(cfg, "publish", "max_workers", default=4)))
         with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="helper") as pool:
@@ -228,9 +230,15 @@ def to_markdown(results: list[Result], dry_run: bool = False) -> str:
         lines.append(f"| [`{r.source_path}`]({r.url})<br>{r.metadata_id} | {r.action} | {seen(LOCAL)} | {seen(GB)} "
                      f"| {len(r.gb_events)} | {ets} | {kpi} | {gdc} | {icon} |")
     for r in results:
-        if r.errors or r.warnings:
+        if r.errors or r.warnings or r.other_gdcs:
             lines += ["", f"### `{r.source_path}`", f"message id `{r.message_id}`"]
             lines += [f"- ❌ {e}" for e in r.errors] + [f"- ⚠️ {w}" for w in r.warnings]
+            lines += [f"- ℹ️ other catalogue `{o['source']}`: {o['summary']} ({o['severity'] or 'no severity'})"
+                      for o in r.other_gdcs]
+    others = sorted({o["source"] for r in results for o in r.other_gdcs})
+    if others:
+        lines += ["", "ℹ️ Also processed by other catalogues (information only, not counted): "
+                  + ", ".join(f"`{s}`" for s in others)]
     return "\n".join(lines) + "\n"
 
 

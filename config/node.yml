@@ -28,6 +28,10 @@ global_discovery_catalogue:
   # (or, for a deletion, until it is gone). Empty disables the check.
   url: https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata
   poll_interval: 10
+  # centre-id (CloudEvents "source") of the target catalogue: only its monitoring events
+  # (ETS, KPI, download/deletion reports) count. Reports from other catalogues are listed
+  # as information in the run report. Empty: accept reports from any catalogue.
+  source: io-wis2dev-labs-global-discovery-catalogue
 
 pages:
   # Empty means use the URL reported by the GitHub Pages deployment.

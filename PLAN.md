@@ -190,8 +190,8 @@ To raise with the **Labs GDC operators**, for example via `tomkralidis`:
 
 3. **Records naming other centres.** Ask whether the Labs GDC accepts records whose `id` centre-id differs from the publishing topic's centre-id. Upstream it rejects them unconditionally ("Topic mismatch"). If it doesn't accept them, publishing such records from this node won't put them in the catalogue. *(2026-10-30: **resolved for the Labs GDC** by Tom's hotfix: it registers such records. The other GDC still rejects them.)*
 
-4. **Labs GDC monitoring events.** Ask for the Labs GDC's events (published to its own broker) to be relayed to `gb.wis2dev.io`, or for subscriber access to its broker. Also ask for a **distinct `source`** for the Labs GDC (e.g. `…-labs-global-discovery-catalogue`). Then add a setting (e.g. `global_discovery_catalogue.source`) so the publisher counts only that GDC's reports and logs the others for information.
-5. **Confirm the two-GDC picture** with Tom: the other GDC's log for `d92132ea…`, or the GB's subscriptions.
+4. **Labs GDC monitoring events.** Ask for the Labs GDC's events (published to its own broker) to be relayed to `gb.wis2dev.io`, or for subscriber access to its broker. Also ask for a **distinct `source`** for the Labs GDC (e.g. `…-labs-global-discovery-catalogue`). Then add a setting (e.g. `global_discovery_catalogue.source`) so the publisher counts only that GDC's reports and logs the others for information. *(2026-10-30: Tom confirmed the shared centre-id. The Labs GDC is now `io-wis2dev-labs-global-discovery-catalogue`, configured as `global_discovery_catalogue.source`: only its reports count, and others are reported as info. **Still to confirm:** that the Labs GDC's events reach `gb.wis2dev.io`. None with the new source had been seen by 12:09Z.)*
+5. **Confirm the two-GDC picture** with Tom: the other GDC's log for `d92132ea…`, or the GB's subscriptions. *(2026-10-30: **confirmed by Tom**: both instances used the same centre-id.)*
 
 Also deferred (our own work):
 

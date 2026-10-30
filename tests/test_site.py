@@ -158,3 +158,11 @@ def test_registered_anyway_badge(record):
                                                           "registered_anyway": True, "failed": []}}}
     html = site.render_index({"centre_id": "c", "records": {record["id"]: entry}})
     assert "GDC warning, registered" in html and "GDC rejected" not in html
+
+
+def test_other_catalogues_listed(record):
+    entry = {"id": record["id"], "title": "x", "versions": [], "current_path": "metadata/a/a.S.json",
+             "last_publication": {"status": "ok", "other_gdcs": [
+                 {"source": "ca-eccc-msc-global-discovery-catalogue", "summary": "ETS 12 passed", "severity": "INFO"}]}}
+    html = site.render_index({"centre_id": "c", "records": {record["id"]: entry}})
+    assert "also processed by: ca-eccc-msc-global-discovery-catalogue" in html

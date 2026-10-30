@@ -463,3 +463,51 @@ def test_missing_ets_downgraded_when_gdc_registers(fast_cfg, net, record, tmp_pa
     net.gdc_sends_ets = False
     (r,) = run(fast_cfg, net, [job(record)], tmp_path, gdc_version=lambda base, mid: ("absent", None))
     assert r.ok and any(w.startswith("no WCMP2 ETS report") for w in r.warnings)
+
+
+# ---------------------------------------------------------------- target catalogue vs other catalogues
+OTHER = "ca-eccc-msc-global-discovery-catalogue"   # the non-Labs instance seen on 2026-10-30
+
+
+def test_only_target_catalogue_counts(fast_cfg, net, record, tmp_path):
+    net.other_gdcs = [(OTHER, {"ets_failed": [("links", "invalid link relation root")]})]
+    (r,) = run(fast_cfg, net, [job(record)], tmp_path)
+    assert r.ok, r.errors                                   # the other GDC's FAILED doesn't count
+    assert r.ets["failed"] == []                            # target's ETS
+    (o,) = r.other_gdcs
+    assert o["source"] == OTHER and o["summary"] == "ETS 1 passed, 1 failed"
+    md = publish.to_markdown([r])
+    assert f"ℹ️ other catalogue `{OTHER}`: ETS 1 passed, 1 failed" in md
+    assert f"Also processed by other catalogues (information only, not counted): `{OTHER}`" in md
+
+
+def test_other_catalogue_mismatch_is_info_when_target_accepts(fast_cfg, net, record, tmp_path):
+    """2026-10-30: Labs GDC (target) accepts an int-ecmwf record; the other GDC rejects it."""
+    net.gdc_enforces_topic_match = False
+    net.other_gdcs = [(OTHER, {})]
+    (r,) = run(fast_cfg, net, [job(other_centre(record))], tmp_path)
+    assert r.ok and not r.warnings, (r.errors, r.warnings)
+    assert r.other_gdcs[0]["summary"] == "rejected the record: Topic mismatch (io-wis2dev-metdx-demo != xx-other)"
+
+
+def test_silent_target_is_still_an_error(fast_cfg, net, record, tmp_path):
+    net.gdc_sends_ets = False
+    net.other_gdcs = [(OTHER, {})]
+    (r,) = run(fast_cfg, net, [job(record)], tmp_path)
+    assert any("no WCMP2 ETS report" in e for e in r.errors)
+    assert r.other_gdcs and r.ets is None
+
+
+def test_empty_source_accepts_any_catalogue(fast_cfg, net, record, tmp_path):
+    fast_cfg["global_discovery_catalogue"]["source"] = ""
+    net.gdc_source = OTHER
+    (r,) = run(fast_cfg, net, [job(record)], tmp_path)
+    assert r.ok and r.ets is not None and r.other_gdcs == []
+
+
+def test_deletion_completes_only_on_target_report(fast_cfg, net, record, tmp_path):
+    net.gdc_delete_result = None             # target says nothing
+    net.other_gdcs = [(OTHER, {})]           # other GDC reports the deletion
+    (r,) = run(fast_cfg, net, [job(record, "deletion")], tmp_path)
+    assert r.ok and any("no deletion report" in w for w in r.warnings)
+    assert "deletion report" in r.other_gdcs[0]["summary"] and r.gdc_events == []
