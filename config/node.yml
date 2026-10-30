@@ -57,18 +57,18 @@ validation:
   relax_centre_id_checks: true
   # Require record ids to start with urn:wmo:md:<centre_id>: (default true: normally
   # a node only publishes its own records). false for this demo, where records
-  # appear to come from many WIS centres. Note: the GDC compares the record's
-  # centre-id with the publishing topic's and, unless configured otherwise, does
-  # not register records that differ ("Topic mismatch"). See PLAN.md.
+  # appear to come from many WIS centres. A standard GDC rejects records whose
+  # centre-id differs from the publishing topic's ("Topic mismatch"); the Labs GDC
+  # has been changed to accept them. See PLAN.md.
   require_centre_id_prefix: false
 
 monitor:
   # GDC ETS tests (short ids, e.g. "identifier", "links") whose FAILED result is
   # reported as a warning instead of an error. Empty: every FAILED is an error.
   ets_failures_as_warnings: []
-  # Whether a helper must also receive a GDC KPI report to succeed. The GDC only
-  # sends KPI reports when WMO_RESOURCE_CATALOGUE_RUN_KPI=true (off by default, and
-  # off on the Labs GDC as of 2026-10-29); a KPI report is recorded whenever one arrives.
+  # Whether a helper must also receive a KPI report from the target GDC to succeed.
+  # A GDC only sends KPI reports when WMO_RESOURCE_CATALOGUE_RUN_KPI=true (off by
+  # default; none seen so far). A KPI report is recorded whenever one arrives.
   require_kpi: false
 
 publish:
