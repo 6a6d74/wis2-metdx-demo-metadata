@@ -65,6 +65,7 @@ class Result:
     ets: dict | None = None
     kpi: dict | None = None
     gdc: dict | None = None                                    # Labs GDC confirmation
+    other_gdcs: list[dict] = field(default_factory=list)       # reports from non-target catalogues (info)
     timings: dict[str, float] = field(default_factory=dict)
     log_file: str | None = None
 
@@ -163,6 +164,9 @@ class Router:
             return target
 
 
+GDC_REPORTS = (mon.ETS_REPORT, mon.KPI_REPORT, mon.ITEM_EVENT)  # report types sent by a catalogue
+
+
 def _filename(url: str) -> str:
     return url.rstrip("/").rsplit("/", 1)[-1]
 
@@ -178,7 +182,8 @@ class Helper:
                  gdc_url: str | None = None, gdc_interval: float = 10.0,
                  gdc_present: Callable[..., float] = wait_for_record,
                  gdc_absent: Callable[..., float] = wait_for_absence,
-                 gdc_version: Callable[..., tuple[str, str | None]] = current_version):
+                 gdc_version: Callable[..., tuple[str, str | None]] = current_version,
+                 gdc_source: str | None = None):
         self.job = job
         self.centre_id = centre_id
         self.publisher = publisher
@@ -197,6 +202,7 @@ class Helper:
         self.gdc_present = gdc_present
         self.gdc_absent = gdc_absent
         self.gdc_version = gdc_version
+        self.gdc_source = gdc_source  # only this catalogue's reports count; others are reported as info
         self._gdc_before: tuple[str, str | None] | None = None  # what the GDC held before we published
         self._soft_errors: list[str] = []  # errors that the GDC registering this version overrides
         self.inbox: queue.Queue = queue.Queue()
@@ -356,6 +362,10 @@ class Helper:
         if cls in (mon.ETS_REPORT, mon.KPI_REPORT) and self._is_stale(body):
             self.log.write("stale-event", source=source, topic=topic, event=body)
             return
+        if cls in GDC_REPORTS and self.gdc_source and body.get("source") != self.gdc_source:
+            self.log.write("other-gdc-event", source=source, topic=topic, classified=cls, event=body)
+            self._on_other_gdc(cls, body)
+            return
         self.log.write("event", source=source, topic=topic, classified=cls, event=body)
         {mon.WNM_EVENT: self._on_wnm_event, mon.ETS_REPORT: self._on_ets,
          mon.KPI_REPORT: self._on_kpi, mon.ITEM_EVENT: self._on_item}.get(cls, self._on_other)(body)
@@ -417,6 +427,25 @@ class Helper:
             self.result.errors.append(text)
         elif sev == "WARNING":
             self.result.warnings.append(text)
+
+    def _on_other_gdc(self, cls: str, event: dict) -> None:
+        """A report from a catalogue other than the target: shows where else our records
+        are processed; never affects the record's result."""
+        sev = mon.severity(event)
+        if cls == mon.ETS_REPORT:
+            failures = mon.ets_failures(event)
+            if not failures and sev in ("ERROR", "CRITICAL"):
+                summary = f"rejected the record: {mon.description(event) or mon.title(event)}"
+            else:
+                counts = mon.report(event).get("summary") or {}
+                summary = "ETS " + (", ".join(f"{v} {k.lower()}" for k, v in counts.items() if v) or "received")
+        elif cls == mon.KPI_REPORT:
+            s = mon.kpi_summary(event)
+            summary = f"KPI {s.get('percentage')}% (grade {s.get('grade')})"
+        else:
+            summary = mon.title(event) + (f": {mon.description(event)}" if mon.description(event) else "")
+        self.result.other_gdcs.append({"source": event.get("source") or "unknown", "type": event.get("type"),
+                                       "severity": sev, "summary": summary})
 
     def _on_other(self, event: dict) -> None:
         if mon.severity(event) in ("ERROR", "CRITICAL"):

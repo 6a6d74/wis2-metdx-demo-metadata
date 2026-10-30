@@ -206,6 +206,8 @@ Each helper works through these steps, and a failure in one record never stops t
    - the GDC's **ETS** report (required; any FAILED test fails the record)
    - the GDC's **KPI** report (recorded if it arrives; required only if `monitor.require_kpi` is set)
    - the GDC's download-failure and deletion reports
+
+   Only reports from the **target catalogue** (`global_discovery_catalogue.source`) count. Reports from any other catalogue instance that processes our notifications are listed as ℹ️ information, naming that catalogue's centre-id.
 5. **Confirm in the GDC:** poll the Labs GDC's API until it holds this version of the record, matched on `updated`/`created`. For a deletion, poll until the record is gone.
    - **The GDC's catalogue is treated as ground truth.** Before publishing, the helper notes which version the GDC already holds. If the GDC then changes to exactly this version, a GDC rejection event (e.g. "Topic mismatch") or a missing ETS report is shown as a ⚠️ warning, and the record passes.
    - **A re-announce of unchanged content** (same `updated`) can't be confirmed this way. It stays an error, with a hint to change `properties.updated`.
@@ -245,6 +247,7 @@ Settings live in [`config/node.yml`](config/node.yml). Change them through a PR,
 | `global_broker.subscribe.username` / `.password` | `everyone` / `everyone` | Public subscriber credentials. |
 | `global_discovery_catalogue.url` | Labs GDC `…/collections/wis2-discovery-metadata` | OGC API - Records collection to confirm records in. Empty turns the check off. |
 | `global_discovery_catalogue.poll_interval` | `10` | Seconds between GDC checks. |
+| `global_discovery_catalogue.source` | `io-wis2dev-labs-global-discovery-catalogue` | Centre-id (event `source`) of the **target** catalogue. Only its ETS, KPI, download and deletion reports count. Reports from other catalogue instances are listed as ℹ️ information in the run report, with their centre-id, to show where else our records go. Empty: accept reports from any catalogue. |
 | `pages.base_url` | `""` | Public base URL of the records. Empty means use the URL GitHub reports for Pages. Set it if you use a custom domain. |
 | `timeouts.broker_connect` | `15` | Seconds to wait for each broker to accept a connection or subscription. |
 | `timeouts.pages_live` | `300` | Seconds to wait for a record to be served correctly by Pages. |
