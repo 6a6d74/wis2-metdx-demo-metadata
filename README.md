@@ -29,8 +29,9 @@ record:
 1. The record is placed on GitHub Pages under a timestamped filename.
 2. A WIS2 Notification Message is published to the local broker.
 3. The workflow confirms that the local broker and the Global Broker delivered the message.
-4. The workflow collects the Global Discovery Catalogue's validation report (ETS), plus its
-   quality report (KPI) when the GDC sends one.
+4. The workflow collects the **target** Global Discovery Catalogue's validation report (ETS),
+   plus its quality report (KPI) when the GDC sends one. The target is the Labs GDC. Reports
+   from any other catalogue that processes our records are listed for information.
 5. The workflow confirms that the record is now in the Labs Global Discovery Catalogue.
 
 Deleting a file in a merged PR publishes a deletion notice.
@@ -100,8 +101,13 @@ The two ⚠️ warnings about `centre_id` (`identifier` and `links`) are expecte
 
 Publishing starts automatically and takes about 1–2 minutes. You can watch it under **Actions → Publish**, where the run's summary shows one row per record:
 - **Local / GB:** the notification was delivered by our broker and by the Global Broker.
-- **GDC ETS:** the Global Discovery Catalogue's validation of your record.
+- **GDC ETS:** the target (Labs) catalogue's validation of your record.
 - **In GDC:** the record is now in the Labs catalogue.
+
+Below the table, each record may have:
+- ❌ **errors:** the record failed.
+- ⚠️ **warnings:** the record passed, but something needs attention. For example, "no WCMP2 ETS report … but the GDC registered this version anyway" means the Labs catalogue accepted your record even though its report didn't reach us.
+- ℹ️ **other catalogues:** reports from other catalogue instances that also processed your record, with their centre-id (e.g. ``other catalogue `ca-eccc-msc-global-discovery-catalogue`: ETS 12 passed``). These are information only. Some of them reject records whose `id` names another centre ("Topic mismatch"), but that doesn't affect our result.
 
 Then find your record:
 - on the [catalogue page](https://6a6d74.github.io/wis2-metdx-demo-metadata/), with its checksum and history
@@ -131,7 +137,8 @@ Downstream WIS2 components that we only observe:
 | Component | What we check |
 |---|---|
 | **Global Broker** (`gb.wis2dev.io`) | It delivers our message, and it raises validation events if the message is invalid. |
-| **Global Discovery Catalogue** (Labs) | It sends a WCMP2 ETS report, and a KPI report if enabled. It then holds the record, which we confirm through its API. |
+| **Labs Global Discovery Catalogue**: the **target** (`io-wis2dev-labs-global-discovery-catalogue`) | Its WCMP2 ETS report (and KPI, if enabled) counts towards the record's result. It holds the record, which we confirm through its API. |
+| **Other catalogue instances** (e.g. `ca-eccc-msc-global-discovery-catalogue`) | They also process our notifications. Their reports are listed in the run report as information only, with their centre-id. |
 
 ```text
 1. Change control (GitHub)
@@ -178,12 +185,12 @@ The **Validate** workflow runs on every PR. It checks only the records that the 
 
 - A file is not valid JSON, or has no `id`.
 - A record fails the WCMP2 schema, or any WCMP2 ETS test returns FAILED (pywcmp, the same version the GDC runs).
-- An `id` doesn't start with `urn:wmo:md:<centre_id>:`.
+- An `id` doesn't start with `urn:wmo:md:<centre_id>:`. This applies only if `validation.require_centre_id_prefix` is on; it is off in this repo, where demo records may name other centres.
 - Two records share an `id`.
 - A changed record has a different `id`, or its `properties.updated` was not moved later.
 - A file under `metadata/` isn't `metadata/<name>.json`.
 
-The KPI score is reported for information only. The report is posted as a comment on the PR. Branch rules on `main` require this check to pass and one approving review from a collaborator before merging.
+The KPI score is reported for information only, and so are warnings, e.g. links that look copied from a catalogue's copy of a record (the GDC's own `root`/`self`/`alternate`/`collection` links). The report is posted as a comment on the PR. Branch rules on `main` require this check to pass and one approving review from a collaborator before merging.
 
 ### On merge: Publish
 
@@ -201,7 +208,7 @@ Each helper works through these steps, and a failure in one record never stops t
 1. **Wait until live:** poll the record's new URL until Pages serves exactly the committed bytes, by SHA-512. Because every publication uses a new filename, a stale cached copy is impossible.
 2. **Publish** the WIS2 Notification Message to `origin/a/wis2/<centre_id>/metadata`, with QoS 1, and wait for the broker to acknowledge it. The message `rel` is `canonical` for a new record, `update` for a change and `deletion` for a removal.
 3. **Confirm delivery:** our message, identified by its message ID, must come back via the **local broker and the Global Broker** within `timeouts.delivery`.
-4. **Collect monitoring events** on `monitor/a/wis2/<centre_id>`, within `timeouts.monitor`:
+4. **Collect monitoring events** within `timeouts.monitor`, on `monitor/a/wis2/<centre_id>` and on `monitor/a/wis2/<centre-id>` of every centre named in the run's record ids. A GDC reports to the centre in the record's `id`.
    - GB validation events about our message (ERROR fails the record)
    - the GDC's **ETS** report (required; any FAILED test fails the record)
    - the GDC's **KPI** report (recorded if it arrives; required only if `monitor.require_kpi` is set)
@@ -256,10 +263,10 @@ Settings live in [`config/node.yml`](config/node.yml). Change them through a PR,
 | `timeouts.gdc` | `120` | Seconds for the GDC to show the record (or remove it). |
 | `timeouts.clock_skew` | `30` | GDC reports dated more than this many seconds before our publish are ignored as stale. |
 | `kpi.warn_below_percentage` | `null` | Warn (never fail) when a KPI score is below this value. |
-| `validation.require_centre_id_prefix` | `true` (code default); **`false` in this repo** | Require record ids to start with `urn:wmo:md:<centre_id>:`. Normally a node publishes only its own records. It is off here because demo records appear to come from many WIS centres. Note that the GDC compares the record's centre-id with the publishing topic's ("Topic mismatch") and, unless it is configured otherwise, does not register records that differ. |
+| `validation.require_centre_id_prefix` | `true` (code default); **`false` in this repo** | Require record ids to start with `urn:wmo:md:<centre_id>:`. Normally a node publishes only its own records. It is off here because demo records appear to come from many WIS centres. A standard GDC compares the record's centre-id with the publishing topic's ("Topic mismatch") and doesn't register records that differ. The Labs GDC has been changed to accept them; other catalogue instances may still reject them (shown as information). |
 | `validation.relax_centre_id_checks` | `true` | pywcmp fails centre-ids that aren't in the official WIS2 list, and ours is a test centre. `true` reports those tests as warnings. Our own prefix rule still applies. |
 | `monitor.ets_failures_as_warnings` | `[]` | GDC ETS tests (short names, e.g. `identifier`) whose FAILED result counts as a warning instead of an error. |
-| `monitor.require_kpi` | `false` | Require a GDC KPI report for success. The GDC only sends KPI reports when its `WMO_RESOURCE_CATALOGUE_RUN_KPI` setting is on, and that is off on the Labs GDC. |
+| `monitor.require_kpi` | `false` | Require a KPI report from the target GDC for success. A GDC only sends KPI reports when its `WMO_RESOURCE_CATALOGUE_RUN_KPI` setting is on. None has been seen so far; re-check once the Labs GDC's events reach `gb.wis2dev.io`. |
 | `publish.max_workers` | `4` | Number of records published in parallel. |
 
 **Secrets** are kept in the `wis2-publish` GitHub environment. Only workflows running from `main` can use them, so collaborators never see them and PRs from forks never get them.
