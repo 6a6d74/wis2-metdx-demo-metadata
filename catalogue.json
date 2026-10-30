@@ -95,8 +95,31 @@
         "run_id": "41043833584",
         "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/41043833584",
         "action": "update",
-        "status": "pending",
-        "stamp": "20261030T105158Z"
+        "status": "failed",
+        "stamp": "20261030T105158Z",
+        "stage": "done",
+        "message_id": "10d7cd04-c0dd-42e9-a97a-07784c8af36b",
+        "errors": [
+          "GDC rejected the record: Topic mismatch (io-wis2dev-metdx-demo != int-ecmwf)"
+        ],
+        "warnings": [],
+        "ets": {
+          "rejected": "Topic mismatch (io-wis2dev-metdx-demo != int-ecmwf)",
+          "summary": null,
+          "source": "ca-eccc-msc-global-discovery-catalogue",
+          "failed": []
+        },
+        "kpi": null,
+        "gdc": {
+          "status": "present",
+          "seconds": 10.8,
+          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aweather.prediction.forecast.global?f=json"
+        },
+        "delivered": {
+          "local": 0.12,
+          "gb": 0.16
+        },
+        "log": "logs/41043833584/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.jsonl"
       },
       "title": "ECMWF IFS Global Deterministic Forecast (Destination Earth)",
       "source_path": "metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.json",
@@ -166,5 +189,5 @@
     }
   },
   "published_commit": "57c5ce058ec7be1aee6edbb3c2eb46f196a28a7c",
-  "updated": "2026-10-30T10:52:00Z"
+  "updated": "2026-10-30T10:52:57Z"
 }
