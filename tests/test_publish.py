@@ -22,6 +22,7 @@ def net():
 def fast_cfg(cfg, monkeypatch):
     monkeypatch.delenv("LOCAL_BROKER_URL", raising=False)
     cfg["timeouts"].update(delivery=1, monitor=1, pages_live=1, broker_connect=1)
+    cfg["monitor"]["kpi_grace"] = 0.3
     cfg["local_broker"]["url"] = "mqtts://local.example:8883"   # in Actions: the LOCAL_BROKER_URL secret
     return cfg
 
@@ -459,10 +460,31 @@ def test_rejection_stays_error_when_gdc_does_not_hold_it(fast_cfg, net, record, 
     assert not r.ok and any("GDC rejected the record" in e for e in r.errors)
 
 
-def test_missing_ets_downgraded_when_gdc_registers(fast_cfg, net, record, tmp_path):
+def test_missing_ets_is_an_error_even_if_gdc_registers(fast_cfg, net, record, tmp_path):
+    """The target's ETS report is mandatory: GDC registration doesn't excuse its absence."""
     net.gdc_sends_ets = False
     (r,) = run(fast_cfg, net, [job(record)], tmp_path, gdc_version=lambda base, mid: ("absent", None))
-    assert r.ok and any(w.startswith("no WCMP2 ETS report") for w in r.warnings)
+    assert not r.ok and any(e.startswith("no WCMP2 ETS report") for e in r.errors)
+    assert r.gdc["status"] == "present"
+
+
+def test_optional_kpi_recorded_within_grace(fast_cfg, net, record, tmp_path):
+    net.gdc_kpi_delay = 0.15              # arrives after the ETS, within the 0.3 s grace
+    (r,) = run(fast_cfg, net, [job(record)], tmp_path)
+    assert r.ok and r.kpi["grade"] == "A"
+
+
+def test_optional_kpi_late_is_not_an_error(fast_cfg, net, record, tmp_path):
+    net.gdc_kpi_delay = 1.0               # after the grace
+    (r,) = run(fast_cfg, net, [job(record)], tmp_path)
+    assert r.ok and r.kpi is None and not r.errors
+
+
+def test_required_kpi_waits_for_it(fast_cfg, net, record, tmp_path):
+    fast_cfg["monitor"]["require_kpi"] = True
+    net.gdc_kpi_delay = 0.5               # beyond the grace but within the monitor timeout
+    (r,) = run(fast_cfg, net, [job(record)], tmp_path)
+    assert r.ok and r.kpi is not None
 
 
 # ---------------------------------------------------------------- target catalogue vs other catalogues

@@ -177,7 +177,8 @@ class Helper:
     def __init__(self, job: Job, *, centre_id: str, publisher: Publisher, router: Router,
                  timeouts: dict, log: JsonlLog, wait_for_pages: bool = True,
                  ets_failures_as_warnings: list[str] | None = None,
-                 kpi_warn_below: float | None = None, require_kpi: bool = False, clock=time.monotonic,
+                 kpi_warn_below: float | None = None, require_kpi: bool = False, kpi_grace: float = 0,
+                 clock=time.monotonic,
                  live_check: Callable[..., float] = wait_until_live,
                  gdc_url: str | None = None, gdc_interval: float = 10.0,
                  gdc_present: Callable[..., float] = wait_for_record,
@@ -194,6 +195,7 @@ class Helper:
         self.ets_relaxed = set(ets_failures_as_warnings or [])
         self.kpi_warn_below = kpi_warn_below
         self.require_kpi = require_kpi
+        self.kpi_grace = kpi_grace  # seconds to wait for an optional KPI report after the ETS
         self._deletion_reported = False
         self.clock = clock
         self.live_check = live_check
@@ -262,9 +264,11 @@ class Helper:
                 self._await(lambda: r.ets is not None and (r.kpi is not None or not self.require_kpi),
                             t1, self.timeouts["monitor"])
                 if r.ets is None:
-                    msg = f"no WCMP2 ETS report from the GDC within {self.timeouts['monitor']}s"
-                    r.errors.append(msg)
-                    self._soft_errors.append(msg)
+                    # mandatory: never downgraded, even if the GDC registers the record
+                    r.errors.append(f"no WCMP2 ETS report from the GDC within {self.timeouts['monitor']}s")
+                elif r.kpi is None and not self.require_kpi and self.kpi_grace > 0:
+                    # optional KPI: the GDC sends it a few seconds after the ETS; record it if it comes
+                    self._await(lambda: r.kpi is not None, self.clock(), self.kpi_grace)
                 if r.kpi is None and self.require_kpi:
                     r.errors.append(f"no WCMP2 KPI report from the GDC within {self.timeouts['monitor']}s")
             r.timings["monitor"] = round(self.clock() - t1, 1)

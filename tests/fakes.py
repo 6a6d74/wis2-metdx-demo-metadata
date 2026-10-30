@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import threading
 import uuid
 from datetime import datetime, timedelta, timezone
 
@@ -45,6 +46,7 @@ class FakeWIS2:
         self.gdc_delete_result = "deleted"  # "deleted" (INFO), "not found" (ERROR) or None (no report)
         self.gdc_enforces_topic_match = True  # real GDC: record centre-id must equal the topic's
         self.gdc_source = "io-wis2dev-labs-global-discovery-catalogue"   # the target (config)
+        self.gdc_kpi_delay = 0.0          # seconds between the target's ETS and KPI reports
         self.other_gdcs = []              # [(source, {option overrides})]: other catalogue instances
 
     def factory(self, name, url, username, password, prefix, on_message=None, label=None):
@@ -89,14 +91,16 @@ class FakeWIS2:
         # the target catalogue, with all the behaviour knobs
         self._gdc(self.gdc_source, enforce=self.gdc_enforces_topic_match, ets_failed=self.gdc_ets_failed,
                   sends_ets=self.gdc_sends_ets, sends_kpi=self.gdc_sends_kpi, delete_result=self.gdc_delete_result,
-                  download_fails=self.gdc_download_fails, stale=self.gdc_stale_ets, **ctx)
+                  download_fails=self.gdc_download_fails, stale=self.gdc_stale_ets,
+                  kpi_delay=self.gdc_kpi_delay, **ctx)
         # other catalogue instances that also process our notifications
         for source, opts in self.other_gdcs:
             self._gdc(source, **{"enforce": True, "ets_failed": [], "sends_ets": True, "sends_kpi": False,
-                                 "delete_result": "deleted", "download_fails": False, "stale": False, **opts}, **ctx)
+                                 "delete_result": "deleted", "download_fails": False, "stale": False,
+                                 "kpi_delay": 0.0, **opts}, **ctx)
 
     def _gdc(self, source, *, enforce, ets_failed, sends_ets, sends_kpi, delete_result, download_fails, stale,
-             rel, mid, cached, record_centre, mon):
+             kpi_delay, rel, mid, cached, record_centre, mon):
         rec_mon = f"monitor/a/wis2/{record_centre}"
         if rel == "deletion":
             if delete_result:
@@ -132,7 +136,11 @@ class FakeWIS2:
             report = {"id": str(uuid.uuid4()), "report_type": "kpi", "metadata_id": mid, "tests": [],
                       "summary": {"total": 20, "score": 17, "percentage": self.gdc_kpi_percentage, "grade": "A"}}
             ev = self._event("int.wmo.wis.wme.event.wcmp2.kpi", source, report)
-            self._deliver("gb-sub", rec_mon, json.dumps(ev).encode())
+            send = lambda: self._deliver("gb-sub", rec_mon, json.dumps(ev).encode())  # noqa: E731
+            if kpi_delay:
+                threading.Timer(kpi_delay, send).start()   # like the real GDC: KPI a little after ETS
+            else:
+                send()
 
 
 class FakeClient:

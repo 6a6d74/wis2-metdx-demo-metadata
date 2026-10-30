@@ -193,6 +193,7 @@ def run(cfg: dict, jobs: list[Job], password: str, log_dir: Path, wait_for_pages
                           ets_failures_as_warnings=cfgmod.get(cfg, "monitor", "ets_failures_as_warnings", default=[]),
                           kpi_warn_below=cfgmod.get(cfg, "kpi", "warn_below_percentage"),
                           require_kpi=bool(cfgmod.get(cfg, "monitor", "require_kpi", default=False)),
+                          kpi_grace=float(cfgmod.get(cfg, "monitor", "kpi_grace", default=0) or 0),
                           gdc_url=gdc_url, gdc_interval=gdc_interval, gdc_source=gdc_source,
                           **helper_overrides)
                    for job in jobs]
