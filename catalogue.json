@@ -105,46 +105,31 @@
           "length": 6849,
           "published": "20261030T112544Z",
           "action": "update"
+        },
+        {
+          "path": "metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261030T122616Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261030T122616Z.json",
+          "sha512_hex": "24a65dc38bbf01126e90eb0d71f85bc6ec0f7aacd7bddcdff8c911457f337da783c811848f9f0efeb7df0d9bdcd7ac74e74c2810b7f349f9b938cbbac4744a8f",
+          "length": 6849,
+          "published": "20261030T122616Z",
+          "action": "update"
         }
       ],
       "last_publication": {
-        "run_id": "41047981774",
-        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/41047981774",
+        "run_id": "41055291968",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/41055291968",
         "action": "update",
-        "status": "failed",
-        "stamp": "20261030T112544Z",
-        "stage": "done",
-        "message_id": "1eb45886-f8b6-4b12-a486-b788d67a6626",
-        "errors": [
-          "GDC rejected the record: Topic mismatch (io-wis2dev-metdx-demo != int-ecmwf)"
-        ],
-        "warnings": [],
-        "ets": {
-          "rejected": "Topic mismatch (io-wis2dev-metdx-demo != int-ecmwf)",
-          "summary": null,
-          "source": "ca-eccc-msc-global-discovery-catalogue",
-          "failed": []
-        },
-        "kpi": null,
-        "gdc": {
-          "status": "present",
-          "seconds": 1.4,
-          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aweather.prediction.forecast.global?f=json"
-        },
-        "delivered": {
-          "local": 0.16,
-          "gb": 0.16
-        },
-        "log": "logs/41047981774/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.jsonl"
+        "status": "pending",
+        "stamp": "20261030T122616Z"
       },
       "title": "ECMWF IFS Global Deterministic Forecast (Destination Earth)",
       "source_path": "metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.json",
-      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261030T112544Z.json",
-      "current_path": "metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261030T112544Z.json",
-      "sha512_hex": "c13d4b661830669994aad70628cd01d6bde63a445f4a3fa26285c4a6b28cd53c43741cdbc61ee353329ce12b5e494327c02651893419d0bd4c6702c23c1aec74",
-      "sha512_b64": "wT1LZhgwZpmUqtcGKM0B1r3mOkRfSj+iYoXEprKM1TxDdBzbxh7jUzKc4SteSUMnwCZRiTQZ0L1MZwLCPBrsdA==",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261030T122616Z.json",
+      "current_path": "metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261030T122616Z.json",
+      "sha512_hex": "24a65dc38bbf01126e90eb0d71f85bc6ec0f7aacd7bddcdff8c911457f337da783c811848f9f0efeb7df0d9bdcd7ac74e74c2810b7f349f9b938cbbac4744a8f",
+      "sha512_b64": "JKZdw4u/ARJukOsNcfhbxuwPeqzXvdzf+MkRRX8zfaeDyBGEj58O/rffDZvc16x050woELfzSfm5OMu6xHRKjw==",
       "length": 6849,
-      "published": "20261030T112544Z",
+      "published": "20261030T122616Z",
       "deleted": false,
       "deleted_at": null
     },
@@ -214,5 +199,5 @@
     }
   },
   "published_commit": "e3cc840630c398f5be559d91d893288aafb94930",
-  "updated": "2026-10-30T12:18:32Z"
+  "updated": "2026-10-30T12:26:18Z"
 }
