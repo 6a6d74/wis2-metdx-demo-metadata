@@ -147,6 +147,28 @@ The publisher now treats the GDC catalogue as ground truth. It snapshots the GDC
 
 Worth feeding back to the GDC operators (part of follow-up task 3): downgrade the mismatch event in Labs mode, and still run and report the ETS.
 
+## Two GDCs process our notifications (2026-10-30)
+
+Tom supplied the Labs GDC's log for the PR #24 publication (Global Cache notification `d92132ea…`, about 11:26:48Z). Taken together with our capture of all `monitor/a/wis2/#` on `gb.wis2dev.io`, it shows that **two GDC instances** process this node's notifications. Both report as `ca-eccc-msc-global-discovery-catalogue`:
+
+| | Labs GDC (`wmo-resource-catalogue.labs.wis2dev.io`) | Other GDC (`wmo-resource-catalogue.wis2dev.io`) |
+|---|---|---|
+| Hotfixed for topic/record centre-id mismatch | yes | no |
+| `int-ecmwf:weather.prediction.forecast.global` (PR #24) | **registered** (`updated` 11:24) | **rejected** (404) |
+| `io-wis2dev-metdx-demo:weather.prediction.forecast.global` (PR #22) | registered | registered |
+| Where its monitoring events go | its **own broker** (`mqtt://wmo-resource-catalogue-broker:1883`) | reach **`gb.wis2dev.io`** |
+
+**Evidence that the "Topic mismatch" event did not come from the Labs GDC** (an inference: the events carry the same `source`):
+1. Tom's Labs log for `d92132ea…`: "Comparing centre-id…" is followed directly by "Running ETS". There is no `Topic mismatch` warning (the log is at DEBUG level). The only publish logged is the **INFO ETS report, event `5f9733c7…`** (12 passed, 0 failed), and then the record is saved to Elasticsearch. Upstream, the mismatch path logs a warning, publishes an ERROR and returns before the ETS.
+2. The GB delivered a **different** event on `monitor/a/wis2/int-ecmwf`: `621b5785…`, ERROR "Topic mismatch", 11:26:48.337. Event `5f9733c7…` appears 0 times in our capture of all `monitor/a/wis2/#`.
+3. The catalogues match that split: the other GDC lacks the `int-ecmwf` record (a mismatch rejection) but holds our PR #22 record, so it does process our notifications.
+
+**Consequences:**
+- The GDC **events** we have analysed (ETS reports, the deletion report, Topic mismatch, absent KPI) very probably came from the **other** GDC. In particular, "KPI reports are off" may describe that GDC rather than the Labs one.
+- The GDC **presence check** has always queried the Labs API, so it targets the right catalogue. The "GDC confirmation wins" rule (PR #25) therefore gives the right outcome for records naming other centres.
+- The Labs GDC's own ETS reports are currently invisible to the publisher.
+- Not directly observed: which GDC brokers the GB subscribes to. To confirm: the other GDC's log should show `Topic mismatch` for `d92132ea…` / event `621b5785…`, or check the GB configuration.
+
 ## Progress
 
 | Phase | Status |
@@ -163,14 +185,17 @@ Worth feeding back to the GDC operators (part of follow-up task 3): downgrade th
 
 To raise with the **Labs GDC operators**, for example via `tomkralidis`:
 
-1. **Enable KPI reports.** The Labs GDC runs with `WMO_RESOURCE_CATALOGUE_RUN_KPI` off (the default), so it never sends WCMP2 KPI reports. If it is enabled, set `monitor.require_kpi: true` in `config/node.yml` to restore the original success rule (ETS **and** KPI received).
+1. **Enable KPI reports.** The Labs GDC runs with `WMO_RESOURCE_CATALOGUE_RUN_KPI` off (the default), so it never sends WCMP2 KPI reports. If it is enabled, set `monitor.require_kpi: true` in `config/node.yml` to restore the original success rule (ETS **and** KPI received). *(2026-10-30: the missing KPI reports may come from the other GDC, whose events are the ones we receive; see "Two GDCs process our notifications". Check which instance has RUN_KPI off.)*
 2. **MQTT links rewritten to production Global Brokers.** The Labs GDC's copy of our record has its MQTT links pointing at the production GBs (`gb.wis.cma.cn`, `wis2globalbroker.nws.noaa.gov`, `globalbroker.inmet.gov.br`, `globalbroker.meteo.fr`) instead of the test GB `gb.wis2dev.io`. Ask whether this is intended for the Labs environment.
 
-3. **Records naming other centres.** Ask whether the Labs GDC accepts records whose `id` centre-id differs from the publishing topic's centre-id. Upstream it rejects them unconditionally ("Topic mismatch"). If it doesn't accept them, publishing such records from this node won't put them in the catalogue.
+3. **Records naming other centres.** Ask whether the Labs GDC accepts records whose `id` centre-id differs from the publishing topic's centre-id. Upstream it rejects them unconditionally ("Topic mismatch"). If it doesn't accept them, publishing such records from this node won't put them in the catalogue. *(2026-10-30: **resolved for the Labs GDC** by Tom's hotfix: it registers such records. The other GDC still rejects them.)*
+
+4. **Labs GDC monitoring events.** Ask for the Labs GDC's events (published to its own broker) to be relayed to `gb.wis2dev.io`, or for subscriber access to its broker. Also ask for a **distinct `source`** for the Labs GDC (e.g. `…-labs-global-discovery-catalogue`). Then add a setting (e.g. `global_discovery_catalogue.source`) so the publisher counts only that GDC's reports and logs the others for information.
+5. **Confirm the two-GDC picture** with Tom: the other GDC's log for `d92132ea…`, or the GB's subscriptions.
 
 Also deferred (our own work):
 
-4. **D8: "open PR" button in `6a6d74/wcmp2-editor`** that pre-fills a new `metadata/<name>.json` in this repo (see section 8).
+6. **D8: "open PR" button in `6a6d74/wcmp2-editor`** that pre-fills a new `metadata/<name>.json` in this repo (see section 8).
 
 Kept open meanwhile: [#7](https://github.com/6a6d74/wis2-metdx-demo-metadata/issues/7). `"length": 7` is explained (the GDC counts the parsed record's keys); a possible upstream report is pending a decision.
 
