@@ -61,7 +61,7 @@
             "EDR",
             "OGC Maps",
             "metdx-demo",
-            "eleventwentyfour"
+            "twelvetwentyfive"
         ],
         "themes":[
             {
@@ -150,7 +150,7 @@
             }
         ],
         "created":"2026-01-01T00:00:00Z",
-        "updated":"2026-10-30T11:24:00Z",
+        "updated":"2026-10-30T12:25:00Z",
         "wmo:dataPolicy":"core",
         "rights":"Destination Earth Data Access Policy",
         "formats":[
