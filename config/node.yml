@@ -41,7 +41,9 @@ timeouts:  # seconds
   broker_connect: 15
   pages_live: 300
   delivery: 60
-  monitor: 60
+  # ETS (and KPI) reports, counted from delivery. The Labs GDC works through a queue:
+  # its ETS report took 48 s on 2026-10-30.
+  monitor: 180
   gdc: 120
   # monitoring events timestamped more than this before our publish are ignored as stale
   clock_skew: 30
@@ -70,6 +72,9 @@ monitor:
   # A GDC only sends KPI reports when WMO_RESOURCE_CATALOGUE_RUN_KPI=true (off by
   # default; none seen so far). A KPI report is recorded whenever one arrives.
   require_kpi: false
+  # With require_kpi false: after the ETS report, wait up to this many seconds for an
+  # optional KPI report so it is recorded (the Labs GDC sends it ~2.5 s after the ETS).
+  kpi_grace: 15
 
 publish:
   # helper threads running at once

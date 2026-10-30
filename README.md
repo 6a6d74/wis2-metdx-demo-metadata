@@ -106,7 +106,7 @@ Publishing starts automatically and takes about 1–2 minutes. You can watch it 
 
 Below the table, each record may have:
 - ❌ **errors:** the record failed.
-- ⚠️ **warnings:** the record passed, but something needs attention. For example, "no WCMP2 ETS report … but the GDC registered this version anyway" means the Labs catalogue accepted your record even though its report didn't reach us.
+- ⚠️ **warnings:** the record passed, but something needs attention. For example, a KPI score below the configured threshold, or "GDC rejected the record: … but the GDC registered this version anyway" (the Labs catalogue sent a rejection yet accepted the record).
 - ℹ️ **other catalogues:** reports from other catalogue instances that also processed your record, with their centre-id (e.g. ``other catalogue `ca-eccc-msc-global-discovery-catalogue`: ETS 12 passed``). These are information only. Some of them reject records whose `id` names another centre ("Topic mismatch"), but that doesn't affect our result.
 
 Then find your record:
@@ -210,13 +210,13 @@ Each helper works through these steps, and a failure in one record never stops t
 3. **Confirm delivery:** our message, identified by its message ID, must come back via the **local broker and the Global Broker** within `timeouts.delivery`.
 4. **Collect monitoring events** within `timeouts.monitor`, on `monitor/a/wis2/<centre_id>` and on `monitor/a/wis2/<centre-id>` of every centre named in the run's record ids. A GDC reports to the centre in the record's `id`.
    - GB validation events about our message (ERROR fails the record)
-   - the GDC's **ETS** report (required; any FAILED test fails the record)
-   - the GDC's **KPI** report (recorded if it arrives; required only if `monitor.require_kpi` is set)
+   - the GDC's **ETS** report (**mandatory**: a missing report or any FAILED test fails the record)
+   - the GDC's **KPI** report (optional: after the ETS report, the helper waits up to `monitor.kpi_grace` seconds so it can be recorded; required only if `monitor.require_kpi` is set)
    - the GDC's download-failure and deletion reports
 
    Only reports from the **target catalogue** (`global_discovery_catalogue.source`) count. Reports from any other catalogue instance that processes our notifications are listed as ℹ️ information, naming that catalogue's centre-id.
 5. **Confirm in the GDC:** poll the Labs GDC's API until it holds this version of the record, matched on `updated`/`created`. For a deletion, poll until the record is gone.
-   - **The GDC's catalogue is treated as ground truth.** Before publishing, the helper notes which version the GDC already holds. If the GDC then changes to exactly this version, a GDC rejection event (e.g. "Topic mismatch") or a missing ETS report is shown as a ⚠️ warning, and the record passes.
+   - **The GDC's catalogue is treated as ground truth.** Before publishing, the helper notes which version the GDC already holds. If the GDC then changes to exactly this version, a GDC rejection event (e.g. "Topic mismatch") is shown as a ⚠️ warning, and the record passes. A **missing** ETS report is never excused this way.
    - **A re-announce of unchanged content** (same `updated`) can't be confirmed this way. It stays an error, with a hint to change `properties.updated`.
 
 Every event received is written to a log. The run fails if any record fails, and the job summary lists the reason for each failure.
@@ -259,14 +259,15 @@ Settings live in [`config/node.yml`](config/node.yml). Change them through a PR,
 | `timeouts.broker_connect` | `15` | Seconds to wait for each broker to accept a connection or subscription. |
 | `timeouts.pages_live` | `300` | Seconds to wait for a record to be served correctly by Pages. |
 | `timeouts.delivery` | `60` | Seconds for both brokers to deliver our message. |
-| `timeouts.monitor` | `60` | Seconds to collect GDC reports, counted from delivery. |
+| `timeouts.monitor` | `180` | Seconds to wait for the target GDC's ETS report (and KPI, if required), counted from delivery. The Labs GDC works through a queue: its ETS report has taken 48 s. |
 | `timeouts.gdc` | `120` | Seconds for the GDC to show the record (or remove it). |
 | `timeouts.clock_skew` | `30` | GDC reports dated more than this many seconds before our publish are ignored as stale. |
 | `kpi.warn_below_percentage` | `null` | Warn (never fail) when a KPI score is below this value. |
 | `validation.require_centre_id_prefix` | `true` (code default); **`false` in this repo** | Require record ids to start with `urn:wmo:md:<centre_id>:`. Normally a node publishes only its own records. It is off here because demo records appear to come from many WIS centres. A standard GDC compares the record's centre-id with the publishing topic's ("Topic mismatch") and doesn't register records that differ. The Labs GDC has been changed to accept them; other catalogue instances may still reject them (shown as information). |
 | `validation.relax_centre_id_checks` | `true` | pywcmp fails centre-ids that aren't in the official WIS2 list, and ours is a test centre. `true` reports those tests as warnings. Our own prefix rule still applies. |
 | `monitor.ets_failures_as_warnings` | `[]` | GDC ETS tests (short names, e.g. `identifier`) whose FAILED result counts as a warning instead of an error. |
-| `monitor.require_kpi` | `false` | Require a KPI report from the target GDC for success. A GDC only sends KPI reports when its `WMO_RESOURCE_CATALOGUE_RUN_KPI` setting is on. None has been seen so far; re-check once the Labs GDC's events reach `gb.wis2dev.io`. |
+| `monitor.kpi_grace` | `15` | With `require_kpi` off: after the ETS report, seconds to wait for an optional KPI report so it's recorded. The Labs GDC sends it about 2.5 s after the ETS. A late or missing KPI report never fails a record. |
+| `monitor.require_kpi` | `false` | Require a KPI report from the target GDC for success. A GDC only sends KPI reports when its `WMO_RESOURCE_CATALOGUE_RUN_KPI` setting is on. The Labs GDC does send them (seen 2026-10-30). Off here: KPI is recorded but optional. |
 | `publish.max_workers` | `4` | Number of records published in parallel. |
 
 **Secrets** are kept in the `wis2-publish` GitHub environment. Only workflows running from `main` can use them, so collaborators never see them and PRs from forks never get them.

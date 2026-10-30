@@ -9,8 +9,8 @@ Status: **agreed 2026-10-29; all six phases delivered and verified live by 2026-
 - **Publishing works end to end** for new, updated and deleted records, verified live against `gb.wis2dev.io` and the Labs GDC.
 - **Records may name other centres** (`validation.require_centre_id_prefix: false`). The Labs GDC was hotfixed to accept them. Another catalogue instance still rejects them ("Topic mismatch"), which is shown as information only.
 - **Target catalogue:** only reports from `io-wis2dev-labs-global-discovery-catalogue` (`global_discovery_catalogue.source`) count. Reports from other instances are listed as ℹ️ information, with their centre-id.
-- **The GDC catalogue is ground truth:** if the Labs GDC changes to exactly the published version, a rejection event or a missing ETS report becomes a ⚠️ warning.
-- **Open:** `gb.wis2dev.io` is being configured (2026-10-30) to relay the Labs GDC's monitoring events. Until then, runs show "no ETS report … but the GDC registered this version anyway".
+- **The GDC catalogue is ground truth for rejections:** if the Labs GDC changes to exactly the published version, a rejection event becomes a ⚠️ warning. The target's **ETS report is mandatory**: a missing one always fails the record.
+- **The Labs GDC's events now reach `gb.wis2dev.io`** (since about 12:50Z on 2026-10-30). Its ETS reports are counted, and its KPI reports are recorded (optional, `monitor.kpi_grace`).
 
 ## Decisions (2026-10-29)
 
@@ -180,6 +180,25 @@ Tom supplied the Labs GDC's log for the PR #24 publication (Global Cache notific
 - The Labs GDC's own ETS reports are currently invisible to the publisher.
 - Not directly observed: which GDC brokers the GB subscribes to. To confirm: the other GDC's log should show `Topic mismatch` for `d92132ea…` / event `621b5785…`, or check the GB configuration.
 
+## Labs GDC events relayed to the GB (2026-10-30, about 12:50Z)
+
+The first publication after `gb.wis2dev.io` started subscribing to the Labs GDC was run 41058504996 (`int-ecmwf` record, `updated` 12:50:00Z). It was ✅ clean:
+
+| Time (UTC) | Event |
+|---|---|
+| 12:52:18.635 | our WNM `faf32d44…` (local broker 0.13 s, GB 0.17 s) |
+| 12:52:19.617 | other GDC (`ca-eccc-msc-…`): "Topic mismatch", ERROR, shown as ℹ️ only |
+| **12:53:06.782** | **Labs GDC ETS: INFO, 12 passed, 0 failed**, counted (**48 s** after our WNM: the Labs GDC works through a queue) |
+| 12:53:09 | Labs GDC catalogue `updated` changed to 12:50:00Z |
+| **12:53:09.195** | **Labs GDC KPI: 89.13%, grade A** (about 2.5 s after the ETS) |
+
+The run showed KPI "–": with KPI optional, the helper finished on the ETS report, and the publish step had disconnected before the KPI report arrived 2 s later. Changes made as a result:
+- `timeouts.monitor` 60 → **180 s**
+- **`monitor.kpi_grace: 15`**: after the ETS report, wait briefly so the optional KPI report is recorded
+- the target's ETS report is now **mandatory**: a missing one is no longer downgraded when the GDC registers the record
+
+Also seen: the Labs GDC re-processed `es-aemet` records about every 30 s (an ETS and a KPI report each time). Not ours, but worth mentioning to the operators.
+
 ## Progress
 
 | Phase | Status |
@@ -217,12 +236,12 @@ Both runs passed.
 
 To raise with the **Labs GDC operators**, for example via `tomkralidis`:
 
-1. **Enable KPI reports.** The Labs GDC runs with `WMO_RESOURCE_CATALOGUE_RUN_KPI` off (the default), so it never sends WCMP2 KPI reports. If it is enabled, set `monitor.require_kpi: true` in `config/node.yml` to restore the original success rule (ETS **and** KPI received). *(2026-10-30: the missing KPI reports may come from the other GDC, whose events are the ones we receive; see "Two GDCs process our notifications". Check which instance has RUN_KPI off.)*
+1. **Enable KPI reports.** The Labs GDC runs with `WMO_RESOURCE_CATALOGUE_RUN_KPI` off (the default), so it never sends WCMP2 KPI reports. If it is enabled, set `monitor.require_kpi: true` in `config/node.yml` to restore the original success rule (ETS **and** KPI received). *(2026-10-30: the missing KPI reports may come from the other GDC, whose events are the ones we receive; see "Two GDCs process our notifications". Check which instance has RUN_KPI off.)* **Answered 2026-10-30: the Labs GDC sends KPI reports; the other GDC doesn't.**
 2. **MQTT links rewritten to production Global Brokers.** The Labs GDC's copy of our record has its MQTT links pointing at the production GBs (`gb.wis.cma.cn`, `wis2globalbroker.nws.noaa.gov`, `globalbroker.inmet.gov.br`, `globalbroker.meteo.fr`) instead of the test GB `gb.wis2dev.io`. Ask whether this is intended for the Labs environment.
 
 3. **Records naming other centres.** Ask whether the Labs GDC accepts records whose `id` centre-id differs from the publishing topic's centre-id. Upstream it rejects them unconditionally ("Topic mismatch"). If it doesn't accept them, publishing such records from this node won't put them in the catalogue. *(2026-10-30: **resolved for the Labs GDC** by Tom's hotfix: it registers such records. The other GDC still rejects them.)*
 
-4. **Labs GDC monitoring events.** Ask for the Labs GDC's events (published to its own broker) to be relayed to `gb.wis2dev.io`, or for subscriber access to its broker. Also ask for a **distinct `source`** for the Labs GDC (e.g. `…-labs-global-discovery-catalogue`). Then add a setting (e.g. `global_discovery_catalogue.source`) so the publisher counts only that GDC's reports and logs the others for information. *(2026-10-30: Tom confirmed the shared centre-id. The Labs GDC is now `io-wis2dev-labs-global-discovery-catalogue`, configured as `global_discovery_catalogue.source`: only its reports count, and others are reported as info. **Still to confirm:** that the Labs GDC's events reach `gb.wis2dev.io`. None with the new source had been seen by 12:09Z.)* *Update: `gb.wis2dev.io` is being configured to subscribe to the Labs GDC. Once it is, re-check that its ETS report arrives and is counted, and whether it sends KPI (follow-up 1).*
+4. **Labs GDC monitoring events.** Ask for the Labs GDC's events (published to its own broker) to be relayed to `gb.wis2dev.io`, or for subscriber access to its broker. Also ask for a **distinct `source`** for the Labs GDC (e.g. `…-labs-global-discovery-catalogue`). Then add a setting (e.g. `global_discovery_catalogue.source`) so the publisher counts only that GDC's reports and logs the others for information. *(2026-10-30: Tom confirmed the shared centre-id. The Labs GDC is now `io-wis2dev-labs-global-discovery-catalogue`, configured as `global_discovery_catalogue.source`: only its reports count, and others are reported as info. **Still to confirm:** that the Labs GDC's events reach `gb.wis2dev.io`. None with the new source had been seen by 12:09Z.)* *Update: `gb.wis2dev.io` is being configured to subscribe to the Labs GDC. Once it is, re-check that its ETS report arrives and is counted, and whether it sends KPI (follow-up 1).* **Done 2026-10-30: `gb.wis2dev.io` relays the Labs GDC's events; filtering by source is in place.**
 5. **Confirm the two-GDC picture** with Tom: the other GDC's log for `d92132ea…`, or the GB's subscriptions. *(2026-10-30: **confirmed by Tom**: both instances used the same centre-id.)*
 
 Also deferred (our own work):
