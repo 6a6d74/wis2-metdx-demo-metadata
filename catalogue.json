@@ -135,8 +135,47 @@
         "run_id": "41060348217",
         "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/41060348217",
         "action": "update",
-        "status": "pending",
-        "stamp": "20261030T130555Z"
+        "status": "ok",
+        "stamp": "20261030T130555Z",
+        "stage": "done",
+        "message_id": "ffdb1c3b-5606-48a9-bfa9-331cab55325d",
+        "errors": [],
+        "warnings": [],
+        "ets": {
+          "summary": {
+            "PASSED": 12,
+            "FAILED": 0,
+            "SKIPPED": 0,
+            "WARNING": 0
+          },
+          "source": "io-wis2dev-labs-global-discovery-catalogue",
+          "failed": []
+        },
+        "kpi": {
+          "percentage": 89.13,
+          "grade": "A",
+          "score": 41,
+          "total": 46,
+          "source": "io-wis2dev-labs-global-discovery-catalogue"
+        },
+        "gdc": {
+          "status": "present",
+          "seconds": 0.6,
+          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aweather.prediction.forecast.global?f=json"
+        },
+        "other_gdcs": [
+          {
+            "source": "ca-eccc-msc-global-discovery-catalogue",
+            "type": "int.wmo.wis.wme.event.wcmp2.ets",
+            "severity": "ERROR",
+            "summary": "rejected the record: Topic mismatch (io-wis2dev-metdx-demo != int-ecmwf)"
+          }
+        ],
+        "delivered": {
+          "local": 0.11,
+          "gb": 0.16
+        },
+        "log": "logs/41060348217/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.jsonl"
       },
       "title": "ECMWF IFS Global Deterministic Forecast (Destination Earth)",
       "source_path": "metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.json",
@@ -214,6 +253,6 @@
       "deleted_at": null
     }
   },
-  "published_commit": "32dc78b8eed347905e4a3934c47d69d81a45eb73",
-  "updated": "2026-10-30T13:05:57Z"
+  "published_commit": "11bdc698cc4e8caf8b712664188b85b26f2e4538",
+  "updated": "2026-10-30T13:06:48Z"
 }
