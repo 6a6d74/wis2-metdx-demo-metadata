@@ -65,50 +65,31 @@
           "length": 6817,
           "published": "20261029T212402Z",
           "action": "canonical"
+        },
+        {
+          "path": "metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261030T082853Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261030T082853Z.json",
+          "sha512_hex": "a8614cab2784f40a7daedeb1d0e72636a574e1223301eb2d8c808242c3d06b96a200ad0bc3238882ae87f638a0e9559e4de30e562872e8ae5ecc51692663e689",
+          "length": 6817,
+          "published": "20261030T082853Z",
+          "action": "update"
         }
       ],
       "last_publication": {
-        "run_id": "40957418321",
-        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/40957418321",
-        "action": "canonical",
-        "status": "failed",
-        "stamp": "20261029T212402Z",
-        "stage": "done",
-        "message_id": "46dc384a-fcfe-4cab-a662-035da43f0cef",
-        "errors": [
-          "GDC ETS gdc FAILED: Topic mismatch (io-wis2dev-metdx-demo != int-ecmwf)",
-          "Labs GDC check failed after 120s: GDC has a different version (updated/created 2026-05-05T00:00:00Z, expected 2026-10-29T17:53:00Z) (https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aweather.prediction.forecast.global?f=json)"
-        ],
-        "warnings": [],
-        "ets": {
-          "summary": null,
-          "source": "ca-eccc-msc-global-discovery-catalogue",
-          "failed": [
-            {
-              "test": "gdc",
-              "message": "Topic mismatch (io-wis2dev-metdx-demo != int-ecmwf)"
-            }
-          ]
-        },
-        "kpi": null,
-        "gdc": {
-          "status": "not confirmed",
-          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aweather.prediction.forecast.global?f=json"
-        },
-        "delivered": {
-          "local": 0.14,
-          "gb": 0.16
-        },
-        "log": "logs/40957418321/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.jsonl"
+        "run_id": "41026684038",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/41026684038",
+        "action": "update",
+        "status": "pending",
+        "stamp": "20261030T082853Z"
       },
       "title": "ECMWF IFS Global Deterministic Forecast (Destination Earth)",
       "source_path": "metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.json",
-      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261029T212402Z.json",
-      "current_path": "metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261029T212402Z.json",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261030T082853Z.json",
+      "current_path": "metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261030T082853Z.json",
       "sha512_hex": "a8614cab2784f40a7daedeb1d0e72636a574e1223301eb2d8c808242c3d06b96a200ad0bc3238882ae87f638a0e9559e4de30e562872e8ae5ecc51692663e689",
       "sha512_b64": "qGFMqyeE9Ap9rt6x0OcmNqV04SIzAestjICCQsPQa5aiAK0LwyOIgq6H9jig6VWeTeMOVihy6K5ezFFpJmPmiQ==",
       "length": 6817,
-      "published": "20261029T212402Z",
+      "published": "20261030T082853Z",
       "deleted": false,
       "deleted_at": null
     },
@@ -169,5 +150,5 @@
     }
   },
   "published_commit": "72ef473809848ca5e0d16cf021df74d8ade10c54",
-  "updated": "2026-10-29T21:50:58Z"
+  "updated": "2026-10-30T08:28:55Z"
 }
