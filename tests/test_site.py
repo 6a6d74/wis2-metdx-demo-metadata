@@ -150,3 +150,11 @@ def test_rejected_badge(record):
                                   "errors": ["GDC rejected the record: Topic mismatch (a != b)"]}}
     html = site.render_index({"centre_id": "c", "records": {record["id"]: entry}})
     assert "GDC rejected" in html and 'title="Topic mismatch (a != b)"' in html
+
+
+def test_registered_anyway_badge(record):
+    entry = {"id": record["id"], "title": "x", "versions": [], "current_path": "metadata/a/a.S.json",
+             "last_publication": {"status": "ok", "ets": {"rejected": "Topic mismatch (a != b)",
+                                                          "registered_anyway": True, "failed": []}}}
+    html = site.render_index({"centre_id": "c", "records": {record["id"]: entry}})
+    assert "GDC warning, registered" in html and "GDC rejected" not in html

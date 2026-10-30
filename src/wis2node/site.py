@@ -145,7 +145,9 @@ def _status_cell(pub: dict | None) -> str:
     cls = {"ok": "ok", "failed": "bad", "pending": "muted"}.get(status, "warn")
     parts = [f'<span class="badge {cls}">{_e(status)}</span>']
     ets = pub.get("ets")
-    if ets and ets.get("rejected"):
+    if ets and ets.get("registered_anyway"):
+        parts.append(f'<span class="badge warn" title="{_e(ets["rejected"])}">GDC warning, registered</span>')
+    elif ets and ets.get("rejected"):
         parts.append(f'<span class="badge bad" title="{_e(ets["rejected"])}">GDC rejected</span>')
     elif ets:
         failed = len(ets.get("failed") or [])

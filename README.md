@@ -207,6 +207,8 @@ Each helper works through these steps, and a failure in one record never stops t
    - the GDC's **KPI** report (recorded if it arrives; required only if `monitor.require_kpi` is set)
    - the GDC's download-failure and deletion reports
 5. **Confirm in the GDC:** poll the Labs GDC's API until it holds this version of the record, matched on `updated`/`created`. For a deletion, poll until the record is gone.
+   - **The GDC's catalogue is treated as ground truth.** Before publishing, the helper notes which version the GDC already holds. If the GDC then changes to exactly this version, a GDC rejection event (e.g. "Topic mismatch") or a missing ETS report is shown as a ⚠️ warning, and the record passes.
+   - **A re-announce of unchanged content** (same `updated`) can't be confirmed this way. It stays an error, with a hint to change `properties.updated`.
 
 Every event received is written to a log. The run fails if any record fails, and the job summary lists the reason for each failure.
 

@@ -130,6 +130,23 @@ Publisher changes so that such records are reported correctly:
 - Events without `metadata_id` (download failures, "Topic mismatch") are matched by our **published filename**. Their links point at the Global Cache copy, which keeps our timestamped filename but not our Pages URL.
 - A `wcmp2.ets` event with severity ERROR and no test results (e.g. "Topic mismatch") counts as a failure, not as an ETS pass.
 
+## Labs GDC hotfix for other-centre records (2026-10-30)
+
+After Tom's hotfix, a test with PR #24 (`urn:wmo:md:int-ecmwf:weather.prediction.forecast.global`, new `updated`) showed:
+
+| Time (UTC) | Event |
+|---|---|
+| 11:26:47.086 | our WNM (`rel=update`, `datetime` 2026-10-30T11:24:00Z) |
+| 11:26:48.297 | Global Cache re-notification (S3 copy) |
+| 11:26:48.337 | GDC `wcmp2.ets` **ERROR "Topic mismatch (io-wis2dev-metdx-demo != int-ecmwf)"** on `monitor/a/wis2/int-ecmwf` |
+| 11:26:42–52 | Labs GDC item `updated` changed 2026-10-29T17:53:00Z → **2026-10-30T11:24:00Z** (independent 10 s poller) |
+
+No ETS or KPI report followed. **So the hotfixed GDC registers these records, but still emits the mismatch ERROR and publishes no ETS report.**
+
+The publisher now treats the GDC catalogue as ground truth. It snapshots the GDC's version before publishing. If the GDC then changes to exactly this version, a rejection event or a missing ETS report is downgraded to a warning ("…; but the GDC registered this version anyway (updated X -> Y)"). The run summary shows "rejected, but registered", and the catalogue page shows a "GDC warning, registered" badge. An unchanged re-announce can't be confirmed, so it stays an error with a hint.
+
+Worth feeding back to the GDC operators (part of follow-up task 3): downgrade the mismatch event in Labs mode, and still run and report the ETS.
+
 ## Progress
 
 | Phase | Status |

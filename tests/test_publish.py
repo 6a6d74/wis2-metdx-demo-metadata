@@ -40,6 +40,7 @@ def run(cfg, net, jobs, tmp_path, **kw):
     kw.setdefault("live_check", lambda url, sha, timeout: 0.0)
     kw.setdefault("gdc_present", lambda base, mid, dt, timeout, interval: 0.5)
     kw.setdefault("gdc_absent", lambda base, mid, timeout, interval: 0.5)
+    kw.setdefault("gdc_version", lambda base, mid: ("unknown", None))   # no pre-publish snapshot
     return publish.run(cfg, jobs, PASSWORD, tmp_path / "logs", factory=net.factory, **kw)
 
 
@@ -56,7 +57,7 @@ def test_publish_verified_end_to_end(fast_cfg, net, record, tmp_path):
     assert all(c.closed for c in net.clients.values())
     # logs: per-record and run-level monitor log
     kinds = [json.loads(l)["kind"] for l in (tmp_path / "logs" / "obs.jsonl").read_text().splitlines()]
-    assert kinds[:3] == ["pages-live", "wnm", "delivered"] and kinds[-1] == "result"
+    assert kinds[:4] == ["pages-live", "gdc-before", "wnm", "delivered"] and kinds[-1] == "result"
     assert (tmp_path / "logs" / "monitor.jsonl").read_text().count('"kind": "monitor"') == 2
 
 
@@ -416,3 +417,49 @@ def test_gdc_rejection_wording(fast_cfg, net, record, tmp_path):
     assert not any("GDC ETS" in e for e in r.errors)
     assert r.ets["rejected"].startswith("Topic mismatch")
     assert "| rejected |" in publish.to_markdown([r])
+
+
+# ---------------------------------------------------------------- GDC confirmation wins
+def test_rejection_downgraded_when_gdc_registers_this_version(fast_cfg, net, record, tmp_path):
+    """Labs GDC (hotfixed): sends "Topic mismatch" yet registers the record (seen 2026-10-30)."""
+    rec = other_centre(record)
+    (r,) = run(fast_cfg, net, [job(rec)], tmp_path,
+               gdc_version=lambda base, mid: ("present", "2026-05-05T00:00:00Z"))   # older version before
+    assert r.ok, r.errors
+    (w,) = [w for w in r.warnings if "Topic mismatch" in w]
+    assert w.startswith("GDC rejected the record: Topic mismatch") and "registered this version anyway" in w
+    assert f"2026-05-05T00:00:00Z -> {rec['properties']['updated']}" in w
+    assert r.ets["registered_anyway"] is True
+    assert "rejected, but registered" in publish.to_markdown([r])
+
+
+def test_new_record_absent_before_counts_as_confirmed(fast_cfg, net, record, tmp_path):
+    (r,) = run(fast_cfg, net, [job(other_centre(record))], tmp_path,
+               gdc_version=lambda base, mid: ("absent", None))
+    assert r.ok and any("updated absent ->" in w for w in r.warnings)
+
+
+def test_unchanged_reannounce_cannot_be_confirmed(fast_cfg, net, record, tmp_path):
+    rec = other_centre(record)
+    (r,) = run(fast_cfg, net, [job(rec)], tmp_path,
+               gdc_version=lambda base, mid: ("present", rec["properties"]["updated"]))   # already held
+    assert not r.ok
+    assert any("GDC rejected the record" in e for e in r.errors)
+    assert any("already held this version" in w for w in r.warnings)
+
+
+def test_rejection_stays_error_when_gdc_does_not_hold_it(fast_cfg, net, record, tmp_path):
+    from wis2node.gdc import GDCError
+
+    def not_there(*args, **kwargs):
+        raise GDCError("record not in the GDC")
+
+    (r,) = run(fast_cfg, net, [job(other_centre(record))], tmp_path, gdc_present=not_there,
+               gdc_version=lambda base, mid: ("absent", None))
+    assert not r.ok and any("GDC rejected the record" in e for e in r.errors)
+
+
+def test_missing_ets_downgraded_when_gdc_registers(fast_cfg, net, record, tmp_path):
+    net.gdc_sends_ets = False
+    (r,) = run(fast_cfg, net, [job(record)], tmp_path, gdc_version=lambda base, mid: ("absent", None))
+    assert r.ok and any(w.startswith("no WCMP2 ETS report") for w in r.warnings)
