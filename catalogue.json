@@ -113,49 +113,31 @@
           "length": 6849,
           "published": "20261030T122616Z",
           "action": "update"
+        },
+        {
+          "path": "metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261030T125132Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261030T125132Z.json",
+          "sha512_hex": "23fda5aa515b47f7cf9822387ac515f113b4e52a36157c3dfd6ba896f4332b7942ae1ce4ad68c2fee244ec0621f32751c5fe8ef3761863d42df72c3de86ff403",
+          "length": 6844,
+          "published": "20261030T125132Z",
+          "action": "update"
         }
       ],
       "last_publication": {
-        "run_id": "41055291968",
-        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/41055291968",
+        "run_id": "41058504996",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/41058504996",
         "action": "update",
-        "status": "ok",
-        "stamp": "20261030T122616Z",
-        "stage": "done",
-        "message_id": "5e7391c8-1068-44b7-ae8d-b7dfc93c8389",
-        "errors": [],
-        "warnings": [
-          "no WCMP2 ETS report from the GDC within 60s; but the GDC registered this version anyway (updated 2026-10-30T11:24:00Z -> 2026-10-30T12:25:00Z)"
-        ],
-        "ets": null,
-        "kpi": null,
-        "gdc": {
-          "status": "present",
-          "seconds": 0.5,
-          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aweather.prediction.forecast.global?f=json"
-        },
-        "other_gdcs": [
-          {
-            "source": "ca-eccc-msc-global-discovery-catalogue",
-            "type": "int.wmo.wis.wme.event.wcmp2.ets",
-            "severity": "ERROR",
-            "summary": "rejected the record: Topic mismatch (io-wis2dev-metdx-demo != int-ecmwf)"
-          }
-        ],
-        "delivered": {
-          "local": 0.09,
-          "gb": 0.16
-        },
-        "log": "logs/41055291968/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.jsonl"
+        "status": "pending",
+        "stamp": "20261030T125132Z"
       },
       "title": "ECMWF IFS Global Deterministic Forecast (Destination Earth)",
       "source_path": "metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.json",
-      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261030T122616Z.json",
-      "current_path": "metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261030T122616Z.json",
-      "sha512_hex": "24a65dc38bbf01126e90eb0d71f85bc6ec0f7aacd7bddcdff8c911457f337da783c811848f9f0efeb7df0d9bdcd7ac74e74c2810b7f349f9b938cbbac4744a8f",
-      "sha512_b64": "JKZdw4u/ARJukOsNcfhbxuwPeqzXvdzf+MkRRX8zfaeDyBGEj58O/rffDZvc16x050woELfzSfm5OMu6xHRKjw==",
-      "length": 6849,
-      "published": "20261030T122616Z",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261030T125132Z.json",
+      "current_path": "metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.20261030T125132Z.json",
+      "sha512_hex": "23fda5aa515b47f7cf9822387ac515f113b4e52a36157c3dfd6ba896f4332b7942ae1ce4ad68c2fee244ec0621f32751c5fe8ef3761863d42df72c3de86ff403",
+      "sha512_b64": "I/2lqlFbR/fPmCI4esUV8RO05So2FXw9/WuolvQzK3lCrhzkrWjC/uJE7AYh8ydRxf6O83YYY9Qt9yw96G/0Aw==",
+      "length": 6844,
+      "published": "20261030T125132Z",
       "deleted": false,
       "deleted_at": null
     },
@@ -225,5 +207,5 @@
     }
   },
   "published_commit": "5b354205a893bc8d8412d0e15906283251f9ccc3",
-  "updated": "2026-10-30T12:28:08Z"
+  "updated": "2026-10-30T12:51:34Z"
 }
