@@ -77,3 +77,11 @@ def test_absence():
     with pytest.raises(gdc.GDCError, match="still in the GDC"):
         gdc.wait_for_absence(BASE, MID, timeout=15, interval=10, session=Session([Resp(200, rec("x"))]),
                              clock=clock, sleep=clock.sleep)
+
+
+def test_current_version():
+    assert gdc.current_version(BASE, MID, session=Session([Resp(404)])) == ("absent", None)
+    assert gdc.current_version(BASE, MID, session=Session([Resp(200, rec("2026-10-30T11:24:00Z"))])) == \
+        ("present", "2026-10-30T11:24:00Z")
+    assert gdc.current_version(BASE, MID, session=Session([Resp(500)])) == ("unknown", None)
+    assert gdc.current_version(BASE, MID, session=Session([requests.ConnectionError("x")])) == ("unknown", None)

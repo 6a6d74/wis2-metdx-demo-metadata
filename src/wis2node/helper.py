@@ -20,7 +20,7 @@ from typing import Callable, Protocol
 
 from . import monitor as mon
 from . import wnm
-from .gdc import GDCError, item_url, wait_for_absence, wait_for_record
+from .gdc import GDCError, current_version, item_url, same_version, wait_for_absence, wait_for_record
 from .mqtt import BrokerError
 from .pages import PagesError, wait_until_live
 
@@ -177,7 +177,8 @@ class Helper:
                  live_check: Callable[..., float] = wait_until_live,
                  gdc_url: str | None = None, gdc_interval: float = 10.0,
                  gdc_present: Callable[..., float] = wait_for_record,
-                 gdc_absent: Callable[..., float] = wait_for_absence):
+                 gdc_absent: Callable[..., float] = wait_for_absence,
+                 gdc_version: Callable[..., tuple[str, str | None]] = current_version):
         self.job = job
         self.centre_id = centre_id
         self.publisher = publisher
@@ -195,6 +196,9 @@ class Helper:
         self.gdc_interval = gdc_interval
         self.gdc_present = gdc_present
         self.gdc_absent = gdc_absent
+        self.gdc_version = gdc_version
+        self._gdc_before: tuple[str, str | None] | None = None  # what the GDC held before we published
+        self._soft_errors: list[str] = []  # errors that the GDC registering this version overrides
         self.inbox: queue.Queue = queue.Queue()
         self.message = self._build_message()
         self.message_id = self.message["id"]
@@ -220,6 +224,10 @@ class Helper:
                 r.timings["pages_live"] = round(self.live_check(
                     self.job.url, self.job.sha512, self.timeouts["pages_live"]), 1)
                 self.log.write("pages-live", url=self.job.url, seconds=r.timings["pages_live"])
+
+            if self.gdc_url and self.job.action != wnm.DELETION:
+                self._gdc_before = self.gdc_version(self.gdc_url, self.job.metadata_id)
+                self.log.write("gdc-before", status=self._gdc_before[0], updated=self._gdc_before[1])
 
             r.stage = "publish"
             self.router.register(self)
@@ -248,7 +256,9 @@ class Helper:
                 self._await(lambda: r.ets is not None and (r.kpi is not None or not self.require_kpi),
                             t1, self.timeouts["monitor"])
                 if r.ets is None:
-                    r.errors.append(f"no WCMP2 ETS report from the GDC within {self.timeouts['monitor']}s")
+                    msg = f"no WCMP2 ETS report from the GDC within {self.timeouts['monitor']}s"
+                    r.errors.append(msg)
+                    self._soft_errors.append(msg)
                 if r.kpi is None and self.require_kpi:
                     r.errors.append(f"no WCMP2 KPI report from the GDC within {self.timeouts['monitor']}s")
             r.timings["monitor"] = round(self.clock() - t1, 1)
@@ -256,6 +266,7 @@ class Helper:
             if self.gdc_url:
                 r.stage = "gdc"
                 self._check_gdc()
+                self._apply_gdc_confirmation()
             self._await(lambda: True, 0, 0)  # pick up anything that arrived meanwhile (e.g. a late KPI)
             r.stage = "done"
         except (PagesError, BrokerError) as exc:
@@ -286,6 +297,29 @@ class Helper:
             r.gdc = {"status": "not confirmed", "url": url}
             r.errors.append(str(exc))
         self.log.write("gdc", **r.gdc)
+
+    def _apply_gdc_confirmation(self) -> None:
+        """The GDC check is ground truth. If the GDC changed to exactly this version after we
+        published, a rejection event or a missing ETS report is downgraded to a warning (e.g.
+        the Labs GDC reports "Topic mismatch" but registers the record anyway). If it already
+        held this version before, registration can't be attributed to this notification."""
+        r = self.result
+        if not self._soft_errors or not r.gdc or r.gdc.get("status") != "present":
+            return
+        before_status, before = self._gdc_before or ("unknown", None)
+        if before_status == "present" and same_version(before, self.job.datetime):
+            r.warnings.append("the GDC already held this version before publishing, so it can't be confirmed "
+                              "that this notification was registered (change properties.updated to verify)")
+            return
+        if before_status == "unknown":
+            return
+        for msg in self._soft_errors:
+            if msg in r.errors:
+                r.errors.remove(msg)
+                r.warnings.append(f"{msg}; but the GDC registered this version anyway "
+                                  f"(updated {before or 'absent'} -> {self.job.datetime})")
+        if r.ets and r.ets.get("rejected"):
+            r.ets["registered_anyway"] = True
 
     def _await(self, done: Callable[[], bool], start: float, timeout: float) -> None:
         """Consume the inbox until done() or timeout, handling every item."""
@@ -351,7 +385,9 @@ class Helper:
             # e.g. "Topic mismatch": the GDC rejected the record before running the tests
             reason = mon.description(event) or mon.title(event)
             self.result.ets = {"rejected": reason, "summary": None, "source": event.get("source"), "failed": []}
-            self.result.errors.append(f"GDC rejected the record: {reason}")
+            msg = f"GDC rejected the record: {reason}"
+            self.result.errors.append(msg)
+            self._soft_errors.append(msg)
             return
         self.result.ets = {"summary": mon.report(event).get("summary"), "source": event.get("source"),
                            "failed": [{"test": mon.short_test_id(t), "message": t.get("message")} for t in failures]}

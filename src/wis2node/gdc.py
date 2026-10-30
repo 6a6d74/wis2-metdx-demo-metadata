@@ -51,6 +51,25 @@ def _poll(url: str, done, describe, timeout: float, interval: float, session, cl
         sleep(interval)
 
 
+def current_version(base_url: str, metadata_id: str, session=None) -> tuple[str, str | None]:
+    """What the GDC holds now: ("present", updated/created), ("absent", None) or ("unknown", None)."""
+    http = session or requests.Session()
+    try:
+        r = http.get(item_url(base_url, metadata_id), timeout=30, verify=certifi.where(),
+                     headers={"Cache-Control": "no-cache", "Accept": "application/json"})
+        if r.status_code == 404:
+            return "absent", None
+        if r.status_code == 200:
+            return "present", record_datetime(r.json())
+    except (requests.RequestException, ValueError):
+        pass
+    return "unknown", None
+
+
+def same_version(a: str | None, b: str | None) -> bool:
+    return _same_time(a, b)
+
+
 def wait_for_record(base_url: str, metadata_id: str, expected_datetime: str | None, timeout: float,
                     interval: float = 10.0, session=None, clock=time.monotonic, sleep=time.sleep) -> float:
     """Wait until the GDC serves the record with the expected updated/created time."""
