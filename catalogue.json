@@ -276,8 +276,47 @@
         "run_id": "41188631423",
         "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/41188631423",
         "action": "canonical",
-        "status": "pending",
-        "stamp": "20261031T092539Z"
+        "status": "ok",
+        "stamp": "20261031T092539Z",
+        "stage": "done",
+        "message_id": "ec384783-5c01-4033-ab27-caa5d27b7cd5",
+        "errors": [],
+        "warnings": [],
+        "ets": {
+          "summary": {
+            "PASSED": 12,
+            "FAILED": 0,
+            "SKIPPED": 0,
+            "WARNING": 0
+          },
+          "source": "io-wis2dev-labs-global-discovery-catalogue",
+          "failed": []
+        },
+        "kpi": {
+          "percentage": 95.652,
+          "grade": "A",
+          "score": 22,
+          "total": 23,
+          "source": "io-wis2dev-labs-global-discovery-catalogue"
+        },
+        "gdc": {
+          "status": "present",
+          "seconds": 0.6,
+          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aca-eccc-msc%3Amsc-weather-forecast?f=json"
+        },
+        "other_gdcs": [
+          {
+            "source": "ca-eccc-msc-global-discovery-catalogue",
+            "type": "int.wmo.wis.wme.event.wcmp2.ets",
+            "severity": "ERROR",
+            "summary": "rejected the record: Topic mismatch (io-wis2dev-metdx-demo != ca-eccc-msc)"
+          }
+        ],
+        "delivered": {
+          "local": 0.12,
+          "gb": 0.17
+        },
+        "log": "logs/41188631423/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.jsonl"
       },
       "title": "Canadian weather forecast [experimental]",
       "source_path": "metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.json",
@@ -291,6 +330,6 @@
       "deleted_at": null
     }
   },
-  "published_commit": "11bdc698cc4e8caf8b712664188b85b26f2e4538",
-  "updated": "2026-10-31T09:25:41Z"
+  "published_commit": "ce113d25e5c0f1e1a2bc4af0c37a9b7d10d75425",
+  "updated": "2026-10-31T09:26:31Z"
 }
