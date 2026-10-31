@@ -262,27 +262,35 @@
           "length": 4225,
           "published": "20261031T092109Z",
           "action": "canonical"
+        },
+        {
+          "path": "metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.20261031T092539Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.20261031T092539Z.json",
+          "sha512_hex": "046168b8305b7473ff203988116b5e69467499e7ccc16ce96861d24f19727e76f818b37b50554cee2b2c2c23d14f3347429d474b0fe177fa81ad01518c86df01",
+          "length": 4268,
+          "published": "20261031T092539Z",
+          "action": "canonical"
         }
       ],
       "last_publication": {
-        "run_id": "41188323736",
-        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/41188323736",
+        "run_id": "41188631423",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/41188631423",
         "action": "canonical",
         "status": "pending",
-        "stamp": "20261031T092109Z"
+        "stamp": "20261031T092539Z"
       },
       "title": "Canadian weather forecast [experimental]",
       "source_path": "metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.json",
-      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.20261031T092109Z.json",
-      "current_path": "metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.20261031T092109Z.json",
-      "sha512_hex": "1df3c5d9992712dd0f821cc97eff1b441156ce6cd2f547eed5e4867fd0783afe888bfae7e7ee1364982ebac1cc643167e4fbaa03a096d9e236156f8ceb487e08",
-      "sha512_b64": "HfPF2ZknEt0PghzJfv8bRBFWzmzS9Ufu1eSGf9B4Ov6Ii/rn5+4TZJguusHMZDFn5PuqA6CW2eI2FW+M60h+CA==",
-      "length": 4225,
-      "published": "20261031T092109Z",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.20261031T092539Z.json",
+      "current_path": "metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.20261031T092539Z.json",
+      "sha512_hex": "046168b8305b7473ff203988116b5e69467499e7ccc16ce96861d24f19727e76f818b37b50554cee2b2c2c23d14f3347429d474b0fe177fa81ad01518c86df01",
+      "sha512_b64": "BGFouDBbdHP/IDmIEWteaUZ0mefMwWzpaGHSTxlyfnb4GLN7UFVM7issLCPRTzNHQp1HSw/hd/qBrQFRjIbfAQ==",
+      "length": 4268,
+      "published": "20261031T092539Z",
       "deleted": false,
       "deleted_at": null
     }
   },
   "published_commit": "11bdc698cc4e8caf8b712664188b85b26f2e4538",
-  "updated": "2026-10-31T09:21:11Z"
+  "updated": "2026-10-31T09:25:41Z"
 }
