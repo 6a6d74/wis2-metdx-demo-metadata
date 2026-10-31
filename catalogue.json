@@ -251,8 +251,38 @@
       "published": "20261030T121647Z",
       "deleted": false,
       "deleted_at": null
+    },
+    "urn:wmo:md:ca-eccc-msc:msc-weather-forecast": {
+      "id": "urn:wmo:md:ca-eccc-msc:msc-weather-forecast",
+      "versions": [
+        {
+          "path": "metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.20261031T092109Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.20261031T092109Z.json",
+          "sha512_hex": "1df3c5d9992712dd0f821cc97eff1b441156ce6cd2f547eed5e4867fd0783afe888bfae7e7ee1364982ebac1cc643167e4fbaa03a096d9e236156f8ceb487e08",
+          "length": 4225,
+          "published": "20261031T092109Z",
+          "action": "canonical"
+        }
+      ],
+      "last_publication": {
+        "run_id": "41188323736",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/41188323736",
+        "action": "canonical",
+        "status": "pending",
+        "stamp": "20261031T092109Z"
+      },
+      "title": "Canadian weather forecast [experimental]",
+      "source_path": "metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.json",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.20261031T092109Z.json",
+      "current_path": "metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.20261031T092109Z.json",
+      "sha512_hex": "1df3c5d9992712dd0f821cc97eff1b441156ce6cd2f547eed5e4867fd0783afe888bfae7e7ee1364982ebac1cc643167e4fbaa03a096d9e236156f8ceb487e08",
+      "sha512_b64": "HfPF2ZknEt0PghzJfv8bRBFWzmzS9Ufu1eSGf9B4Ov6Ii/rn5+4TZJguusHMZDFn5PuqA6CW2eI2FW+M60h+CA==",
+      "length": 4225,
+      "published": "20261031T092109Z",
+      "deleted": false,
+      "deleted_at": null
     }
   },
   "published_commit": "11bdc698cc4e8caf8b712664188b85b26f2e4538",
-  "updated": "2026-10-30T13:06:48Z"
+  "updated": "2026-10-31T09:21:11Z"
 }
