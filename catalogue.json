@@ -220,8 +220,47 @@
         "run_id": "41662956364",
         "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/41662956364",
         "action": "update",
-        "status": "pending",
-        "stamp": "20261103T152125Z"
+        "status": "ok",
+        "stamp": "20261103T152125Z",
+        "stage": "done",
+        "message_id": "ab6a476c-ef7a-42f1-8d62-55659af51ece",
+        "errors": [],
+        "warnings": [],
+        "ets": {
+          "summary": {
+            "PASSED": 11,
+            "FAILED": 0,
+            "SKIPPED": 0,
+            "WARNING": 1
+          },
+          "source": "io-wis2dev-labs-global-discovery-catalogue",
+          "failed": []
+        },
+        "kpi": {
+          "percentage": 89.13,
+          "grade": "A",
+          "score": 41,
+          "total": 46,
+          "source": "io-wis2dev-labs-global-discovery-catalogue"
+        },
+        "gdc": {
+          "status": "present",
+          "seconds": 0.6,
+          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aio-wis2dev-metdx-demo%3Aweather.prediction.forecast.global?f=json"
+        },
+        "other_gdcs": [
+          {
+            "source": "ca-eccc-msc-global-discovery-catalogue",
+            "type": "int.wmo.wis.wme.event.wcmp2.ets",
+            "severity": "WARNING",
+            "summary": "ETS 11 passed, 1 warning"
+          }
+        ],
+        "delivered": {
+          "local": 0.11,
+          "gb": 0.16
+        },
+        "log": "logs/41662956364/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global.jsonl"
       },
       "title": "ECMWF IFS Global Deterministic Forecast (Destination Earth)",
       "source_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global.json",
@@ -312,6 +351,6 @@
       "deleted_at": null
     }
   },
-  "published_commit": "ce113d25e5c0f1e1a2bc4af0c37a9b7d10d75425",
-  "updated": "2026-11-03T15:21:27Z"
+  "published_commit": "16e93bf11282865f4b963ec25be1ddf53cb103a4",
+  "updated": "2026-11-03T15:22:20Z"
 }
