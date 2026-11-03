@@ -206,49 +206,31 @@
           "length": 6870,
           "published": "20261030T121647Z",
           "action": "update"
+        },
+        {
+          "path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global.20261103T152125Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global.20261103T152125Z.json",
+          "sha512_hex": "538bc291a65a5556268c924494544c220b93491e3e8ffcb01f5f49fd37b9cdf5fab6a7a6c4387253dfd00a3a6730ea911219ec231aab4875703eda980c9b610a",
+          "length": 6872,
+          "published": "20261103T152125Z",
+          "action": "update"
         }
       ],
       "last_publication": {
-        "run_id": "41054096059",
-        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/41054096059",
+        "run_id": "41662956364",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/41662956364",
         "action": "update",
-        "status": "ok",
-        "stamp": "20261030T121647Z",
-        "stage": "done",
-        "message_id": "f06d4417-b6e6-4224-b082-2c241bd98611",
-        "errors": [],
-        "warnings": [
-          "no WCMP2 ETS report from the GDC within 60s; but the GDC registered this version anyway (updated 2026-10-29T17:53:00Z -> 2026-10-30T12:15:00Z)"
-        ],
-        "ets": null,
-        "kpi": null,
-        "gdc": {
-          "status": "present",
-          "seconds": 0.5,
-          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aio-wis2dev-metdx-demo%3Aweather.prediction.forecast.global?f=json"
-        },
-        "other_gdcs": [
-          {
-            "source": "ca-eccc-msc-global-discovery-catalogue",
-            "type": "int.wmo.wis.wme.event.wcmp2.ets",
-            "severity": "WARNING",
-            "summary": "ETS 11 passed, 1 warning"
-          }
-        ],
-        "delivered": {
-          "local": 0.09,
-          "gb": 0.16
-        },
-        "log": "logs/41054096059/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global.jsonl"
+        "status": "pending",
+        "stamp": "20261103T152125Z"
       },
       "title": "ECMWF IFS Global Deterministic Forecast (Destination Earth)",
       "source_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global.json",
-      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global.20261030T121647Z.json",
-      "current_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global.20261030T121647Z.json",
-      "sha512_hex": "6713c49d87d7f3cbdda0ccf8f12e4d5a551395743a71e6918f968771b6007f2086ae9fb4ac44de618ddfbf41f5e591e2fb4437ed40d2bdee27ef0accfdc22e24",
-      "sha512_b64": "ZxPEnYfX88vdoMz48S5NWlUTlXQ6ceaRj5aHcbYAfyCGrp+0rETeYY3fv0H15ZHi+0Q37UDSve4n7wrM/cIuJA==",
-      "length": 6870,
-      "published": "20261030T121647Z",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global.20261103T152125Z.json",
+      "current_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global.20261103T152125Z.json",
+      "sha512_hex": "538bc291a65a5556268c924494544c220b93491e3e8ffcb01f5f49fd37b9cdf5fab6a7a6c4387253dfd00a3a6730ea911219ec231aab4875703eda980c9b610a",
+      "sha512_b64": "U4vCkaZaVVYmjJJElFRMIguTSR4+j/ywH19J/Te5zfX6tqemxDhyU9/QCjpnMOqREhnsIxqrSHVwPtqYDJthCg==",
+      "length": 6872,
+      "published": "20261103T152125Z",
       "deleted": false,
       "deleted_at": null
     },
@@ -331,5 +313,5 @@
     }
   },
   "published_commit": "ce113d25e5c0f1e1a2bc4af0c37a9b7d10d75425",
-  "updated": "2026-10-31T09:26:31Z"
+  "updated": "2026-11-03T15:21:27Z"
 }
