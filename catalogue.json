@@ -363,52 +363,11 @@
         }
       ],
       "last_publication": {
-        "run_id": "42079554169",
-        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42079554169",
-        "action": "canonical",
-        "status": "failed",
-        "stamp": "20261105T175715Z",
-        "stage": "done",
-        "message_id": "1a454038-62a2-46a8-88b2-2578c227b997",
-        "errors": [
-          "Labs GDC check failed after 120s: record not in the GDC (https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aio-wis2dev-metdx-demo%3Aecmwf-opendata-ifs-0p1-oper?f=json)"
-        ],
-        "warnings": [
-          "GDC ETS links FAILED: centre identifiers do not match: link: io-wis2dev-metdx-demo, id: int-ecmwf"
-        ],
-        "ets": {
-          "summary": {
-            "PASSED": 10,
-            "FAILED": 1,
-            "SKIPPED": 0,
-            "WARNING": 1
-          },
-          "source": "io-wis2dev-labs-global-discovery-catalogue",
-          "failed": [
-            {
-              "test": "links",
-              "message": "centre identifiers do not match: link: io-wis2dev-metdx-demo, id: int-ecmwf"
-            }
-          ]
-        },
-        "kpi": null,
-        "gdc": {
-          "status": "not confirmed",
-          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aio-wis2dev-metdx-demo%3Aecmwf-opendata-ifs-0p1-oper?f=json"
-        },
-        "other_gdcs": [
-          {
-            "source": "ca-eccc-msc-global-discovery-catalogue",
-            "type": "int.wmo.wis.wme.event.wcmp2.ets",
-            "severity": "ERROR",
-            "summary": "ETS 10 passed, 1 failed, 1 warning"
-          }
-        ],
-        "delivered": {
-          "local": 0.09,
-          "gb": 0.17
-        },
-        "log": "logs/42079554169/urn-wmo-md-io-wis2dev-metdx-demo-ecmwf-opendata-ifs-0p1-oper.jsonl"
+        "run_id": "42082231007",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42082231007",
+        "action": "deletion",
+        "status": "pending",
+        "stamp": "20261105T181421Z"
       },
       "title": "ECMWF physics-based deterministic forecast at 0.1\u00b0",
       "source_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-ecmwf-opendata-ifs-0p1-oper.json",
@@ -418,10 +377,40 @@
       "sha512_b64": "3D8nSASY2NT/ej4yrxjic38YDD10dYIWhgLyVw4KbYaaXLYwrHrnYaZB/Rpu6HLKhICSMxQEL55R119y/yR71Q==",
       "length": 14471,
       "published": "20261105T175715Z",
+      "deleted": true,
+      "deleted_at": "2026-11-05T18:14:24Z"
+    },
+    "urn:wmo:md:int-ecmwf:ecmwf-opendata-ifs-0p1-oper": {
+      "id": "urn:wmo:md:int-ecmwf:ecmwf-opendata-ifs-0p1-oper",
+      "versions": [
+        {
+          "path": "metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.20261105T181421Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.20261105T181421Z.json",
+          "sha512_hex": "a6364dedd4804368eb14ab3078f21422afc0e88ec7d3fce3bae5a2df11bc36954264edee2509fb44b808e395336161342553bebb5e836ac1a9d141cfbb60b9fe",
+          "length": 14435,
+          "published": "20261105T181421Z",
+          "action": "canonical"
+        }
+      ],
+      "last_publication": {
+        "run_id": "42082231007",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42082231007",
+        "action": "canonical",
+        "status": "pending",
+        "stamp": "20261105T181421Z"
+      },
+      "title": "ECMWF physics-based deterministic forecast at 0.1\u00b0",
+      "source_path": "metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.json",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.20261105T181421Z.json",
+      "current_path": "metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.20261105T181421Z.json",
+      "sha512_hex": "a6364dedd4804368eb14ab3078f21422afc0e88ec7d3fce3bae5a2df11bc36954264edee2509fb44b808e395336161342553bebb5e836ac1a9d141cfbb60b9fe",
+      "sha512_b64": "pjZN7dSAQ2jrFKswePIUIq/A6I7H0/zjuuWi3xG8NpVCZO3uJQn7RLgI45UzYWE0JVO+u16DasGp0UHPu2C5/g==",
+      "length": 14435,
+      "published": "20261105T181421Z",
       "deleted": false,
       "deleted_at": null
     }
   },
   "published_commit": "f22c6714a0e5a8638126365f9ecf97ef093fc075",
-  "updated": "2026-11-05T18:00:38Z"
+  "updated": "2026-11-05T18:14:24Z"
 }
