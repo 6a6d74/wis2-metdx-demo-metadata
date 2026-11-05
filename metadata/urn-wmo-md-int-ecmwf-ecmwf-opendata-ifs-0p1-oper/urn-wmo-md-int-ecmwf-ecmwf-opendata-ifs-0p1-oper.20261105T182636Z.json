@@ -1,0 +1,357 @@
+{
+    "id": "urn:wmo:md:int-ecmwf:ecmwf-opendata-ifs-0p1-oper",
+    "type": "Feature",
+    "conformsTo": [
+        "http://wis.wmo.int/spec/wcmp/2/conf/core"
+    ],
+    "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+            [
+                [
+                    -180,
+                    -90
+                ],
+                [
+                    180,
+                    -90
+                ],
+                [
+                    180,
+                    90
+                ],
+                [
+                    -180,
+                    90
+                ],
+                [
+                    -180,
+                    -90
+                ]
+            ]
+        ]
+    },
+    "time": {
+        "interval": [
+            "..",
+            ".."
+        ],
+        "resolution": "PT3H"
+    },
+    "additionalExtents": {
+        "spatial": {
+            "bbox": [
+                [
+                    -180,
+                    -90,
+                    180,
+                    90
+                ]
+            ],
+            "crs": "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+        },
+        "temporal": {
+            "interval": [
+                [
+                    "T00Z",
+                    "PT360H"
+                ],
+                [
+                    "T06Z",
+                    "PT144H"
+                ],
+                [
+                    "T12Z",
+                    "PT360H"
+                ],
+                [
+                    "T18Z",
+                    "PT144H"
+                ]
+            ],
+            "resolution": [
+                "PT3H",
+                "PT6H"
+            ],
+            "trs": "http://www.opengis.net/def/trs/ISO-8601"
+        }
+    },
+    "properties": {
+        "type": "dataset",
+        "identifier": "urn:wmo:md:int-ecmwf:ecmwf-opendata-ifs-0p1-oper",
+        "centre-id": "int-ecmwf",
+        "title": "ECMWF physics-based deterministic forecast at 0.1\u00b0",
+        "description": "ECMWF physics based deterministic forecast (IFS, stream oper) at 0.1\u00b0 resolution on a global regular latitude/longitude grid, from four runs a day: the 00 and 12 UTC runs go to step 360 hours (every 3 h to step 144 h, then every 6 h), and the 06 and 18 UTC runs to step 144 hours (every 3 h). ECMWF open data is a rolling archive: only the most recent four days of runs are online. Pressure-level fields (z, gh, t, q, w, vo, d, r, u, v on 14 levels from 1000 to 10 hPa) and surface fields (about 45 parameters, including 2 m temperature, 10 m wind, mean sea level pressure, precipitation, cloud cover, radiation and soil variables) are in separate GRIB2 files. This record describes a STAC catalog of those files. Each forecast run is described by two STAC Items, one for pressure levels and one for surface fields, whose assets are the GRIB2 file and ECMWF index file of every forecast step, with Projection, Datacube and Forecast extension metadata. The catalog is rebuilt to match the runs online at ECMWF. The GRIB2 data are produced and hosted by ECMWF; the STAC catalog is a metdx-demo prototype.",
+        "version": "1.0",
+        "language": {
+            "code": "en"
+        },
+        "keywords": [
+            "metdx-demo",
+            "STAC",
+            "ECMWF",
+            "IFS",
+            "Physics-based",
+            "open data",
+            "GRIB2",
+            "weather",
+            "prediction",
+            "forecast",
+            "NWP",
+            "deterministic",
+            "medium-range",
+            "global",
+            "0.1 degree",
+            "pressure levels",
+            "surface"
+        ],
+        "themes": [
+            {
+                "concepts": [
+                    {
+                        "id": "weather",
+                        "url": "https://github.com/wmo-im/wis2-topic-hierarchy/tree/main/topic-hierarchy/earth-system-discipline/index.csv#L2"
+                    }
+                ],
+                "scheme": "https://github.com/wmo-im/wis2-topic-hierarchy/tree/main/topic-hierarchy/earth-system-discipline"
+            },
+            {
+                "concepts": [
+                    {
+                        "id": "prediction",
+                        "url": "https://github.com/wmo-im/wis2-topic-hierarchy/tree/main/topic-hierarchy/earth-system-discipline/weather/index.csv#L4"
+                    }
+                ],
+                "scheme": "https://github.com/wmo-im/wis2-topic-hierarchy/tree/main/topic-hierarchy/earth-system-discipline/weather"
+            },
+            {
+                "concepts": [
+                    {
+                        "id": "forecast",
+                        "url": "https://github.com/wmo-im/wis2-topic-hierarchy/tree/main/topic-hierarchy/earth-system-discipline/weather/prediction/index.csv#L3"
+                    }
+                ],
+                "scheme": "https://github.com/wmo-im/wis2-topic-hierarchy/tree/main/topic-hierarchy/earth-system-discipline/weather/prediction"
+            },
+            {
+                "concepts": [
+                    {
+                        "id": "medium-range",
+                        "url": "https://github.com/wmo-im/wis2-topic-hierarchy/tree/main/topic-hierarchy/earth-system-discipline/weather/prediction/forecast/index.csv#L2"
+                    }
+                ],
+                "scheme": "https://github.com/wmo-im/wis2-topic-hierarchy/tree/main/topic-hierarchy/earth-system-discipline/weather/prediction/forecast"
+            },
+            {
+                "concepts": [
+                    {
+                        "id": "deterministic",
+                        "url": "https://github.com/wmo-im/wis2-topic-hierarchy/tree/main/topic-hierarchy/earth-system-discipline/weather/prediction/forecast/medium-range/index.csv#L2"
+                    }
+                ],
+                "scheme": "https://github.com/wmo-im/wis2-topic-hierarchy/tree/main/topic-hierarchy/earth-system-discipline/weather/prediction/forecast/medium-range"
+            },
+            {
+                "concepts": [
+                    {
+                        "id": "global",
+                        "url": "https://github.com/wmo-im/wis2-topic-hierarchy/tree/main/topic-hierarchy/earth-system-discipline/weather/prediction/forecast/medium-range/deterministic/index.csv#L2"
+                    }
+                ],
+                "scheme": "https://github.com/wmo-im/wis2-topic-hierarchy/tree/main/topic-hierarchy/earth-system-discipline/weather/prediction/forecast/medium-range/deterministic"
+            },
+            {
+                "concepts": [
+                    {
+                        "id": "FM 92 GRIB edition 2",
+                        "url": "https://codes.wmo.int/codeform/_grib2"
+                    }
+                ],
+                "scheme": "http://codes.wmo.int/codeform"
+            },
+            {
+                "concepts": [
+                    {
+                        "id": "air_temperature",
+                        "title": "Temperature",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/air_temperature/"
+                    },
+                    {
+                        "id": "geopotential_height",
+                        "title": "Geopotential height",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/geopotential_height/"
+                    },
+                    {
+                        "id": "relative_humidity",
+                        "title": "Relative humidity",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/relative_humidity/"
+                    },
+                    {
+                        "id": "eastward_wind",
+                        "title": "U component of wind",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/eastward_wind/"
+                    },
+                    {
+                        "id": "northward_wind",
+                        "title": "V component of wind",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/northward_wind/"
+                    },
+                    {
+                        "id": "air_pressure_at_mean_sea_level",
+                        "title": "Mean sea level pressure",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/air_pressure_at_mean_sea_level/"
+                    }
+                ],
+                "scheme": "https://vocab.nerc.ac.uk/standard_name/"
+            }
+        ],
+        "contacts": [
+            {
+                "identifier": "ECMWF",
+                "organization": "European Centre for Medium-Range Weather Forecasts (ECMWF)",
+                "name": "ECMWF User support",
+                "addresses": [
+                    {
+                        "deliveryPoint": [
+                            "Shinfield Park"
+                        ],
+                        "city": "Reading",
+                        "postalCode": "RG2 9AX",
+                        "country": "United Kingdom"
+                    }
+                ],
+                "links": [
+                    {
+                        "rel": "about",
+                        "href": "https://support.ecmwf.int",
+                        "type": "text/html"
+                    }
+                ],
+                "contactInstructions": "Use the ECMWF Support Portal",
+                "roles": [
+                    "producer",
+                    "host"
+                ]
+            },
+            {
+                "organization": "WIS2 metdx-demo (SG-FIT)",
+                "links": [
+                    {
+                        "rel": "about",
+                        "href": "https://github.com/6a6d74/ecmwf-stac",
+                        "type": "text/html",
+                        "title": "STAC catalog source repository"
+                    }
+                ],
+                "contactInstructions": "Open an issue in the source repository",
+                "roles": [
+                    "publisher"
+                ]
+            }
+        ],
+        "created": "2026-11-05T18:11:15Z",
+        "updated": "2026-11-05T18:24:00Z",
+        "wmo:dataPolicy": "core",
+        "externalIds": [
+            {
+                "scheme": "doi",
+                "value": "10.21957/open-data"
+            }
+        ],
+        "rights": "ECMWF open data are licensed under CC-BY-4.0, subject to the ECMWF Terms of Use. Data \u00a9 ECMWF.",
+        "formats": [
+            {
+                "name": "GRIB2",
+                "mediaType": "application/grib;edition=2"
+            },
+            {
+                "name": "STAC (JSON)",
+                "mediaType": "application/json"
+            }
+        ]
+    },
+    "links": [
+        {
+            "rel": "items",
+            "type": "application/geo+json",
+            "href": "mqtts://everyone:everyone@gb.wis2dev.io:8883",
+            "channel": "cache/a/wis2/int-ecmwf/data/core/weather/prediction/forecast/medium-range/deterministic/global",
+            "title": "Notifications from the WIS2 test Global Broker (gb.wis2dev.io)"
+        },
+        {
+            "rel": "collection",
+            "type": "application/json",
+            "href": "https://6a6d74.github.io/ecmwf-stac/stac/collection.json",
+            "title": "STAC catalog: root Collection (IFS 0.1\u00b0 oper)",
+            "profile": "https://schemas.stacspec.org/v1.1.0/collection-spec/json-schema/collection.json"
+        },
+        {
+            "rel": "related",
+            "type": "text/html",
+            "href": "https://6a6d74.github.io/ecmwf-stac/browser/",
+            "title": "STAC Browser for this catalog"
+        },
+        {
+            "rel": "collection",
+            "type": "application/json",
+            "href": "https://polytope-edr.lumi.apps.dte.destination-earth.eu/collections/operational-data?f=json",
+            "title": "OGC EDR - Operational forecast data (position, area, trajectory, radius queries)",
+            "profile": "http://www.opengis.net/spec/ogcapi-edr-1/1.0/conf/core"
+        },
+        {
+            "rel": "collection",
+            "type": "application/json",
+            "href": "https://polytope-edr.lumi.apps.dte.destination-earth.eu/collections/operational_map_server?f=json",
+            "title": "OGC Maps - Rendered forecast map images of ECMWF IFS Global Model",
+            "profile": "http://www.opengis.net/spec/ogcapi-maps-1/1.0/conf/core"
+        },
+        {
+            "rel": "related",
+            "type": "text/html",
+            "href": "https://polytope-edr.lumi.apps.dte.destination-earth.eu/collections/operational-data?f=html",
+            "title": "OGC EDR landing page - Operational forecast data (position, area, trajectory, radius queries)"
+        },
+        {
+            "rel": "related",
+            "type": "text/html",
+            "href": "https://polytope-edr.lumi.apps.dte.destination-earth.eu/collections/operational_map_server?f=html",
+            "title": "OGC Maps landing page - Rendered forecast map images of ECMWF IFS Global Model"
+        },
+        {
+            "rel": "items",
+            "type": "text/html",
+            "href": "https://data.ecmwf.int/forecasts/",
+            "title": "ECMWF open data portal (the GRIB2 files)"
+        },
+        {
+            "rel": "describedby",
+            "type": "text/html",
+            "href": "https://www.ecmwf.int/en/forecasts/datasets/open-data",
+            "title": "ECMWF open data documentation"
+        },
+        {
+            "rel": "related",
+            "type": "application/geo+json",
+            "href": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn:wmo:md:int-ecmwf:ifs:oper:forecast",
+            "title": "ECMWF's WIS2 record for the IFS deterministic forecast at 0.25\u00b0 (urn:wmo:md:int-ecmwf:ifs:oper:forecast)"
+        },
+        {
+            "rel": "license",
+            "type": "text/html",
+            "href": "https://creativecommons.org/licenses/by/4.0/",
+            "title": "CC-BY-4.0"
+        },
+        {
+            "rel": "license",
+            "type": "text/html",
+            "href": "https://apps.ecmwf.int/datasets/licences/general/",
+            "title": "Terms of Use for ECMWF Open Data Products"
+        },
+        {
+            "rel": "cite-as",
+            "type": "text/html",
+            "href": "https://doi.org/10.21957/open-data",
+            "title": "ECMWF Open Data (DOI 10.21957/open-data)"
+        }
+    ]
+}
