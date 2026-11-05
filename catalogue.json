@@ -349,8 +349,38 @@
       "published": "20261031T092539Z",
       "deleted": false,
       "deleted_at": null
+    },
+    "urn:wmo:md:io-wis2dev-metdx-demo:ecmwf-opendata-ifs-0p1-oper": {
+      "id": "urn:wmo:md:io-wis2dev-metdx-demo:ecmwf-opendata-ifs-0p1-oper",
+      "versions": [
+        {
+          "path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-io-wis2dev-metdx-demo-ecmwf-opendata-ifs-0p1-oper.20261105T175715Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-io-wis2dev-metdx-demo-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-io-wis2dev-metdx-demo-ecmwf-opendata-ifs-0p1-oper.20261105T175715Z.json",
+          "sha512_hex": "dc3f27480498d8d4ff7a3e32af18e2737f180c3d747582168602f2570e0a6d869a5cb630ac7ae761a641fd1a6ee872ca8480923314042f9e51d75f72ff247bd5",
+          "length": 14471,
+          "published": "20261105T175715Z",
+          "action": "canonical"
+        }
+      ],
+      "last_publication": {
+        "run_id": "42079554169",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42079554169",
+        "action": "canonical",
+        "status": "pending",
+        "stamp": "20261105T175715Z"
+      },
+      "title": "ECMWF physics-based deterministic forecast at 0.1\u00b0",
+      "source_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-ecmwf-opendata-ifs-0p1-oper.json",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-io-wis2dev-metdx-demo-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-io-wis2dev-metdx-demo-ecmwf-opendata-ifs-0p1-oper.20261105T175715Z.json",
+      "current_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-io-wis2dev-metdx-demo-ecmwf-opendata-ifs-0p1-oper.20261105T175715Z.json",
+      "sha512_hex": "dc3f27480498d8d4ff7a3e32af18e2737f180c3d747582168602f2570e0a6d869a5cb630ac7ae761a641fd1a6ee872ca8480923314042f9e51d75f72ff247bd5",
+      "sha512_b64": "3D8nSASY2NT/ej4yrxjic38YDD10dYIWhgLyVw4KbYaaXLYwrHrnYaZB/Rpu6HLKhICSMxQEL55R119y/yR71Q==",
+      "length": 14471,
+      "published": "20261105T175715Z",
+      "deleted": false,
+      "deleted_at": null
     }
   },
   "published_commit": "16e93bf11282865f4b963ec25be1ddf53cb103a4",
-  "updated": "2026-11-03T15:22:20Z"
+  "updated": "2026-11-05T17:57:17Z"
 }
