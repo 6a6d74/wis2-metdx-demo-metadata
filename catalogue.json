@@ -366,8 +366,34 @@
         "run_id": "42082231007",
         "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42082231007",
         "action": "deletion",
-        "status": "pending",
-        "stamp": "20261105T181421Z"
+        "status": "failed",
+        "stamp": "20261105T181421Z",
+        "stage": "done",
+        "message_id": "53a506c6-a7dd-4541-ba6e-84b56ca5099b",
+        "errors": [
+          "io-wis2dev-labs-global-discovery-catalogue: WIS2 GDC WCMP2 deletion report (metadata urn:wmo:md:io-wis2dev-metdx-demo:ecmwf-opendata-ifs-0p1-oper not found)"
+        ],
+        "warnings": [],
+        "ets": null,
+        "kpi": null,
+        "gdc": {
+          "status": "removed",
+          "seconds": 0.4,
+          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aio-wis2dev-metdx-demo%3Aecmwf-opendata-ifs-0p1-oper?f=json"
+        },
+        "other_gdcs": [
+          {
+            "source": "ca-eccc-msc-global-discovery-catalogue",
+            "type": "int.wmo.wis.wme.event.item.download",
+            "severity": "INFO",
+            "summary": "WIS2 GDC WCMP2 deletion report: metadata urn:wmo:md:io-wis2dev-metdx-demo:ecmwf-opendata-ifs-0p1-oper deleted"
+          }
+        ],
+        "delivered": {
+          "local": 0.09,
+          "gb": 0.16
+        },
+        "log": "logs/42082231007/urn-wmo-md-io-wis2dev-metdx-demo-ecmwf-opendata-ifs-0p1-oper.jsonl"
       },
       "title": "ECMWF physics-based deterministic forecast at 0.1\u00b0",
       "source_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-ecmwf-opendata-ifs-0p1-oper.json",
@@ -396,8 +422,47 @@
         "run_id": "42082231007",
         "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42082231007",
         "action": "canonical",
-        "status": "pending",
-        "stamp": "20261105T181421Z"
+        "status": "ok",
+        "stamp": "20261105T181421Z",
+        "stage": "done",
+        "message_id": "fa1a1914-4f52-41f9-8f37-68e4b0e79283",
+        "errors": [],
+        "warnings": [],
+        "ets": {
+          "summary": {
+            "PASSED": 12,
+            "FAILED": 0,
+            "SKIPPED": 0,
+            "WARNING": 0
+          },
+          "source": "io-wis2dev-labs-global-discovery-catalogue",
+          "failed": []
+        },
+        "kpi": {
+          "percentage": 91.209,
+          "grade": "A",
+          "score": 83,
+          "total": 91,
+          "source": "io-wis2dev-labs-global-discovery-catalogue"
+        },
+        "gdc": {
+          "status": "present",
+          "seconds": 0.4,
+          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aecmwf-opendata-ifs-0p1-oper?f=json"
+        },
+        "other_gdcs": [
+          {
+            "source": "ca-eccc-msc-global-discovery-catalogue",
+            "type": "int.wmo.wis.wme.event.wcmp2.ets",
+            "severity": "ERROR",
+            "summary": "rejected the record: Topic mismatch (io-wis2dev-metdx-demo != int-ecmwf)"
+          }
+        ],
+        "delivered": {
+          "local": 0.09,
+          "gb": 0.16
+        },
+        "log": "logs/42082231007/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.jsonl"
       },
       "title": "ECMWF physics-based deterministic forecast at 0.1\u00b0",
       "source_path": "metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.json",
@@ -411,6 +476,6 @@
       "deleted_at": null
     }
   },
-  "published_commit": "f22c6714a0e5a8638126365f9ecf97ef093fc075",
-  "updated": "2026-11-05T18:14:24Z"
+  "published_commit": "dd7f9aebb74b8fee30c9eca52f740913fd65f1c1",
+  "updated": "2026-11-05T18:15:21Z"
 }
