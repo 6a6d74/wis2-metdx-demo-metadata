@@ -533,3 +533,18 @@ def test_deletion_completes_only_on_target_report(fast_cfg, net, record, tmp_pat
     (r,) = run(fast_cfg, net, [job(record, "deletion")], tmp_path)
     assert r.ok and any("no deletion report" in w for w in r.warnings)
     assert "deletion report" in r.other_gdcs[0]["summary"] and r.gdc_events == []
+
+
+def test_gdc_ets_failure_downgraded_by_message_prefix(fast_cfg, net, record, tmp_path):
+    fast_cfg["monitor"]["ets_failures_as_warnings"] = ["links: centre identifiers do not match"]
+    net.gdc_ets_failed = [("links", "centre identifiers do not match: link: io-wis2dev-metdx-demo, id: int-ecmwf")]
+    (r,) = run(fast_cfg, net, [job(record)], tmp_path)
+    assert r.ok and r.warnings == [
+        "GDC ETS links FAILED: centre identifiers do not match: link: io-wis2dev-metdx-demo, id: int-ecmwf"]
+
+
+def test_gdc_ets_other_links_failure_still_an_error(fast_cfg, net, record, tmp_path):
+    fast_cfg["monitor"]["ets_failures_as_warnings"] = ["links: centre identifiers do not match"]
+    net.gdc_ets_failed = [("links", "invalid link relation root")]
+    (r,) = run(fast_cfg, net, [job(record)], tmp_path)
+    assert r.errors == ["GDC ETS links FAILED: invalid link relation root"]

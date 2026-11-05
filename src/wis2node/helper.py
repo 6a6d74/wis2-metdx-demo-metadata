@@ -192,7 +192,7 @@ class Helper:
         self.timeouts = timeouts
         self.log = log
         self.wait_for_pages = wait_for_pages
-        self.ets_relaxed = set(ets_failures_as_warnings or [])
+        self.ets_relaxed = list(ets_failures_as_warnings or [])
         self.kpi_warn_below = kpi_warn_below
         self.require_kpi = require_kpi
         self.kpi_grace = kpi_grace  # seconds to wait for an optional KPI report after the ETS
@@ -408,7 +408,8 @@ class Helper:
         for t in failures:
             name = mon.short_test_id(t)
             text = f"GDC ETS {name} FAILED" + (f": {t['message']}" if t.get("message") else "")
-            (self.result.warnings if name in self.ets_relaxed else self.result.errors).append(text)
+            excused = mon.ets_failure_excused(name, t.get("message"), self.ets_relaxed)
+            (self.result.warnings if excused else self.result.errors).append(text)
 
     def _on_kpi(self, event: dict) -> None:
         s = mon.kpi_summary(event)
