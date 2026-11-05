@@ -4,14 +4,17 @@ Errors (fail the check):
   - not valid JSON, or not a JSON object with a string "id"
   - WCMP2 schema validation failure (checked separately: pywcmp leaves it out
     of the ETS summary)
-  - any ETS test FAILED, or the ETS crashing on the record
+  - any ETS test FAILED (unless excused by monitor.ets_failures_as_warnings,
+    the same rules the Publish workflow applies to the GDC's report), or the ETS
+    crashing on the record
   - id does not start with urn:wmo:md:<centre-id>: (unless
     validation.require_centre_id_prefix is false)
   - id used by another record in metadata/
   - a modified record changed its id, or did not advance properties.updated
   - files under metadata/ that are not metadata/<name>.json
 
-Warnings (reported only): ETS WARNING results, KPI below the configured threshold,
+Warnings (reported only): ETS WARNING results, excused ETS failures, KPI below the
+configured threshold,
 links that look copied from a catalogue's copy of the record (e.g. the GDC's
 root/self/alternate links).
 The KPI report is informational.
@@ -33,6 +36,7 @@ from urllib.parse import urlparse
 
 from . import changes as ch
 from . import config as cfgmod
+from . import monitor as mon
 
 MAX_LISTED_ERRORS = 20
 COMMENT_MARKER = "<!-- wis2node-validate -->"
@@ -76,7 +80,7 @@ def parse_datetime(value) -> datetime | None:
     return dt if dt.tzinfo else None
 
 
-def run_ets(record: dict, relax_centre_id: bool, result: RecordResult) -> None:
+def run_ets(record: dict, relax_centre_id: bool, result: RecordResult, excused=()) -> None:
     from pywcmp.wcmp2.ets import WMOCoreMetadataProfileTestSuite2
 
     suite = WMOCoreMetadataProfileTestSuite2(record)
@@ -98,7 +102,10 @@ def run_ets(record: dict, relax_centre_id: bool, result: RecordResult) -> None:
         name = test["id"].rsplit("/", 1)[-1]
         msg = f"ETS {name}: {test.get('message', '')}".rstrip(": ")
         if test["code"] == "FAILED":
-            result.errors.append(msg)
+            if mon.ets_failure_excused(name, test.get("message"), excused):
+                result.warnings.append(f"{msg} (excused by monitor.ets_failures_as_warnings)")
+            else:
+                result.errors.append(msg)
         elif test["code"] == "WARNING":
             result.warnings.append(msg)
 
@@ -183,6 +190,7 @@ def validate(changes: list[ch.Change], cfg: dict, root: Path, base: str | None,
     relax = cfgmod.get(cfg, "validation", "relax_centre_id_checks", default=True)
     require_prefix = cfgmod.get(cfg, "validation", "require_centre_id_prefix", default=True)
     warn_below = cfgmod.get(cfg, "kpi", "warn_below_percentage")
+    excused = cfgmod.get(cfg, "monitor", "ets_failures_as_warnings", default=[]) or []
     id_paths = index_ids(root)
     results = []
 
@@ -216,7 +224,7 @@ def validate(changes: list[ch.Change], cfg: dict, root: Path, base: str | None,
         check_local_rules(record, change.status, previous, centre_id, id_paths, change.path, result,
                           require_prefix=require_prefix)
         check_catalogue_links(record, cfgmod.get(cfg, "global_discovery_catalogue", "url"), result)
-        run_ets(record, relax, result)
+        run_ets(record, relax, result, excused)
         if run_kpis:
             run_kpi(record, warn_below, result)
 

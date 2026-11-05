@@ -208,3 +208,40 @@ def test_hint_also_catches_other_catalogues_and_not_dataset_links(repo, cfg, rec
     (r,) = run(repo, cfg, base, repo.commit())
     (hint,) = [w for w in r.warnings if "copied from the GDC" in w]
     assert hint.startswith("1 link(s)") and "other-gdc.example" in hint and "data.example" not in hint
+
+
+ECMWF_CHANNEL_LINK = {
+    "rel": "items", "type": "application/geo+json",
+    "href": "mqtts://everyone:everyone@gb.wis2dev.io:8883",
+    "channel": "cache/a/wis2/int-ecmwf/data/core/weather/prediction/forecast/medium-range/deterministic/global",
+}
+
+
+def test_other_centres_channel_is_excused_by_this_repos_config(repo, cfg, record):
+    # config/node.yml excuses "links: centre identifiers do not match"
+    record["properties"]["wmo:dataPolicy"] = "core"
+    record["links"].insert(0, dict(ECMWF_CHANNEL_LINK))  # pywcmp stops at the first link problem
+    base = repo.commit()
+    repo.write("metadata/obs.json", record)
+    (r,) = run(repo, cfg, base, repo.commit())
+    assert r.ok, r.errors
+    assert any(w.startswith("ETS links: centre identifiers do not match") and "excused" in w for w in r.warnings)
+
+
+def test_other_centres_channel_fails_without_the_exception(repo, cfg, record):
+    cfg["monitor"]["ets_failures_as_warnings"] = []
+    record["properties"]["wmo:dataPolicy"] = "core"
+    record["links"].insert(0, dict(ECMWF_CHANNEL_LINK))  # pywcmp stops at the first link problem
+    base = repo.commit()
+    repo.write("metadata/obs.json", record)
+    (r,) = run(repo, cfg, base, repo.commit())
+    assert any(e.startswith("ETS links: centre identifiers do not match") for e in r.errors)
+
+
+def test_exception_does_not_hide_other_link_failures(repo, cfg, record):
+    record["links"].insert(0, {"rel": "items", "type": "application/geo+json",
+                               "href": "mqtts://everyone:everyone@gb.wis2dev.io:8883"})  # no channel
+    base = repo.commit()
+    repo.write("metadata/obs.json", record)
+    (r,) = run(repo, cfg, base, repo.commit())
+    assert "ETS links: missing channel for Pub/Sub link" in r.errors

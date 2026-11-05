@@ -123,3 +123,21 @@ def kpi_summary(event: dict) -> dict:
 
 def short_test_id(test: dict) -> str:
     return str(test.get("id", "?")).rstrip("/").rsplit("/", 1)[-1]
+
+
+def ets_failure_excused(name: str, message: str | None, rules) -> bool:
+    """Whether a FAILED ETS test is excused by an ets_failures_as_warnings rule.
+
+    A rule is a short test id ("identifier"), which excuses every failure of that
+    test, or "<test>: <message prefix>" ("links: centre identifiers do not match"),
+    which excuses only failures whose message starts with that text. The prefix
+    form matters for tests like `links`, which stop at their first problem: excusing
+    the whole test would also hide a broken link.
+    """
+    for rule in rules or []:
+        test, sep, prefix = str(rule).partition(":")
+        if test.strip() != name:
+            continue
+        if not sep or not prefix.strip() or (message or "").startswith(prefix.strip()):
+            return True
+    return False

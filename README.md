@@ -184,7 +184,7 @@ Downstream WIS2 components that we only observe:
 The **Validate** workflow runs on every PR. It checks only the records that the PR adds or changes, and fails if any of the following is true:
 
 - A file is not valid JSON, or has no `id`.
-- A record fails the WCMP2 schema, or any WCMP2 ETS test returns FAILED (pywcmp, the same version the GDC runs).
+- A record fails the WCMP2 schema, or any WCMP2 ETS test returns FAILED (pywcmp, the same version the GDC runs). Failures listed in `monitor.ets_failures_as_warnings` are reported as warnings instead.
 - An `id` doesn't start with `urn:wmo:md:<centre_id>:`. This applies only if `validation.require_centre_id_prefix` is on; it is off in this repo, where demo records may name other centres.
 - Two records share an `id`.
 - A changed record has a different `id`, or its `properties.updated` was not moved later.
@@ -265,7 +265,7 @@ Settings live in [`config/node.yml`](config/node.yml). Change them through a PR,
 | `kpi.warn_below_percentage` | `null` | Warn (never fail) when a KPI score is below this value. |
 | `validation.require_centre_id_prefix` | `true` (code default); **`false` in this repo** | Require record ids to start with `urn:wmo:md:<centre_id>:`. Normally a node publishes only its own records. It is off here because demo records appear to come from many WIS centres. A standard GDC compares the record's centre-id with the publishing topic's ("Topic mismatch") and doesn't register records that differ. The Labs GDC has been changed to accept them; other catalogue instances may still reject them (shown as information). |
 | `validation.relax_centre_id_checks` | `true` | pywcmp fails centre-ids that aren't in the official WIS2 list, and ours is a test centre. `true` reports those tests as warnings. Our own prefix rule still applies. |
-| `monitor.ets_failures_as_warnings` | `[]` | GDC ETS tests (short names, e.g. `identifier`) whose FAILED result counts as a warning instead of an error. |
+| `monitor.ets_failures_as_warnings` | `[]` (code default); **`["links: centre identifiers do not match"]` in this repo** | ETS failures that count as a warning instead of an error, in both the Validate check and the GDC's ETS report. An entry is a short test name (`identifier`), which excuses every failure of that test, or `<test>: <message prefix>`, which excuses only failures whose message starts with that text. This repo excuses one: a record under our centre-id whose MQTT link points at another centre's channel, e.g. the STAC catalog of ECMWF open data linking ECMWF's notifications. Other `links` problems still fail. |
 | `monitor.kpi_grace` | `15` | With `require_kpi` off: after the ETS report, seconds to wait for an optional KPI report so it's recorded. The Labs GDC sends it about 2.5 s after the ETS. A late or missing KPI report never fails a record. |
 | `monitor.require_kpi` | `false` | Require a KPI report from the target GDC for success. A GDC only sends KPI reports when its `WMO_RESOURCE_CATALOGUE_RUN_KPI` setting is on. The Labs GDC does send them (seen 2026-10-30). Off here: KPI is recorded but optional. |
 | `publish.max_workers` | `4` | Number of records published in parallel. |
