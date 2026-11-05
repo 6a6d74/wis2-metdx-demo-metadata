@@ -250,7 +250,7 @@
             }
         ],
         "created": "2026-11-05T18:11:15Z",
-        "updated": "2026-11-05T18:11:15Z",
+        "updated": "2026-11-05T18:24:00Z",
         "wmo:dataPolicy": "core",
         "externalIds": [
             {
@@ -327,7 +327,7 @@
             "rel": "describedby",
             "type": "text/html",
             "href": "https://www.ecmwf.int/en/forecasts/datasets/open-data",
-            "title": "ECMWF open data"
+            "title": "ECMWF open data documentation"
         },
         {
             "rel": "related",
