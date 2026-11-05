@@ -69,11 +69,10 @@ monitor:
   # and in the GDC's ETS report. An entry is a short test id ("identifier"), which
   # excuses every failure of that test, or "<test>: <message prefix>", which excuses
   # only failures whose message starts with that text. Empty: every FAILED is an error.
-  ets_failures_as_warnings:
-    # A record under our centre-id may point at another centre's notifications, e.g.
-    # the STAC catalog of ECMWF open data links ECMWF's channel (cache/a/wis2/int-ecmwf/…).
-    # Only this message is excused: other link problems still fail.
-    - "links: centre identifiers do not match"
+  # This only changes our reporting: the GDC runs its own ETS and won't register a
+  # record with any FAILED test (seen 2026-11-05, Publish run 42079554169), so an
+  # excused record passes Validate but never reaches the catalogue.
+  ets_failures_as_warnings: []
   # Whether a helper must also receive a KPI report from the target GDC to succeed.
   # A GDC only sends KPI reports when WMO_RESOURCE_CATALOGUE_RUN_KPI=true (off by
   # default; none seen so far). A KPI report is recorded whenever one arrives.

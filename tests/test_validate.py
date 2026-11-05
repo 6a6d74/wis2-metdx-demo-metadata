@@ -217,8 +217,11 @@ ECMWF_CHANNEL_LINK = {
 }
 
 
-def test_other_centres_channel_is_excused_by_this_repos_config(repo, cfg, record):
-    # config/node.yml excuses "links: centre identifiers do not match"
+RULE = "links: centre identifiers do not match"
+
+
+def test_other_centres_channel_can_be_excused_by_a_prefix_rule(repo, cfg, record):
+    cfg["monitor"]["ets_failures_as_warnings"] = [RULE]
     record["properties"]["wmo:dataPolicy"] = "core"
     record["links"].insert(0, dict(ECMWF_CHANNEL_LINK))  # pywcmp stops at the first link problem
     base = repo.commit()
@@ -228,8 +231,8 @@ def test_other_centres_channel_is_excused_by_this_repos_config(repo, cfg, record
     assert any(w.startswith("ETS links: centre identifiers do not match") and "excused" in w for w in r.warnings)
 
 
-def test_other_centres_channel_fails_without_the_exception(repo, cfg, record):
-    cfg["monitor"]["ets_failures_as_warnings"] = []
+def test_other_centres_channel_fails_with_this_repos_config(repo, cfg, record):
+    # config/node.yml excuses nothing: the GDC refuses records with a FAILED test
     record["properties"]["wmo:dataPolicy"] = "core"
     record["links"].insert(0, dict(ECMWF_CHANNEL_LINK))  # pywcmp stops at the first link problem
     base = repo.commit()
@@ -239,6 +242,7 @@ def test_other_centres_channel_fails_without_the_exception(repo, cfg, record):
 
 
 def test_exception_does_not_hide_other_link_failures(repo, cfg, record):
+    cfg["monitor"]["ets_failures_as_warnings"] = [RULE]
     record["links"].insert(0, {"rel": "items", "type": "application/geo+json",
                                "href": "mqtts://everyone:everyone@gb.wis2dev.io:8883"})  # no channel
     base = repo.commit()
