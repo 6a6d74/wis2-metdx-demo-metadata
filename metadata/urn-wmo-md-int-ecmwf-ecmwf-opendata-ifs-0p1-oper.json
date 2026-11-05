@@ -1,5 +1,5 @@
 {
-    "id": "urn:wmo:md:io-wis2dev-metdx-demo:ecmwf-opendata-ifs-0p1-oper",
+    "id": "urn:wmo:md:int-ecmwf:ecmwf-opendata-ifs-0p1-oper",
     "type": "Feature",
     "conformsTo": [
         "http://wis.wmo.int/spec/wcmp/2/conf/core"
@@ -78,8 +78,8 @@
     },
     "properties": {
         "type": "dataset",
-        "identifier": "urn:wmo:md:io-wis2dev-metdx-demo:ecmwf-opendata-ifs-0p1-oper",
-        "centre-id": "io-wis2dev-metdx-demo",
+        "identifier": "urn:wmo:md:int-ecmwf:ecmwf-opendata-ifs-0p1-oper",
+        "centre-id": "int-ecmwf",
         "title": "ECMWF physics-based deterministic forecast at 0.1\u00b0",
         "description": "ECMWF physics based deterministic forecast (IFS, stream oper) at 0.1\u00b0 resolution on a global regular latitude/longitude grid, from four runs a day: the 00 and 12 UTC runs go to step 360 hours (every 3 h to step 144 h, then every 6 h), and the 06 and 18 UTC runs to step 144 hours (every 3 h). ECMWF open data is a rolling archive: only the most recent four days of runs are online. Pressure-level fields (z, gh, t, q, w, vo, d, r, u, v on 14 levels from 1000 to 10 hPa) and surface fields (about 45 parameters, including 2 m temperature, 10 m wind, mean sea level pressure, precipitation, cloud cover, radiation and soil variables) are in separate GRIB2 files. This record describes a STAC catalog of those files. Each forecast run is described by two STAC Items, one for pressure levels and one for surface fields, whose assets are the GRIB2 file and ECMWF index file of every forecast step, with Projection, Datacube and Forecast extension metadata. The catalog is rebuilt to match the runs online at ECMWF. The GRIB2 data are produced and hosted by ECMWF; the STAC catalog is a metdx-demo prototype.",
         "version": "1.0",
@@ -249,8 +249,8 @@
                 ]
             }
         ],
-        "created": "2026-11-05T17:54:05Z",
-        "updated": "2026-11-05T17:54:05Z",
+        "created": "2026-11-05T18:11:15Z",
+        "updated": "2026-11-05T18:11:15Z",
         "wmo:dataPolicy": "core",
         "externalIds": [
             {
