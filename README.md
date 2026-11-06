@@ -218,6 +218,7 @@ Each helper works through these steps, and a failure in one record never stops t
 5. **Confirm in the GDC:** poll the Labs GDC's API until it holds this version of the record, matched on `updated`/`created`. For a deletion, poll until the record is gone.
    - **The GDC's catalogue is treated as ground truth.** Before publishing, the helper notes which version the GDC already holds. If the GDC then changes to exactly this version, a GDC rejection event (e.g. "Topic mismatch") is shown as a ⚠️ warning, and the record passes. A **missing** ETS report is never excused this way.
    - **A re-announce of unchanged content** (same `updated`) can't be confirmed this way. It stays an error, with a hint to change `properties.updated`.
+   - **A deletion the GDC reports as "not found"** means the GDC never held the record, for example because it had rejected the record. If the GDC check confirms the record is absent, the report is shown as a ⚠️ warning and the deletion passes. Otherwise it stays an error.
 
 Every event received is written to a log. The run fails if any record fails, and the job summary lists the reason for each failure.
 

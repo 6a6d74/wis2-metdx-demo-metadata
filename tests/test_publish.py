@@ -87,7 +87,29 @@ def test_deletion_completes_on_gdc_report(fast_cfg, net, record, tmp_path):
     assert r.gdc_events[0]["severity"] == "INFO" and "deleted" in r.gdc_events[0]["description"]
 
 
-def test_deletion_not_found_is_error(fast_cfg, net, record, tmp_path):
+def test_deletion_not_found_but_absent_warns(fast_cfg, net, record, tmp_path):
+    # e.g. a record the GDC had rejected: nothing to delete, and it is absent as intended
+    net.gdc_delete_result = "not found"
+    (r,) = run(fast_cfg, net, [job(record, "deletion")], tmp_path)
+    assert r.ok, r.errors
+    assert r.gdc["status"] == "removed"
+    assert any("not found" in w and "never held this record" in w for w in r.warnings)
+
+
+def test_deletion_not_found_and_still_present_is_error(fast_cfg, net, record, tmp_path):
+    from wis2node.gdc import GDCError
+
+    def still_there(base, mid, timeout, interval):
+        raise GDCError("record still in the GDC")
+
+    net.gdc_delete_result = "not found"
+    (r,) = run(fast_cfg, net, [job(record, "deletion")], tmp_path, gdc_absent=still_there)
+    assert not r.ok
+    assert any("not found" in e for e in r.errors) and any("still in the GDC" in e for e in r.errors)
+
+
+def test_deletion_not_found_without_gdc_check_is_error(fast_cfg, net, record, tmp_path):
+    fast_cfg["global_discovery_catalogue"]["url"] = ""
     net.gdc_delete_result = "not found"
     (r,) = run(fast_cfg, net, [job(record, "deletion")], tmp_path)
     assert not r.ok and "not found" in r.errors[0]
