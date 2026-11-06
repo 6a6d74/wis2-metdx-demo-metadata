@@ -292,6 +292,13 @@
             "title": "STAC Browser for this catalog"
         },
         {
+            "rel": "related",
+            "type": "application/vnd+zarr",
+            "href": "https://pub-c0b5dafd5b604c39aea40eca9165a981.r2.dev/ifs-0p1-oper-azure",
+            "title": "Icechunk repository (analysis-ready cube, Zarr v3): virtual references to the GRIB2 files on Microsoft Planetary Computer; read-only over HTTPS with icechunk.http_storage, decode with gribberish",
+            "profile": "https://icechunk.io/en/latest/spec/"
+        },
+        {
             "rel": "collection",
             "type": "application/json",
             "href": "https://polytope-edr.lumi.apps.dte.destination-earth.eu/collections/operational-data?f=json",
