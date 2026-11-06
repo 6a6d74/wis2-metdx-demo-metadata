@@ -250,7 +250,7 @@
             }
         ],
         "created": "2026-11-05T18:11:15Z",
-        "updated": "2026-11-06T16:18:28Z",
+        "updated": "2026-11-06T16:40:00Z",
         "wmo:dataPolicy": "core",
         "externalIds": [
             {
@@ -292,7 +292,7 @@
             "title": "STAC Browser for this catalog"
         },
         {
-            "rel": "related",
+            "rel": "manifest",
             "type": "application/vnd+zarr",
             "href": "https://pub-c0b5dafd5b604c39aea40eca9165a981.r2.dev/ifs-0p1-oper-azure",
             "title": "Icechunk repository (analysis-ready cube, Zarr v3): virtual references to the GRIB2 files on Microsoft Planetary Computer; read-only over HTTPS with icechunk.http_storage, decode with gribberish",
