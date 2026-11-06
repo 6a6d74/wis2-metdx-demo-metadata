@@ -197,6 +197,7 @@ class Helper:
         self.require_kpi = require_kpi
         self.kpi_grace = kpi_grace  # seconds to wait for an optional KPI report after the ETS
         self._deletion_reported = False
+        self._deletion_not_found: str | None = None  # the GDC's "not found" deletion report, if any
         self.clock = clock
         self.live_check = live_check
         self.gdc_url = gdc_url
@@ -277,6 +278,7 @@ class Helper:
                 r.stage = "gdc"
                 self._check_gdc()
                 self._apply_gdc_confirmation()
+                self._apply_deletion_confirmation()
             self._await(lambda: True, 0, 0)  # pick up anything that arrived meanwhile (e.g. a late KPI)
             r.stage = "done"
         except (PagesError, BrokerError) as exc:
@@ -330,6 +332,15 @@ class Helper:
                                   f"(updated {before or 'absent'} -> {self.job.datetime})")
         if r.ets and r.ets.get("rejected"):
             r.ets["registered_anyway"] = True
+
+    def _apply_deletion_confirmation(self) -> None:
+        """A deletion the GDC reports as "not found" means it never held the record (e.g. it had
+        rejected it). If the GDC check confirms the record is absent, the outcome is the one we
+        wanted, so the report becomes a warning. Without that confirmation it stays an error."""
+        r, msg = self.result, self._deletion_not_found
+        if msg and msg in r.errors and r.gdc and r.gdc.get("status") == "removed":
+            r.errors.remove(msg)
+            r.warnings.append(f"{msg}; the GDC never held this record, and it is absent as intended")
 
     def _await(self, done: Callable[[], bool], start: float, timeout: float) -> None:
         """Consume the inbox until done() or timeout, handling every item."""
@@ -426,10 +437,13 @@ class Helper:
             (f" ({mon.description(event)})" if mon.description(event) else "")
         self.result.gdc_events.append({"type": event.get("type"), "severity": sev, "title": mon.title(event),
                                        "description": mon.description(event), "source": event.get("source")})
-        if self.job.action == wnm.DELETION and mon.metadata_id(event) == self.job.metadata_id:
+        ours = self.job.action == wnm.DELETION and mon.metadata_id(event) == self.job.metadata_id
+        if ours:
             self._deletion_reported = True
         if sev in ("ERROR", "CRITICAL"):
             self.result.errors.append(text)
+            if ours and "not found" in text.lower():
+                self._deletion_not_found = text  # settled by the GDC check (_apply_deletion_confirmation)
         elif sev == "WARNING":
             self.result.warnings.append(text)
 
