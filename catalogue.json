@@ -499,8 +499,41 @@
         "run_id": "42249738649",
         "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42249738649",
         "action": "canonical",
-        "status": "pending",
-        "stamp": "20261106T161000Z"
+        "status": "ok",
+        "stamp": "20261106T161000Z",
+        "stage": "done",
+        "message_id": "03780fbf-f0a6-4a87-8cfb-1bfce854f336",
+        "errors": [],
+        "warnings": [],
+        "ets": {
+          "summary": {
+            "PASSED": 11,
+            "FAILED": 0,
+            "SKIPPED": 0,
+            "WARNING": 1
+          },
+          "source": "io-wis2dev-labs-global-discovery-catalogue",
+          "failed": []
+        },
+        "kpi": null,
+        "gdc": {
+          "status": "present",
+          "seconds": 0.9,
+          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aio-wis2dev-metdx-demo%3Ametoffice.global.forecast.edr?f=json"
+        },
+        "other_gdcs": [
+          {
+            "source": "ca-eccc-msc-global-discovery-catalogue",
+            "type": "int.wmo.wis.wme.event.wcmp2.ets",
+            "severity": "WARNING",
+            "summary": "ETS 11 passed, 1 warning"
+          }
+        ],
+        "delivered": {
+          "local": 0.15,
+          "gb": 0.16
+        },
+        "log": "logs/42249738649/urn-wmo-md-io-wis2dev-metdx-demo-metoffice.global.forecast.edr.jsonl"
       },
       "title": "Met Office Global Model forecast via OGC EDR (ICE demo, Met Office Labs)",
       "source_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-metoffice.global.forecast.edr.json",
@@ -514,6 +547,6 @@
       "deleted_at": null
     }
   },
-  "published_commit": "d1c9f530fa6d00e851c2496b01d91d208d7e79b2",
-  "updated": "2026-11-06T16:10:02Z"
+  "published_commit": "ab6cfb68ab0c9f2a76bc3eb095698b850d91510d",
+  "updated": "2026-11-06T16:11:46Z"
 }
