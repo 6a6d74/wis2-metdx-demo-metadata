@@ -482,8 +482,38 @@
       "published": "20261105T182636Z",
       "deleted": false,
       "deleted_at": null
+    },
+    "urn:wmo:md:io-wis2dev-metdx-demo:metoffice.global.forecast.edr": {
+      "id": "urn:wmo:md:io-wis2dev-metdx-demo:metoffice.global.forecast.edr",
+      "versions": [
+        {
+          "path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-metoffice.global.forecast.edr/urn-wmo-md-io-wis2dev-metdx-demo-metoffice.global.forecast.edr.20261106T161000Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-io-wis2dev-metdx-demo-metoffice.global.forecast.edr/urn-wmo-md-io-wis2dev-metdx-demo-metoffice.global.forecast.edr.20261106T161000Z.json",
+          "sha512_hex": "3bacc39e241a3ebffe004e9d36484512050182af2434fd6f10742e8103cda74dffe062bd266675289356b2197abf6e6eac35c5113de44a18e6d6b01df20b1012",
+          "length": 5590,
+          "published": "20261106T161000Z",
+          "action": "canonical"
+        }
+      ],
+      "last_publication": {
+        "run_id": "42249738649",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42249738649",
+        "action": "canonical",
+        "status": "pending",
+        "stamp": "20261106T161000Z"
+      },
+      "title": "Met Office Global Model forecast via OGC EDR (ICE demo, Met Office Labs)",
+      "source_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-metoffice.global.forecast.edr.json",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-io-wis2dev-metdx-demo-metoffice.global.forecast.edr/urn-wmo-md-io-wis2dev-metdx-demo-metoffice.global.forecast.edr.20261106T161000Z.json",
+      "current_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-metoffice.global.forecast.edr/urn-wmo-md-io-wis2dev-metdx-demo-metoffice.global.forecast.edr.20261106T161000Z.json",
+      "sha512_hex": "3bacc39e241a3ebffe004e9d36484512050182af2434fd6f10742e8103cda74dffe062bd266675289356b2197abf6e6eac35c5113de44a18e6d6b01df20b1012",
+      "sha512_b64": "O6zDniQaPr/+AE6dNkhFEgUBgq8kNP1vEHQugQPNp03/4GK9JmZ1KJNWshl6v25urDXFET3kShjm1rAd8gsQEg==",
+      "length": 5590,
+      "published": "20261106T161000Z",
+      "deleted": false,
+      "deleted_at": null
     }
   },
   "published_commit": "d1c9f530fa6d00e851c2496b01d91d208d7e79b2",
-  "updated": "2026-11-05T18:27:48Z"
+  "updated": "2026-11-06T16:10:02Z"
 }
