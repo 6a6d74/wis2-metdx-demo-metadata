@@ -424,62 +424,31 @@
           "length": 14449,
           "published": "20261105T182636Z",
           "action": "update"
+        },
+        {
+          "path": "metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.20261106T162223Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.20261106T162223Z.json",
+          "sha512_hex": "dde2e6fd2e3f85e2bb7cd401cbf113b6eda6991e1e0c285627457164bb8222a5bf9be71d8bb30d89063eaf187c8a64ec9df672ae972380002a85e69108dca2d3",
+          "length": 14918,
+          "published": "20261106T162223Z",
+          "action": "update"
         }
       ],
       "last_publication": {
-        "run_id": "42084212165",
-        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42084212165",
+        "run_id": "42251698645",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42251698645",
         "action": "update",
-        "status": "ok",
-        "stamp": "20261105T182636Z",
-        "stage": "done",
-        "message_id": "dc12717c-2be5-4e88-a815-49fb62108a9b",
-        "errors": [],
-        "warnings": [],
-        "ets": {
-          "summary": {
-            "PASSED": 12,
-            "FAILED": 0,
-            "SKIPPED": 0,
-            "WARNING": 0
-          },
-          "source": "io-wis2dev-labs-global-discovery-catalogue",
-          "failed": []
-        },
-        "kpi": {
-          "percentage": 91.209,
-          "grade": "A",
-          "score": 83,
-          "total": 91,
-          "source": "io-wis2dev-labs-global-discovery-catalogue"
-        },
-        "gdc": {
-          "status": "present",
-          "seconds": 0.6,
-          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aecmwf-opendata-ifs-0p1-oper?f=json"
-        },
-        "other_gdcs": [
-          {
-            "source": "ca-eccc-msc-global-discovery-catalogue",
-            "type": "int.wmo.wis.wme.event.wcmp2.ets",
-            "severity": "ERROR",
-            "summary": "rejected the record: Topic mismatch (io-wis2dev-metdx-demo != int-ecmwf)"
-          }
-        ],
-        "delivered": {
-          "local": 0.11,
-          "gb": 0.16
-        },
-        "log": "logs/42084212165/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.jsonl"
+        "status": "pending",
+        "stamp": "20261106T162223Z"
       },
       "title": "ECMWF physics-based deterministic forecast at 0.1\u00b0",
       "source_path": "metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.json",
-      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.20261105T182636Z.json",
-      "current_path": "metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.20261105T182636Z.json",
-      "sha512_hex": "5d8f865c732e11b4cddc90e590795ff045c04c02c8b6b279828643e1951e2b1d46d342645155cebdb2378cd7f6f232db94c89b7a1028630a15754114b495cbb3",
-      "sha512_b64": "XY+GXHMuEbTN3JDlkHlf8EXATALItrJ5goZD4ZUeKx1G00JkUVXOvbI3jNf28jLblMibehAoYwoVdUEUtJXLsw==",
-      "length": 14449,
-      "published": "20261105T182636Z",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.20261106T162223Z.json",
+      "current_path": "metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.20261106T162223Z.json",
+      "sha512_hex": "dde2e6fd2e3f85e2bb7cd401cbf113b6eda6991e1e0c285627457164bb8222a5bf9be71d8bb30d89063eaf187c8a64ec9df672ae972380002a85e69108dca2d3",
+      "sha512_b64": "3eLm/S4/heK7fNQBy/ETtu2mmR4eDChWJ0VxZLuCIqW/m+cdi7MNiQY+rxh8imTsnfZyrpcjgAAqheaRCNyi0w==",
+      "length": 14918,
+      "published": "20261106T162223Z",
       "deleted": false,
       "deleted_at": null
     },
@@ -548,5 +517,5 @@
     }
   },
   "published_commit": "ab6cfb68ab0c9f2a76bc3eb095698b850d91510d",
-  "updated": "2026-11-06T16:11:46Z"
+  "updated": "2026-11-06T16:22:26Z"
 }
