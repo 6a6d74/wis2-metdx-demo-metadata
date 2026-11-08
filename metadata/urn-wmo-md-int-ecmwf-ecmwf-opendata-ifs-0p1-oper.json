@@ -250,7 +250,7 @@
             }
         ],
         "created": "2026-11-05T18:11:15Z",
-        "updated": "2026-11-06T16:40:00Z",
+        "updated": "2026-11-08T18:53:00Z",
         "wmo:dataPolicy": "core",
         "externalIds": [
             {
@@ -329,6 +329,13 @@
             "type": "text/html",
             "href": "https://data.ecmwf.int/forecasts/",
             "title": "ECMWF open data portal (the GRIB2 files)"
+        },
+        {
+            "rel": "service",
+            "href": "https://mcp.ecmwf.int",
+            "type": "application/json",
+            "profile": "https://modelcontextprotocol.io/specification/2025-11-25",
+            "title": "The official Model Context Protocol service of ECMWF, providing the institute's forecasts, climate data, charts and catalogue information through one endpoint"
         },
         {
             "rel": "describedby",
