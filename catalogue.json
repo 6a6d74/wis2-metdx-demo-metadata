@@ -220,8 +220,32 @@
         "run_id": "42523706051",
         "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42523706051",
         "action": "deletion",
-        "status": "pending",
-        "stamp": "20261108T210902Z"
+        "status": "ok",
+        "stamp": "20261108T210902Z",
+        "stage": "done",
+        "message_id": "2547a055-db2a-4657-b816-d51f1c50d00e",
+        "errors": [],
+        "warnings": [],
+        "ets": null,
+        "kpi": null,
+        "gdc": {
+          "status": "removed",
+          "seconds": 0.9,
+          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aio-wis2dev-metdx-demo%3Aweather.prediction.forecast.global?f=json"
+        },
+        "other_gdcs": [
+          {
+            "source": "ca-eccc-msc-global-discovery-catalogue",
+            "type": "int.wmo.wis.wme.event.item.download",
+            "severity": "INFO",
+            "summary": "WIS2 GDC WCMP2 deletion report: metadata urn:wmo:md:io-wis2dev-metdx-demo:weather.prediction.forecast.global deleted"
+          }
+        ],
+        "delivered": {
+          "local": 0.13,
+          "gb": 0.16
+        },
+        "log": "logs/42523706051/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global.jsonl"
       },
       "title": "ECMWF IFS Global Deterministic Forecast (Destination Earth)",
       "source_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-weather.prediction.forecast.global.json",
@@ -532,6 +556,6 @@
       "deleted_at": null
     }
   },
-  "published_commit": "7e0630212cc2faad2cba05de3114e37a5209d4af",
-  "updated": "2026-11-08T21:09:04Z"
+  "published_commit": "60ffd8ac2a4e2e6a8c806440c2be2c6997f702f4",
+  "updated": "2026-11-08T21:09:55Z"
 }
