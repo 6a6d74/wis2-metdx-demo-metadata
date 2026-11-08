@@ -454,8 +454,47 @@
         "run_id": "42512376751",
         "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42512376751",
         "action": "update",
-        "status": "pending",
-        "stamp": "20261108T185527Z"
+        "status": "ok",
+        "stamp": "20261108T185527Z",
+        "stage": "done",
+        "message_id": "0f11d588-3011-4f0e-a8ca-e5b535b2cf78",
+        "errors": [],
+        "warnings": [],
+        "ets": {
+          "summary": {
+            "PASSED": 12,
+            "FAILED": 0,
+            "SKIPPED": 0,
+            "WARNING": 0
+          },
+          "source": "io-wis2dev-labs-global-discovery-catalogue",
+          "failed": []
+        },
+        "kpi": {
+          "percentage": 89.474,
+          "grade": "A",
+          "score": 85,
+          "total": 95,
+          "source": "io-wis2dev-labs-global-discovery-catalogue"
+        },
+        "gdc": {
+          "status": "present",
+          "seconds": 0.6,
+          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aecmwf-opendata-ifs-0p1-oper?f=json"
+        },
+        "other_gdcs": [
+          {
+            "source": "ca-eccc-msc-global-discovery-catalogue",
+            "type": "int.wmo.wis.wme.event.wcmp2.ets",
+            "severity": "ERROR",
+            "summary": "rejected the record: Topic mismatch (io-wis2dev-metdx-demo != int-ecmwf)"
+          }
+        ],
+        "delivered": {
+          "local": 0.09,
+          "gb": 0.16
+        },
+        "log": "logs/42512376751/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.jsonl"
       },
       "title": "ECMWF physics-based deterministic forecast at 0.1\u00b0",
       "source_path": "metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.json",
@@ -532,6 +571,6 @@
       "deleted_at": null
     }
   },
-  "published_commit": "c8ffa8d41a1a2cae3252c07a8a79790dcb246a73",
-  "updated": "2026-11-08T18:55:29Z"
+  "published_commit": "7e0630212cc2faad2cba05de3114e37a5209d4af",
+  "updated": "2026-11-08T18:56:12Z"
 }
