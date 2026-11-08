@@ -331,6 +331,13 @@
             "title": "ECMWF open data portal (the GRIB2 files)"
         },
         {
+            "rel": "service",
+            "href": "https://mcp.ecmwf.int",
+            "type": "application/json",
+            "profile": "https://modelcontextprotocol.io/specification/2025-11-25",
+            "title": "The official Model Context Protocol service of ECMWF, providing the institute's forecasts, climate data, charts and catalogue information through one endpoint"
+        },
+        {
             "rel": "describedby",
             "type": "text/html",
             "href": "https://www.ecmwf.int/en/forecasts/datasets/open-data",
