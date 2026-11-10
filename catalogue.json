@@ -436,50 +436,11 @@
         }
       ],
       "last_publication": {
-        "run_id": "42512376751",
-        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42512376751",
-        "action": "update",
-        "status": "ok",
-        "stamp": "20261108T185527Z",
-        "stage": "done",
-        "message_id": "0f11d588-3011-4f0e-a8ca-e5b535b2cf78",
-        "errors": [],
-        "warnings": [],
-        "ets": {
-          "summary": {
-            "PASSED": 12,
-            "FAILED": 0,
-            "SKIPPED": 0,
-            "WARNING": 0
-          },
-          "source": "io-wis2dev-labs-global-discovery-catalogue",
-          "failed": []
-        },
-        "kpi": {
-          "percentage": 89.474,
-          "grade": "A",
-          "score": 85,
-          "total": 95,
-          "source": "io-wis2dev-labs-global-discovery-catalogue"
-        },
-        "gdc": {
-          "status": "present",
-          "seconds": 0.6,
-          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aecmwf-opendata-ifs-0p1-oper?f=json"
-        },
-        "other_gdcs": [
-          {
-            "source": "ca-eccc-msc-global-discovery-catalogue",
-            "type": "int.wmo.wis.wme.event.wcmp2.ets",
-            "severity": "ERROR",
-            "summary": "rejected the record: Topic mismatch (io-wis2dev-metdx-demo != int-ecmwf)"
-          }
-        ],
-        "delivered": {
-          "local": 0.09,
-          "gb": 0.16
-        },
-        "log": "logs/42512376751/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.jsonl"
+        "run_id": "42833405941",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42833405941",
+        "action": "deletion",
+        "status": "pending",
+        "stamp": "20261110T142237Z"
       },
       "title": "ECMWF physics-based deterministic forecast at 0.1\u00b0",
       "source_path": "metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.json",
@@ -489,8 +450,8 @@
       "sha512_b64": "4LhkFgR5odwzAD9T8UhUKBs+YU87aIA882VafaBlzIJsmhLVNmsNiRdi/7/rn69DtaYtZ3EhYp/TdrDlhJkG0g==",
       "length": 15320,
       "published": "20261108T185527Z",
-      "deleted": false,
-      "deleted_at": null
+      "deleted": true,
+      "deleted_at": "2026-11-10T14:22:39Z"
     },
     "urn:wmo:md:io-wis2dev-metdx-demo:metoffice.global.forecast.edr": {
       "id": "urn:wmo:md:io-wis2dev-metdx-demo:metoffice.global.forecast.edr",
@@ -557,5 +518,5 @@
     }
   },
   "published_commit": "60ffd8ac2a4e2e6a8c806440c2be2c6997f702f4",
-  "updated": "2026-11-08T21:09:55Z"
+  "updated": "2026-11-10T14:22:39Z"
 }
