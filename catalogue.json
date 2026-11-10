@@ -570,8 +570,38 @@
       "published": "20261106T161000Z",
       "deleted": false,
       "deleted_at": null
+    },
+    "urn:wmo:md:io-wis2dev-metdx-demo:era5.single-levels.arco.edr": {
+      "id": "urn:wmo:md:io-wis2dev-metdx-demo:era5.single-levels.arco.edr",
+      "versions": [
+        {
+          "path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr.20261110T144407Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr.20261110T144407Z.json",
+          "sha512_hex": "3d29114f383799e2af3702dfadea26d6e5d67c41e20709336bba06c5956c583113990cc09cf5bfcc4c2c9620f7f54219578c9cd1f06df25b1bd35fa8cb5f0a81",
+          "length": 10401,
+          "published": "20261110T144407Z",
+          "action": "canonical"
+        }
+      ],
+      "last_publication": {
+        "run_id": "42836586115",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42836586115",
+        "action": "canonical",
+        "status": "pending",
+        "stamp": "20261110T144407Z"
+      },
+      "title": "ERA5 hourly reanalysis on single levels, served from cloud-optimised Zarr",
+      "source_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr.json",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr.20261110T144407Z.json",
+      "current_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr.20261110T144407Z.json",
+      "sha512_hex": "3d29114f383799e2af3702dfadea26d6e5d67c41e20709336bba06c5956c583113990cc09cf5bfcc4c2c9620f7f54219578c9cd1f06df25b1bd35fa8cb5f0a81",
+      "sha512_b64": "PSkRTzg3meKvNwLfreom1uXWfEHiBwkza7oGxZVsWDETmQzAnPW/zEwsliD39UIZV4yc0fBt8lsb01+oy18KgQ==",
+      "length": 10401,
+      "published": "20261110T144407Z",
+      "deleted": false,
+      "deleted_at": null
     }
   },
   "published_commit": "1adb6804ca95c7e2662d507823e064063601041b",
-  "updated": "2026-11-10T14:43:25Z"
+  "updated": "2026-11-10T14:44:09Z"
 }
