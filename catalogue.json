@@ -447,8 +447,27 @@
         "run_id": "42834995383",
         "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42834995383",
         "action": "canonical",
-        "status": "pending",
-        "stamp": "20261110T143207Z"
+        "status": "failed",
+        "stamp": "20261110T143207Z",
+        "stage": "done",
+        "message_id": "7effdffb-25cc-46f8-a713-06a83bc3407d",
+        "errors": [
+          "no WCMP2 ETS report from the GDC within 180s",
+          "Labs GDC check failed after 120s: record not in the GDC (https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aecmwf-opendata-ifs-0p1-oper?f=json)"
+        ],
+        "warnings": [],
+        "ets": null,
+        "kpi": null,
+        "gdc": {
+          "status": "not confirmed",
+          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aecmwf-opendata-ifs-0p1-oper?f=json"
+        },
+        "other_gdcs": [],
+        "delivered": {
+          "local": 0.15,
+          "gb": 0.15
+        },
+        "log": "logs/42834995383/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.jsonl"
       },
       "title": "ECMWF physics-based deterministic forecast at 0.1\u00b0",
       "source_path": "metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.json",
@@ -525,6 +544,6 @@
       "deleted_at": null
     }
   },
-  "published_commit": "f934c81928030d76d40afe6bd695be9dab1591ea",
-  "updated": "2026-11-10T14:32:09Z"
+  "published_commit": "1adb6804ca95c7e2662d507823e064063601041b",
+  "updated": "2026-11-10T14:39:16Z"
 }
