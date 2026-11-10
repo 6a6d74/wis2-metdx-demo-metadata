@@ -441,42 +441,31 @@
           "length": 15320,
           "published": "20261110T143207Z",
           "action": "canonical"
+        },
+        {
+          "path": "metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.20261110T144106Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.20261110T144106Z.json",
+          "sha512_hex": "e0b864160479a1dc33003f53f14854281b3e614f3b68803cf3655a7da065cc826c9a12d5366b0d891762ffbfeb9faf43b5a62d677121629fd376b0e5849906d2",
+          "length": 15320,
+          "published": "20261110T144106Z",
+          "action": "update"
         }
       ],
       "last_publication": {
-        "run_id": "42834995383",
-        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42834995383",
-        "action": "canonical",
-        "status": "failed",
-        "stamp": "20261110T143207Z",
-        "stage": "done",
-        "message_id": "7effdffb-25cc-46f8-a713-06a83bc3407d",
-        "errors": [
-          "no WCMP2 ETS report from the GDC within 180s",
-          "Labs GDC check failed after 120s: record not in the GDC (https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aecmwf-opendata-ifs-0p1-oper?f=json)"
-        ],
-        "warnings": [],
-        "ets": null,
-        "kpi": null,
-        "gdc": {
-          "status": "not confirmed",
-          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aecmwf-opendata-ifs-0p1-oper?f=json"
-        },
-        "other_gdcs": [],
-        "delivered": {
-          "local": 0.15,
-          "gb": 0.15
-        },
-        "log": "logs/42834995383/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.jsonl"
+        "run_id": "42836494326",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42836494326",
+        "action": "update",
+        "status": "pending",
+        "stamp": "20261110T144106Z"
       },
       "title": "ECMWF physics-based deterministic forecast at 0.1\u00b0",
       "source_path": "metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.json",
-      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.20261110T143207Z.json",
-      "current_path": "metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.20261110T143207Z.json",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.20261110T144106Z.json",
+      "current_path": "metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.20261110T144106Z.json",
       "sha512_hex": "e0b864160479a1dc33003f53f14854281b3e614f3b68803cf3655a7da065cc826c9a12d5366b0d891762ffbfeb9faf43b5a62d677121629fd376b0e5849906d2",
       "sha512_b64": "4LhkFgR5odwzAD9T8UhUKBs+YU87aIA882VafaBlzIJsmhLVNmsNiRdi/7/rn69DtaYtZ3EhYp/TdrDlhJkG0g==",
       "length": 15320,
-      "published": "20261110T143207Z",
+      "published": "20261110T144106Z",
       "deleted": false,
       "deleted_at": null
     },
@@ -545,5 +534,5 @@
     }
   },
   "published_commit": "1adb6804ca95c7e2662d507823e064063601041b",
-  "updated": "2026-11-10T14:39:16Z"
+  "updated": "2026-11-10T14:41:08Z"
 }
