@@ -1,0 +1,240 @@
+{
+    "id": "urn:wmo:md:io-wis2dev-metdx-demo:era5.single-levels.arco.edr",
+    "type": "Feature",
+    "conformsTo": [
+        "http://wis.wmo.int/spec/wcmp/2/conf/core"
+    ],
+    "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+            [
+                [
+                    -180,
+                    -90
+                ],
+                [
+                    180,
+                    -90
+                ],
+                [
+                    180,
+                    90
+                ],
+                [
+                    -180,
+                    90
+                ],
+                [
+                    -180,
+                    -90
+                ]
+            ]
+        ]
+    },
+    "time": {
+        "interval": [
+            "1940-01-01T00:00:00Z",
+            "2026-10-01T23:00:00Z"
+        ],
+        "resolution": "PT1H"
+    },
+    "properties": {
+        "type": "dataset",
+        "identifier": "urn:wmo:md:io-wis2dev-metdx-demo:era5.single-levels.arco.edr",
+        "title": "ERA5 hourly reanalysis on single levels, served from cloud-optimised Zarr",
+        "description": "Hourly ERA5 global atmospheric reanalysis from ECMWF on single levels, produced for the Copernicus Climate Change Service. Covers 1940 to about five days ago at 0.25 degree resolution, with 20 variables including 2 m temperature and dew point, mean sea level and surface pressure, 10 m and 100 m wind, wind gusts, total precipitation, total cloud cover, cloud base height, boundary layer height, skin and sea surface temperature, and surface radiation and heat fluxes. The data are read from the Copernicus analysis-ready, cloud-optimised (ARCO) Zarr stores and served through the OGC Environmental Data Retrieval (EDR) API on Destination Earth infrastructure, supporting position, area and cube queries that return CoverageJSON.",
+        "language": "en",
+        "keywords": [
+            "metdx-demo",
+            "ERA5",
+            "reanalysis",
+            "climate",
+            "weather",
+            "hourly",
+            "global",
+            "single levels",
+            "ECMWF",
+            "Copernicus",
+            "C3S",
+            "ARCO",
+            "Zarr",
+            "EDR",
+            "CoverageJSON"
+        ],
+        "themes": [
+            {
+                "concepts": [
+                    {
+                        "id": "weather",
+                        "title": "Weather",
+                        "url": "https://github.com/wmo-im/wis2-topic-hierarchy/blob/main/topic-hierarchy/earth-system-discipline/weather"
+                    },
+                    {
+                        "id": "climate",
+                        "title": "Climate",
+                        "url": "https://github.com/wmo-im/wis2-topic-hierarchy/blob/main/topic-hierarchy/earth-system-discipline/climate"
+                    }
+                ],
+                "scheme": "https://github.com/wmo-im/wis2-topic-hierarchy/blob/main/topic-hierarchy/earth-system-discipline"
+            },
+            {
+                "concepts": [
+                    {
+                        "id": "air_temperature",
+                        "title": "air_temperature (t2m)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/air_temperature/"
+                    },
+                    {
+                        "id": "dew_point_temperature",
+                        "title": "dew_point_temperature (d2m)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/dew_point_temperature/"
+                    },
+                    {
+                        "id": "air_pressure_at_mean_sea_level",
+                        "title": "air_pressure_at_mean_sea_level (msl)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/air_pressure_at_mean_sea_level/"
+                    },
+                    {
+                        "id": "surface_air_pressure",
+                        "title": "surface_air_pressure (sp)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/surface_air_pressure/"
+                    },
+                    {
+                        "id": "eastward_wind",
+                        "title": "eastward_wind (u10, u100)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/eastward_wind/"
+                    },
+                    {
+                        "id": "northward_wind",
+                        "title": "northward_wind (v10, v100)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/northward_wind/"
+                    },
+                    {
+                        "id": "wind_speed_of_gust",
+                        "title": "wind_speed_of_gust (fg10)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/wind_speed_of_gust/"
+                    },
+                    {
+                        "id": "precipitation_amount",
+                        "title": "precipitation_amount (tp)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/precipitation_amount/"
+                    },
+                    {
+                        "id": "cloud_area_fraction",
+                        "title": "cloud_area_fraction (tcc)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/cloud_area_fraction/"
+                    },
+                    {
+                        "id": "cloud_base_altitude",
+                        "title": "cloud_base_altitude (cbh)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/cloud_base_altitude/"
+                    },
+                    {
+                        "id": "atmosphere_boundary_layer_thickness",
+                        "title": "atmosphere_boundary_layer_thickness (blh)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/atmosphere_boundary_layer_thickness/"
+                    },
+                    {
+                        "id": "surface_temperature",
+                        "title": "surface_temperature (skt)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/surface_temperature/"
+                    },
+                    {
+                        "id": "sea_surface_temperature",
+                        "title": "sea_surface_temperature (sst)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/sea_surface_temperature/"
+                    },
+                    {
+                        "id": "surface_downwelling_shortwave_flux_in_air",
+                        "title": "surface_downwelling_shortwave_flux_in_air (ssrd)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/surface_downwelling_shortwave_flux_in_air/"
+                    },
+                    {
+                        "id": "surface_direct_downwelling_shortwave_flux_in_air",
+                        "title": "surface_direct_downwelling_shortwave_flux_in_air (fdir)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/surface_direct_downwelling_shortwave_flux_in_air/"
+                    },
+                    {
+                        "id": "surface_downwelling_longwave_flux_in_air",
+                        "title": "surface_downwelling_longwave_flux_in_air (strd)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/surface_downwelling_longwave_flux_in_air/"
+                    },
+                    {
+                        "id": "surface_upward_latent_heat_flux",
+                        "title": "surface_upward_latent_heat_flux (slhf)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/surface_upward_latent_heat_flux/"
+                    },
+                    {
+                        "id": "surface_upward_sensible_heat_flux",
+                        "title": "surface_upward_sensible_heat_flux (sshf)",
+                        "url": "http://vocab.nerc.ac.uk/standard_name/surface_upward_sensible_heat_flux/"
+                    }
+                ],
+                "scheme": "https://vocab.nerc.ac.uk/standard_name/"
+            }
+        ],
+        "contacts": [
+            {
+                "name": "Adam Warde",
+                "organization": "ECMWF",
+                "emails": [
+                    {
+                        "value": "adam.warde@ecmwf.int"
+                    }
+                ],
+                "addresses": [
+                    {
+                        "deliveryPoint": [
+                            "Shinfield Park"
+                        ],
+                        "city": "Reading",
+                        "administrativeArea": "Berkshire",
+                        "postalCode": "RG2 9AX",
+                        "country": "GBR"
+                    }
+                ],
+                "links": [
+                    {
+                        "rel": "about",
+                        "href": "https://www.ecmwf.int",
+                        "type": "text/html"
+                    }
+                ],
+                "roles": [
+                    "host",
+                    "producer"
+                ]
+            }
+        ],
+        "created": "2026-11-10T00:00:00Z",
+        "updated": "2026-11-10T00:00:00Z",
+        "wmo:dataPolicy": "recommended",
+        "rights": "Contains modified Copernicus Climate Change Service information 2026. Released under the Creative Commons Attribution 4.0 International licence (CC-BY 4.0).",
+        "formats": [
+            {
+                "name": "CoverageJSON",
+                "mediaType": "application/prs.coverage+json"
+            }
+        ]
+    },
+    "links": [
+        {
+            "rel": "collection",
+            "type": "application/json",
+            "href": "https://polytope-edr.lumi.apps.dte.destination-earth.eu/collections/era5-single-levels?f=json",
+            "title": "OGC EDR: ERA5 hourly data on single levels (position, area, cube queries)"
+        },
+        {
+            "rel": "license",
+            "type": "text/html",
+            "href": "https://cds.climate.copernicus.eu/licences/cc-by",
+            "title": "CC-BY licence (Copernicus Climate Data Store)"
+        },
+        {
+            "rel": "related",
+            "type": "text/html",
+            "href": "https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels",
+            "title": "ERA5 hourly data on single levels in the Copernicus Climate Data Store"
+        }
+    ]
+}
