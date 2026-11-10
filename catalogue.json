@@ -135,8 +135,32 @@
         "run_id": "42838043162",
         "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42838043162",
         "action": "deletion",
-        "status": "pending",
-        "stamp": "20261110T144957Z"
+        "status": "ok",
+        "stamp": "20261110T144957Z",
+        "stage": "done",
+        "message_id": "71093406-275a-48dd-8d5c-33456924ae8d",
+        "errors": [],
+        "warnings": [],
+        "ets": null,
+        "kpi": null,
+        "gdc": {
+          "status": "removed",
+          "seconds": 0.9,
+          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aweather.prediction.forecast.global?f=json"
+        },
+        "other_gdcs": [
+          {
+            "source": "ca-eccc-msc-global-discovery-catalogue",
+            "type": "int.wmo.wis.wme.event.item.download",
+            "severity": "ERROR",
+            "summary": "WIS2 GDC WCMP2 deletion report: metadata urn:wmo:md:int-ecmwf:weather.prediction.forecast.global not found"
+          }
+        ],
+        "delivered": {
+          "local": 0.14,
+          "gb": 0.16
+        },
+        "log": "logs/42838043162/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.jsonl"
       },
       "title": "ECMWF IFS Global Deterministic Forecast (Destination Earth)",
       "source_path": "metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.json",
@@ -556,8 +580,47 @@
         "run_id": "42838043162",
         "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42838043162",
         "action": "canonical",
-        "status": "pending",
-        "stamp": "20261110T144957Z"
+        "status": "ok",
+        "stamp": "20261110T144957Z",
+        "stage": "done",
+        "message_id": "494cf8a4-b2fe-4bdc-b411-df9972f0afa2",
+        "errors": [],
+        "warnings": [],
+        "ets": {
+          "summary": {
+            "PASSED": 11,
+            "FAILED": 0,
+            "SKIPPED": 0,
+            "WARNING": 1
+          },
+          "source": "io-wis2dev-labs-global-discovery-catalogue",
+          "failed": []
+        },
+        "kpi": {
+          "percentage": 94.286,
+          "grade": "A",
+          "score": 66,
+          "total": 70,
+          "source": "io-wis2dev-labs-global-discovery-catalogue"
+        },
+        "gdc": {
+          "status": "present",
+          "seconds": 0.8,
+          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aio-wis2dev-metdx-demo%3Aera5.single-levels.arco.edr?f=json"
+        },
+        "other_gdcs": [
+          {
+            "source": "ca-eccc-msc-global-discovery-catalogue",
+            "type": "int.wmo.wis.wme.event.wcmp2.ets",
+            "severity": "WARNING",
+            "summary": "ETS 11 passed, 1 warning"
+          }
+        ],
+        "delivered": {
+          "local": 0.14,
+          "gb": 0.16
+        },
+        "log": "logs/42838043162/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr.jsonl"
       },
       "title": "ERA5 hourly reanalysis on single levels, served from cloud-optimised Zarr",
       "source_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr.json",
@@ -571,6 +634,6 @@
       "deleted_at": null
     }
   },
-  "published_commit": "1adb6804ca95c7e2662d507823e064063601041b",
-  "updated": "2026-11-10T14:49:59Z"
+  "published_commit": "651b2b0586cec565621e1a0f42b873a8fdefb009",
+  "updated": "2026-11-10T14:54:16Z"
 }
