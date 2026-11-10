@@ -132,50 +132,11 @@
         }
       ],
       "last_publication": {
-        "run_id": "41060348217",
-        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/41060348217",
-        "action": "update",
-        "status": "ok",
-        "stamp": "20261030T130555Z",
-        "stage": "done",
-        "message_id": "ffdb1c3b-5606-48a9-bfa9-331cab55325d",
-        "errors": [],
-        "warnings": [],
-        "ets": {
-          "summary": {
-            "PASSED": 12,
-            "FAILED": 0,
-            "SKIPPED": 0,
-            "WARNING": 0
-          },
-          "source": "io-wis2dev-labs-global-discovery-catalogue",
-          "failed": []
-        },
-        "kpi": {
-          "percentage": 89.13,
-          "grade": "A",
-          "score": 41,
-          "total": 46,
-          "source": "io-wis2dev-labs-global-discovery-catalogue"
-        },
-        "gdc": {
-          "status": "present",
-          "seconds": 0.6,
-          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aweather.prediction.forecast.global?f=json"
-        },
-        "other_gdcs": [
-          {
-            "source": "ca-eccc-msc-global-discovery-catalogue",
-            "type": "int.wmo.wis.wme.event.wcmp2.ets",
-            "severity": "ERROR",
-            "summary": "rejected the record: Topic mismatch (io-wis2dev-metdx-demo != int-ecmwf)"
-          }
-        ],
-        "delivered": {
-          "local": 0.11,
-          "gb": 0.16
-        },
-        "log": "logs/41060348217/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.jsonl"
+        "run_id": "42838043162",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42838043162",
+        "action": "deletion",
+        "status": "pending",
+        "stamp": "20261110T144957Z"
       },
       "title": "ECMWF IFS Global Deterministic Forecast (Destination Earth)",
       "source_path": "metadata/urn-wmo-md-int-ecmwf-weather.prediction.forecast.global.json",
@@ -185,8 +146,8 @@
       "sha512_b64": "c7poeiMLw0bap0nz7p6c7mRAWCKI8RRNmrtxolihv8TfT3Qn89FJrWl91gEuB9ROEzmzidPBAHgT+2Z0TjgjzQ==",
       "length": 6849,
       "published": "20261030T130555Z",
-      "deleted": false,
-      "deleted_at": null
+      "deleted": true,
+      "deleted_at": "2026-11-10T14:49:59Z"
     },
     "urn:wmo:md:io-wis2dev-metdx-demo:weather.prediction.forecast.global": {
       "id": "urn:wmo:md:io-wis2dev-metdx-demo:weather.prediction.forecast.global",
@@ -581,27 +542,35 @@
           "length": 10401,
           "published": "20261110T144407Z",
           "action": "canonical"
+        },
+        {
+          "path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr.20261110T144957Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr.20261110T144957Z.json",
+          "sha512_hex": "3d29114f383799e2af3702dfadea26d6e5d67c41e20709336bba06c5956c583113990cc09cf5bfcc4c2c9620f7f54219578c9cd1f06df25b1bd35fa8cb5f0a81",
+          "length": 10401,
+          "published": "20261110T144957Z",
+          "action": "canonical"
         }
       ],
       "last_publication": {
-        "run_id": "42836586115",
-        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42836586115",
+        "run_id": "42838043162",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42838043162",
         "action": "canonical",
         "status": "pending",
-        "stamp": "20261110T144407Z"
+        "stamp": "20261110T144957Z"
       },
       "title": "ERA5 hourly reanalysis on single levels, served from cloud-optimised Zarr",
       "source_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr.json",
-      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr.20261110T144407Z.json",
-      "current_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr.20261110T144407Z.json",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr.20261110T144957Z.json",
+      "current_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr/urn-wmo-md-io-wis2dev-metdx-demo-era5.single-levels.arco.edr.20261110T144957Z.json",
       "sha512_hex": "3d29114f383799e2af3702dfadea26d6e5d67c41e20709336bba06c5956c583113990cc09cf5bfcc4c2c9620f7f54219578c9cd1f06df25b1bd35fa8cb5f0a81",
       "sha512_b64": "PSkRTzg3meKvNwLfreom1uXWfEHiBwkza7oGxZVsWDETmQzAnPW/zEwsliD39UIZV4yc0fBt8lsb01+oy18KgQ==",
       "length": 10401,
-      "published": "20261110T144407Z",
+      "published": "20261110T144957Z",
       "deleted": false,
       "deleted_at": null
     }
   },
   "published_commit": "1adb6804ca95c7e2662d507823e064063601041b",
-  "updated": "2026-11-10T14:44:09Z"
+  "updated": "2026-11-10T14:49:59Z"
 }
