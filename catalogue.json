@@ -455,8 +455,47 @@
         "run_id": "42836494326",
         "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42836494326",
         "action": "update",
-        "status": "pending",
-        "stamp": "20261110T144106Z"
+        "status": "ok",
+        "stamp": "20261110T144106Z",
+        "stage": "done",
+        "message_id": "cb91adf8-f1c5-490b-acc4-6185db71c99d",
+        "errors": [],
+        "warnings": [],
+        "ets": {
+          "summary": {
+            "PASSED": 12,
+            "FAILED": 0,
+            "SKIPPED": 0,
+            "WARNING": 0
+          },
+          "source": "io-wis2dev-labs-global-discovery-catalogue",
+          "failed": []
+        },
+        "kpi": {
+          "percentage": 87.368,
+          "grade": "A",
+          "score": 83,
+          "total": 95,
+          "source": "io-wis2dev-labs-global-discovery-catalogue"
+        },
+        "gdc": {
+          "status": "present",
+          "seconds": 1.0,
+          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aint-ecmwf%3Aecmwf-opendata-ifs-0p1-oper?f=json"
+        },
+        "other_gdcs": [
+          {
+            "source": "ca-eccc-msc-global-discovery-catalogue",
+            "type": "int.wmo.wis.wme.event.wcmp2.ets",
+            "severity": "ERROR",
+            "summary": "rejected the record: Topic mismatch (io-wis2dev-metdx-demo != int-ecmwf)"
+          }
+        ],
+        "delivered": {
+          "local": 0.16,
+          "gb": 0.16
+        },
+        "log": "logs/42836494326/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.jsonl"
       },
       "title": "ECMWF physics-based deterministic forecast at 0.1\u00b0",
       "source_path": "metadata/urn-wmo-md-int-ecmwf-ecmwf-opendata-ifs-0p1-oper.json",
@@ -534,5 +573,5 @@
     }
   },
   "published_commit": "1adb6804ca95c7e2662d507823e064063601041b",
-  "updated": "2026-11-10T14:41:08Z"
+  "updated": "2026-11-10T14:43:25Z"
 }
