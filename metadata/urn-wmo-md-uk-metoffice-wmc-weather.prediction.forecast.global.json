@@ -365,10 +365,10 @@
         },
         {
             "rel":"items",
-            "href":"mqtts://everyone:everyone@broker.metoffice.gov.uk:8883",
+            "href":"mqtts://everyone:everyone@gb.wis2dev.io:8883",
             "channel":"cache/a/wis2/uk-metoffice-wmc/data/core/weather/prediction/forecast/medium-range/deterministic/global",
             "type":"application/geo+json",
-            "title":"WIS2 Notification Messages from Met Office broker",
+            "title":"Notifications from the WIS2 test Global Broker (gb.wis2dev.io)",
             "properties":{
                 "diagnostic":{
                     "type":"string",
