@@ -365,214 +365,10 @@
         },
         {
             "rel":"items",
-            "href":"mqtts://everyone:everyone@gb.wis.cma.cn:8883",
+            "href":"mqtts://everyone:everyone@broker.metoffice.gov.uk:8883",
             "channel":"cache/a/wis2/uk-metoffice-wmc/data/core/weather/prediction/forecast/medium-range/deterministic/global",
             "type":"application/geo+json",
-            "title":"Notifications from China Meteorological Agency, Global Broker Service (cn-cma-global-broker)",
-            "properties":{
-                "diagnostic":{
-                    "type":"string",
-                    "title":"Diagnostic",
-                    "example":"Total cloud cover",
-                    "description":"The diagnostic filter parameter is the title property of the concept object within the themes array, where the scheme is 'http://codes.wmo.int/grib2/codeflag/4.2'."
-                },
-                "timestep":{
-                    "type":"string",
-                    "title":"Timestep",
-                    "enum":[
-                        "T+00",
-                        "T+03",
-                        "T+06",
-                        "T+09",
-                        "T+12",
-                        "T+15",
-                        "T+18",
-                        "T+21",
-                        "T+24",
-                        "T+27",
-                        "T+30",
-                        "T+33",
-                        "T+36",
-                        "T+39",
-                        "T+42",
-                        "T+45",
-                        "T+48",
-                        "T+51",
-                        "T+54",
-                        "T+57",
-                        "T+60",
-                        "T+63",
-                        "T+66",
-                        "T+69",
-                        "T+72",
-                        "T+78",
-                        "T+84",
-                        "T+90",
-                        "T+96",
-                        "T+102",
-                        "T+108",
-                        "T+114",
-                        "T+120",
-                        "T+126",
-                        "T+132",
-                        "T+138",
-                        "T+144"
-                    ],
-                    "example":"T+06"
-                },
-                "model_run_hour":{
-                    "type":"string",
-                    "title":"Model run hour",
-                    "enum":[
-                        "00",
-                        "12"
-                    ],
-                    "example":"00"
-                }
-            }
-        },
-        {
-            "rel":"items",
-            "href":"mqtts://everyone:everyone@globalbroker.meteo.fr:8883",
-            "channel":"cache/a/wis2/uk-metoffice-wmc/data/core/weather/prediction/forecast/medium-range/deterministic/global",
-            "type":"application/geo+json",
-            "title":"Notifications from Météo-France, Global Broker Service (fr-meteofrance-global-broker)",
-            "properties":{
-                "diagnostic":{
-                    "type":"string",
-                    "title":"Diagnostic",
-                    "example":"Total cloud cover",
-                    "description":"The diagnostic filter parameter is the title property of the concept object within the themes array, where the scheme is 'http://codes.wmo.int/grib2/codeflag/4.2'."
-                },
-                "timestep":{
-                    "type":"string",
-                    "title":"Timestep",
-                    "enum":[
-                        "T+00",
-                        "T+03",
-                        "T+06",
-                        "T+09",
-                        "T+12",
-                        "T+15",
-                        "T+18",
-                        "T+21",
-                        "T+24",
-                        "T+27",
-                        "T+30",
-                        "T+33",
-                        "T+36",
-                        "T+39",
-                        "T+42",
-                        "T+45",
-                        "T+48",
-                        "T+51",
-                        "T+54",
-                        "T+57",
-                        "T+60",
-                        "T+63",
-                        "T+66",
-                        "T+69",
-                        "T+72",
-                        "T+78",
-                        "T+84",
-                        "T+90",
-                        "T+96",
-                        "T+102",
-                        "T+108",
-                        "T+114",
-                        "T+120",
-                        "T+126",
-                        "T+132",
-                        "T+138",
-                        "T+144"
-                    ],
-                    "example":"T+06"
-                },
-                "model_run_hour":{
-                    "type":"string",
-                    "title":"Model run hour",
-                    "enum":[
-                        "00",
-                        "12"
-                    ],
-                    "example":"00"
-                }
-            }
-        },
-        {
-            "rel":"items",
-            "href":"mqtts://everyone:everyone@globalbroker.inmet.gov.br:8883",
-            "channel":"cache/a/wis2/uk-metoffice-wmc/data/core/weather/prediction/forecast/medium-range/deterministic/global",
-            "type":"application/geo+json",
-            "title":"Notifications from Instituto Nacional de Meteorologia (Brazil), Global Broker Service (br-inmet-global-broker)",
-            "properties":{
-                "diagnostic":{
-                    "type":"string",
-                    "title":"Diagnostic",
-                    "example":"Total cloud cover",
-                    "description":"The diagnostic filter parameter is the title property of the concept object within the themes array, where the scheme is 'http://codes.wmo.int/grib2/codeflag/4.2'."
-                },
-                "timestep":{
-                    "type":"string",
-                    "title":"Timestep",
-                    "enum":[
-                        "T+00",
-                        "T+03",
-                        "T+06",
-                        "T+09",
-                        "T+12",
-                        "T+15",
-                        "T+18",
-                        "T+21",
-                        "T+24",
-                        "T+27",
-                        "T+30",
-                        "T+33",
-                        "T+36",
-                        "T+39",
-                        "T+42",
-                        "T+45",
-                        "T+48",
-                        "T+51",
-                        "T+54",
-                        "T+57",
-                        "T+60",
-                        "T+63",
-                        "T+66",
-                        "T+69",
-                        "T+72",
-                        "T+78",
-                        "T+84",
-                        "T+90",
-                        "T+96",
-                        "T+102",
-                        "T+108",
-                        "T+114",
-                        "T+120",
-                        "T+126",
-                        "T+132",
-                        "T+138",
-                        "T+144"
-                    ],
-                    "example":"T+06"
-                },
-                "model_run_hour":{
-                    "type":"string",
-                    "title":"Model run hour",
-                    "enum":[
-                        "00",
-                        "12"
-                    ],
-                    "example":"00"
-                }
-            }
-        },
-        {
-            "rel":"items",
-            "href":"mqtts://everyone:everyone@wis2globalbroker.nws.noaa.gov:8883",
-            "channel":"cache/a/wis2/uk-metoffice-wmc/data/core/weather/prediction/forecast/medium-range/deterministic/global",
-            "type":"application/geo+json",
-            "title":"Notifications from National Oceanic and Atmospheric Administration, National Weather Service, Global Broker Service (us-noaa-nws-global-broker)",
+            "title":"WIS2 Notification Messages from Met Office broker",
             "properties":{
                 "diagnostic":{
                     "type":"string",
@@ -639,13 +435,13 @@
             "rel":"collection",
             "type":"application/json",
             "href":"https://labs.metoffice.gov.uk/ice_demo/collections/mo-prslvl?f=json",
-            "title":"OGC EDR - Met Office Global data on pressure levels (mo-prslvl)"
+            "title":"OGC EDR - Met Office Global data on pressure levels (mo-prslvl); experimental, Met Office Labs deployment"
         },
         {
             "rel":"related",
             "type":"text/html",
             "href":"https://labs.metoffice.gov.uk/ice_demo/collections/mo-prslvl?f=html",
-            "title":"OGC EDR landing page - Met Office Global data on pressure levels (mo-prslvl)"
+            "title":"OGC EDR landing page - Met Office Global data on pressure levels (mo-prslvl); experimental, Met Office Labs deployment"
         },
         {
             "rel":"related",
