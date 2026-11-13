@@ -506,44 +506,11 @@
         }
       ],
       "last_publication": {
-        "run_id": "42249738649",
-        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/42249738649",
-        "action": "canonical",
-        "status": "ok",
-        "stamp": "20261106T161000Z",
-        "stage": "done",
-        "message_id": "03780fbf-f0a6-4a87-8cfb-1bfce854f336",
-        "errors": [],
-        "warnings": [],
-        "ets": {
-          "summary": {
-            "PASSED": 11,
-            "FAILED": 0,
-            "SKIPPED": 0,
-            "WARNING": 1
-          },
-          "source": "io-wis2dev-labs-global-discovery-catalogue",
-          "failed": []
-        },
-        "kpi": null,
-        "gdc": {
-          "status": "present",
-          "seconds": 0.9,
-          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aio-wis2dev-metdx-demo%3Ametoffice.global.forecast.edr?f=json"
-        },
-        "other_gdcs": [
-          {
-            "source": "ca-eccc-msc-global-discovery-catalogue",
-            "type": "int.wmo.wis.wme.event.wcmp2.ets",
-            "severity": "WARNING",
-            "summary": "ETS 11 passed, 1 warning"
-          }
-        ],
-        "delivered": {
-          "local": 0.15,
-          "gb": 0.16
-        },
-        "log": "logs/42249738649/urn-wmo-md-io-wis2dev-metdx-demo-metoffice.global.forecast.edr.jsonl"
+        "run_id": "43480643117",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/43480643117",
+        "action": "deletion",
+        "status": "pending",
+        "stamp": "20261113T181432Z"
       },
       "title": "Met Office Global Model forecast via OGC EDR (ICE demo, Met Office Labs)",
       "source_path": "metadata/urn-wmo-md-io-wis2dev-metdx-demo-metoffice.global.forecast.edr.json",
@@ -553,8 +520,8 @@
       "sha512_b64": "O6zDniQaPr/+AE6dNkhFEgUBgq8kNP1vEHQugQPNp03/4GK9JmZ1KJNWshl6v25urDXFET3kShjm1rAd8gsQEg==",
       "length": 5590,
       "published": "20261106T161000Z",
-      "deleted": false,
-      "deleted_at": null
+      "deleted": true,
+      "deleted_at": "2026-11-13T18:14:34Z"
     },
     "urn:wmo:md:io-wis2dev-metdx-demo:era5.single-levels.arco.edr": {
       "id": "urn:wmo:md:io-wis2dev-metdx-demo:era5.single-levels.arco.edr",
@@ -632,8 +599,38 @@
       "published": "20261110T144957Z",
       "deleted": false,
       "deleted_at": null
+    },
+    "urn:wmo:md:uk-metoffice-wmc:weather.prediction.forecast.global": {
+      "id": "urn:wmo:md:uk-metoffice-wmc:weather.prediction.forecast.global",
+      "versions": [
+        {
+          "path": "metadata/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global.20261113T181432Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global.20261113T181432Z.json",
+          "sha512_hex": "d07a6bdb8c65e5ef488b3f5c56e2a3f9e15a38bb3dda759f12c807794491b7432bb2e75533de3764942e3f0927a76b8c45f78f314f2ea3aaf19f3b05a21b1f18",
+          "length": 19328,
+          "published": "20261113T181432Z",
+          "action": "canonical"
+        }
+      ],
+      "last_publication": {
+        "run_id": "43480643117",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/43480643117",
+        "action": "canonical",
+        "status": "pending",
+        "stamp": "20261113T181432Z"
+      },
+      "title": "Met Office Global Deterministic",
+      "source_path": "metadata/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global.json",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global.20261113T181432Z.json",
+      "current_path": "metadata/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global.20261113T181432Z.json",
+      "sha512_hex": "d07a6bdb8c65e5ef488b3f5c56e2a3f9e15a38bb3dda759f12c807794491b7432bb2e75533de3764942e3f0927a76b8c45f78f314f2ea3aaf19f3b05a21b1f18",
+      "sha512_b64": "0Hpr24xl5e9Iiz9cVuKj+eFaOLs92nWfEsgHeUSRt0MrsudVM943ZJQuPwknp2uMRfePMU8uo6rxnzsFohsfGA==",
+      "length": 19328,
+      "published": "20261113T181432Z",
+      "deleted": false,
+      "deleted_at": null
     }
   },
   "published_commit": "651b2b0586cec565621e1a0f42b873a8fdefb009",
-  "updated": "2026-11-10T14:54:16Z"
+  "updated": "2026-11-13T18:14:34Z"
 }
