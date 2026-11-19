@@ -1,12 +1,12 @@
 {
-    "id":"urn:wmo:md:ca-eccc-msc:msc-weather-forecast",
-    "conformsTo":[
+    "id": "urn:wmo:md:ca-eccc-msc:msc-weather-forecast",
+    "conformsTo": [
         "http://wis.wmo.int/spec/wcmp/2/conf/core"
     ],
-    "type":"Feature",
-    "geometry":{
-        "type":"MultiPolygon",
-        "coordinates":[
+    "type": "Feature",
+    "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
             [
                 [
                     [
@@ -33,91 +33,89 @@
             ]
         ]
     },
-    "properties":{
-        "title":"Canadian weather forecast [experimental]",
-        "description":"The MSC Weather Forecast provides icons and weather information generated from Canadian numerical weather prediction models, such as probability of precipitation, precipitation type, temperature, feels-like temperature, visibility, wind speed, UV index, and sky condition. This data is produced at various temporal scales to meet public needs by offering users detailed forecasts as hourly, daily, and 7-day outlooks for all locations across Canada.",
-        "themes":[
+    "properties": {
+        "title": "Canadian weather forecast [experimental]",
+        "description": "The MSC Weather Forecast provides icons and weather information generated from Canadian numerical weather prediction models, such as probability of precipitation, precipitation type, temperature, feels-like temperature, visibility, wind speed, UV index, and sky condition. This data is produced at various temporal scales to meet public needs by offering users detailed forecasts as hourly, daily, and 7-day outlooks for all locations across Canada.",
+        "themes": [
             {
-                "concepts":[
+                "concepts": [
                     {
-                        "id":"Meteorological data"
+                        "id": "Meteorological data"
                     }
                 ],
-                "scheme":"https://canada.multites.net/cst/EAEAD1E6-7DD2-4997-BE7F-40BFB1CBE8A2/CST20230912.rdf"
+                "scheme": "https://canada.multites.net/cst/EAEAD1E6-7DD2-4997-BE7F-40BFB1CBE8A2/CST20230912.rdf"
             },
             {
-                "concepts":[
+                "concepts": [
                     {
-                        "id":"weather"
+                        "id": "weather"
                     }
                 ],
-                "scheme":"https://codes.wmo.int/wis/topic-hierarchy/earth-system-discipline"
+                "scheme": "https://codes.wmo.int/wis/topic-hierarchy/earth-system-discipline"
             }
         ],
-        "type":"dataset",
-        "language":{
-            "code":"en"
+        "type": "dataset",
+        "language": {
+            "code": "en"
         },
-        "wmo:dataPolicy":"core",
-        "created":"2026-03-03T00:00:00Z",
-        "updated":"2026-10-31T09:17:00Z",
-        "rights":"Open Government Licence - Canada (https://open.canada.ca/en/open-government-licence-canada)",
-        "contacts":[
+        "wmo:dataPolicy": "core",
+        "created": "2026-03-03T00:00:00Z",
+        "updated": "2026-11-18T11:08:42Z",
+        "rights": "Open Government Licence - Canada (https://open.canada.ca/en/open-government-licence-canada)",
+        "contacts": [
             {
-                "addresses":[
+                "addresses": [
                     {
-                        "deliveryPoint":[
+                        "deliveryPoint": [
                             "77 Westmorland Street, suite 260"
                         ],
-                        "city":"Fredericton",
-                        "administrativeArea":"New Brunswick",
-                        "postalCode":"E3B 6Z4",
-                        "country":"CAN"
+                        "city": "Fredericton",
+                        "administrativeArea": "New Brunswick",
+                        "postalCode": "E3B 6Z4",
+                        "country": "CAN"
                     }
                 ],
-                "roles":[
+                "roles": [
                     "host"
                 ],
-                "organization":"Government of Canada; Environment and Climate Change Canada; Meteorological Service of Canada",
-                "name":"National Inquiry Response Team / Équipe nationale de réponse des demandes du public",
-                "position":"National Inquiry Response Team",
-                "hoursOfService":"0700h - 1500h EST",
-                "contactInstructions":"email",
-                "phones":[
+                "organization": "Government of Canada; Environment and Climate Change Canada; Meteorological Service of Canada",
+                "name": "National Inquiry Response Team / Équipe nationale de réponse demandes du public",
+                "position": "National Inquiry Response Team",
+                "hoursOfService": "0700h - 1500h EST",
+                "contactInstructions": "email",
+                "phones": [
                     {
-                        "value":"+18199972800"
+                        "value": "+18199972800"
                     }
                 ],
-                "emails":[
+                "emails": [
                     {
-                        "value":"ECWeather-Meteo@ec.gc.ca"
+                        "value": "ECWeather-Meteo@ec.gc.ca"
                     }
                 ],
-                "links":[
+                "links": [
                     {
-                        "rel":"canonical",
-                        "type":"text/html",
-                        "href":"https://www.canada.ca/en/environment-climate-change.html"
+                        "rel": "canonical",
+                        "type": "text/html",
+                        "href": "https://www.canada.ca/en/environment-climate-change.html"
                     }
                 ]
             }
         ],
-        "keywords":[
+        "keywords": [
             "Point forecast",
             "Weather Elements on the Grid",
-            "metdx-demo",
-            "nineseventeen"
-        ],
-        "centre-id":"ca-eccc-msc"
+            "metdx-demo"
+        ]
     },
-    "links":[
+    "links": [
         {
-            "rel":"collection",
-            "type":"application/json",
-            "href":"https://kralidis.ca/api/collections/msc-weather-forecast",
-            "title":"Data access via API"
+            "rel": "collection",
+            "type": "application/json",
+            "href": "https://dev.api.weather.gc.ca/collections/msc-weather-forecast",
+            "title": "Data access via API"
         }
     ],
-    "time":null,
-    "generated_by":"pygeometa 0.22.dev1"
+    "time": null,
+    "generated_by": "pygeometa 0.22.dev1"
 }
