@@ -261,62 +261,31 @@
           "length": 4268,
           "published": "20261031T092539Z",
           "action": "canonical"
+        },
+        {
+          "path": "metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.20261119T175008Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.20261119T175008Z.json",
+          "sha512_hex": "e954d9636fc3e59467fbd35e50a22d7afcedea5fae166dc9e421523a19a14f2de9e3829ee0e14679ccd71e5a3f3c857f080426460345093c15cac3bbb2376428",
+          "length": 4258,
+          "published": "20261119T175008Z",
+          "action": "update"
         }
       ],
       "last_publication": {
-        "run_id": "41188631423",
-        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/41188631423",
-        "action": "canonical",
-        "status": "ok",
-        "stamp": "20261031T092539Z",
-        "stage": "done",
-        "message_id": "ec384783-5c01-4033-ab27-caa5d27b7cd5",
-        "errors": [],
-        "warnings": [],
-        "ets": {
-          "summary": {
-            "PASSED": 12,
-            "FAILED": 0,
-            "SKIPPED": 0,
-            "WARNING": 0
-          },
-          "source": "io-wis2dev-labs-global-discovery-catalogue",
-          "failed": []
-        },
-        "kpi": {
-          "percentage": 95.652,
-          "grade": "A",
-          "score": 22,
-          "total": 23,
-          "source": "io-wis2dev-labs-global-discovery-catalogue"
-        },
-        "gdc": {
-          "status": "present",
-          "seconds": 0.6,
-          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Aca-eccc-msc%3Amsc-weather-forecast?f=json"
-        },
-        "other_gdcs": [
-          {
-            "source": "ca-eccc-msc-global-discovery-catalogue",
-            "type": "int.wmo.wis.wme.event.wcmp2.ets",
-            "severity": "ERROR",
-            "summary": "rejected the record: Topic mismatch (io-wis2dev-metdx-demo != ca-eccc-msc)"
-          }
-        ],
-        "delivered": {
-          "local": 0.12,
-          "gb": 0.17
-        },
-        "log": "logs/41188631423/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.jsonl"
+        "run_id": "44581337685",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/44581337685",
+        "action": "update",
+        "status": "pending",
+        "stamp": "20261119T175008Z"
       },
       "title": "Canadian weather forecast [experimental]",
       "source_path": "metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.json",
-      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.20261031T092539Z.json",
-      "current_path": "metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.20261031T092539Z.json",
-      "sha512_hex": "046168b8305b7473ff203988116b5e69467499e7ccc16ce96861d24f19727e76f818b37b50554cee2b2c2c23d14f3347429d474b0fe177fa81ad01518c86df01",
-      "sha512_b64": "BGFouDBbdHP/IDmIEWteaUZ0mefMwWzpaGHSTxlyfnb4GLN7UFVM7issLCPRTzNHQp1HSw/hd/qBrQFRjIbfAQ==",
-      "length": 4268,
-      "published": "20261031T092539Z",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.20261119T175008Z.json",
+      "current_path": "metadata/urn-wmo-md-ca-eccc-msc-msc-weather-forecast/urn-wmo-md-ca-eccc-msc-msc-weather-forecast.20261119T175008Z.json",
+      "sha512_hex": "e954d9636fc3e59467fbd35e50a22d7afcedea5fae166dc9e421523a19a14f2de9e3829ee0e14679ccd71e5a3f3c857f080426460345093c15cac3bbb2376428",
+      "sha512_b64": "6VTZY2/D5ZRn+9NeUKItevzt6l+uFm3J5CFSOhmhTy3p44Ke4OFGeczXHlo/PIV/CAQmRgNFCTwVysO7sjdkKA==",
+      "length": 4258,
+      "published": "20261119T175008Z",
       "deleted": false,
       "deleted_at": null
     },
@@ -703,5 +672,5 @@
     }
   },
   "published_commit": "edcde0bd7ba8b7296da91598d0709e6a30c447b9",
-  "updated": "2026-11-13T18:28:34Z"
+  "updated": "2026-11-19T17:50:10Z"
 }
