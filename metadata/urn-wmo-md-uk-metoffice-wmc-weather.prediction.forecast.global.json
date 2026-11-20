@@ -343,7 +343,7 @@
             }
         ],
         "created":"2025-08-26T15:00:00Z",
-        "updated":"2026-11-13T18:27:00Z",
+        "updated":"2026-11-20T16:05:00Z",
         "wmo:dataPolicy":"core",
         "rights":"Users are granted free and unrestricted access to this data, without charge and with no conditions on use. Users are requested to attribute the producer of this data. WMO Unified Data Policy (Resolution 1 (Cg-Ext 2021)).",
         "type":"dataset",
@@ -434,14 +434,14 @@
         {
             "rel":"collection",
             "type":"application/json",
-            "href":"https://labs.metoffice.gov.uk/ice_demo/collections/mo-prslvl?f=json",
-            "title":"OGC EDR - Met Office Global data on pressure levels (mo-prslvl); experimental, Met Office Labs deployment"
+            "href":"https://labs.metoffice.gov.uk/ice_demo/collections/mo-stnlvl?f=json",
+            "title":"OGC EDR - Met Office Global data on standard levels (mo-stnlvl); experimental, Met Office Labs deployment"
         },
         {
             "rel":"related",
             "type":"text/html",
-            "href":"https://labs.metoffice.gov.uk/ice_demo/collections/mo-prslvl?f=html",
-            "title":"OGC EDR landing page - Met Office Global data on pressure levels (mo-prslvl); experimental, Met Office Labs deployment"
+            "href":"https://labs.metoffice.gov.uk/ice_demo/collections/mo-stnlvl?f=html",
+            "title":"OGC EDR landing page - Met Office Global data on standard levels (mo-stnlvl); experimental, Met Office Labs deployment"
         },
         {
             "rel":"related",
