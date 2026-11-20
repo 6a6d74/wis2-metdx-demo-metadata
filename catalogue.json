@@ -664,8 +664,47 @@
         "run_id": "44770053793",
         "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/44770053793",
         "action": "update",
-        "status": "pending",
-        "stamp": "20261120T160708Z"
+        "status": "ok",
+        "stamp": "20261120T160708Z",
+        "stage": "done",
+        "message_id": "7d4a2f80-fdbc-46ca-9eff-51af19e398c2",
+        "errors": [],
+        "warnings": [],
+        "ets": {
+          "summary": {
+            "PASSED": 12,
+            "FAILED": 0,
+            "SKIPPED": 0,
+            "WARNING": 0
+          },
+          "source": "io-wis2dev-labs-global-discovery-catalogue",
+          "failed": []
+        },
+        "kpi": {
+          "percentage": 95.745,
+          "grade": "A",
+          "score": 90,
+          "total": 94,
+          "source": "io-wis2dev-labs-global-discovery-catalogue"
+        },
+        "gdc": {
+          "status": "present",
+          "seconds": 0.5,
+          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Auk-metoffice-wmc%3Aweather.prediction.forecast.global?f=json"
+        },
+        "other_gdcs": [
+          {
+            "source": "ca-eccc-msc-global-discovery-catalogue",
+            "type": "int.wmo.wis.wme.event.wcmp2.ets",
+            "severity": "ERROR",
+            "summary": "rejected the record: Topic mismatch (io-wis2dev-metdx-demo != uk-metoffice-wmc)"
+          }
+        ],
+        "delivered": {
+          "local": 0.12,
+          "gb": 0.16
+        },
+        "log": "logs/44770053793/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global.jsonl"
       },
       "title": "Met Office Global Deterministic",
       "source_path": "metadata/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global.json",
@@ -679,6 +718,6 @@
       "deleted_at": null
     }
   },
-  "published_commit": "574477c82084644ffafb4decbbdb65bf733b5c69",
-  "updated": "2026-11-20T16:07:10Z"
+  "published_commit": "41511cb62c305dcb284b62d88d8cb846ced5d91e",
+  "updated": "2026-11-20T16:08:05Z"
 }
