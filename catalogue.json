@@ -650,66 +650,35 @@
           "length": 19331,
           "published": "20261113T182744Z",
           "action": "update"
+        },
+        {
+          "path": "metadata/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global.20261120T160708Z.json",
+          "url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global.20261120T160708Z.json",
+          "sha512_hex": "313979866b5075f05bde9792c854175c01de69dba5aa6f59ca4158bd570e75acae2e41dc16029b97c9091b1898b4e85eb13c90896af922dcc83c7907fcb3a611",
+          "length": 19331,
+          "published": "20261120T160708Z",
+          "action": "update"
         }
       ],
       "last_publication": {
-        "run_id": "43482811286",
-        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/43482811286",
+        "run_id": "44770053793",
+        "run_url": "https://github.com/6a6d74/wis2-metdx-demo-metadata/actions/runs/44770053793",
         "action": "update",
-        "status": "ok",
-        "stamp": "20261113T182744Z",
-        "stage": "done",
-        "message_id": "4d6db4d8-b6f0-4645-bbbc-b9fe347cd02c",
-        "errors": [],
-        "warnings": [],
-        "ets": {
-          "summary": {
-            "PASSED": 12,
-            "FAILED": 0,
-            "SKIPPED": 0,
-            "WARNING": 0
-          },
-          "source": "io-wis2dev-labs-global-discovery-catalogue",
-          "failed": []
-        },
-        "kpi": {
-          "percentage": 88.298,
-          "grade": "A",
-          "score": 83,
-          "total": 94,
-          "source": "io-wis2dev-labs-global-discovery-catalogue"
-        },
-        "gdc": {
-          "status": "present",
-          "seconds": 0.7,
-          "url": "https://wmo-resource-catalogue.labs.wis2dev.io/collections/wis2-discovery-metadata/items/urn%3Awmo%3Amd%3Auk-metoffice-wmc%3Aweather.prediction.forecast.global?f=json"
-        },
-        "other_gdcs": [
-          {
-            "source": "ca-eccc-msc-global-discovery-catalogue",
-            "type": "int.wmo.wis.wme.event.wcmp2.ets",
-            "severity": "ERROR",
-            "summary": "rejected the record: Topic mismatch (io-wis2dev-metdx-demo != uk-metoffice-wmc)"
-          }
-        ],
-        "delivered": {
-          "local": 0.12,
-          "gb": 0.16
-        },
-        "log": "logs/43482811286/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global.jsonl"
+        "status": "pending",
+        "stamp": "20261120T160708Z"
       },
       "title": "Met Office Global Deterministic",
       "source_path": "metadata/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global.json",
-      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global.20261113T182744Z.json",
-      "current_path": "metadata/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global.20261113T182744Z.json",
-      "sha512_hex": "aac758bc3548dc64fdc4d2f6e77c659d57b00bed4bd65b63c0e28557bf26c328cb034437a9dd3c29f0eeda67188bbd027d2591b44b369fa6f51fa4997526810f",
-      "sha512_b64": "qsdYvDVI3GT9xNL253xlnVewC+1L1ltjwOKFV78mwyjLA0Q3qd08KfDu2mcYi70CfSWRtEs2n6b1H6SZdSaBDw==",
+      "current_url": "https://6a6d74.github.io/wis2-metdx-demo-metadata/metadata/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global.20261120T160708Z.json",
+      "current_path": "metadata/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global/urn-wmo-md-uk-metoffice-wmc-weather.prediction.forecast.global.20261120T160708Z.json",
+      "sha512_hex": "313979866b5075f05bde9792c854175c01de69dba5aa6f59ca4158bd570e75acae2e41dc16029b97c9091b1898b4e85eb13c90896af922dcc83c7907fcb3a611",
+      "sha512_b64": "MTl5hmtQdfBb3peSyFQXXAHeadulqm9ZykFYvVcOdayuLkHcFgKbl8kJGxiYtOhesTyQiWr5ItzIPHkH/LOmEQ==",
       "length": 19331,
-      "published": "20261113T182744Z",
+      "published": "20261120T160708Z",
       "deleted": false,
       "deleted_at": null
     }
   },
   "published_commit": "574477c82084644ffafb4decbbdb65bf733b5c69",
-  "updated": "2026-11-19T17:50:58Z"
+  "updated": "2026-11-20T16:07:10Z"
 }
